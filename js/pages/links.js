@@ -1,4 +1,4 @@
-define(['pages/pagebase','utils/storage', 'utils/util'], function(pagebase, storage, util) {
+define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(pagebase, storage, util) {
     var links = {
         name: 'links',
 
@@ -20,7 +20,7 @@ define(['pages/pagebase','utils/storage', 'utils/util'], function(pagebase, stor
             this.elems.addLink.addEventListener('submit', this.addLink.bind(this));
 
             this.data = storage.get('links', [{'name': 'use the wrench to get started. . . ', 'url': ''}]);
-            this.links = new pagebase(document, this.name, this.elems.rootDom, this.templateFunc.bind(this));
+            this.links = new pagebase(document, this.name, "simple", this.elems.rootDom, this.templateFunc.bind(this));
             this.links.buildDom(this.data);
         },
 

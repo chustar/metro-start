@@ -27,7 +27,7 @@ define(['jquery', 'jss', 'farbtastic', 'utils/util', 'utils/storage', 'utils/def
             transition: A bool indicating whether to slowly transition or immediately change.
         */
         updateStyle: function(transition) {
-            updateFont();
+            //updateFont();
 
             var scope = {};
             var options_color = defaults.defaultTheme.colors['options-color'];

@@ -4,7 +4,7 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
        item: util.createElement('<div class="item"></div>')
     };
 
-    var pagebase = function pagebase(document, name, rootNode, templateFunc) {
+    var pagebase = function pagebase(document, name, orientation, rootNode, templateFunc) {
         this.elems = {};
         this.name = name;
         this.rootNode = rootNode;
@@ -12,6 +12,7 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         this.currentPage = 0;
         this.templateFunc = templateFunc;
         this.page = 0;
+        this.orientation = orientation;
 
         this.init(document);
     };

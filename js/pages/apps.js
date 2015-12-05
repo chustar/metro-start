@@ -1,4 +1,4 @@
-define(['pages/pagebase','utils/storage', 'utils/util'], function(pagebase, storage, util) {
+define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(pagebase, storage, util) {
     var apps = {
         name: 'apps',
 
@@ -14,7 +14,7 @@ define(['pages/pagebase','utils/storage', 'utils/util'], function(pagebase, stor
 
         init: function(document) {
             this.elems.rootNode = document.getElementById('internal_selector_apps');
-            this.apps = new pagebase(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
+            this.apps = new pagebase(document, this.name, "simple", this.elems.rootNode, this.templateFunc.bind(this));
             this.loadApps();
         },
 

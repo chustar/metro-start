@@ -17,12 +17,9 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
     },
 
     init: function(document) {
-      this.page = storage.get('page', 'links');
       this.forEachModule('init', document);
 
-      //this.elems.chooser = document.getElementById(this.name + '-chooser');
-      //jquery(this.elems.chooser).attr('selectedIndex', this.indexOfModule(this.page));
-      this.changePage(this.page);
+      this.changePage(storage.get('page', 'links'));
 
       jquery(this.elems.chooser).metroSelect({
         'onchange': this.changePage.bind(this)
@@ -34,10 +31,6 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
     },
 
     changePage: function changePage(page) {
-      //if (this.page == page) {
-      //  return;
-      //}
-
       this.page = page;
       if (page != 'themes') {
         storage.save('page', page);
@@ -46,7 +39,6 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
       this.elems.chooser = document.getElementById(this.name + '-chooser');
       jquery(this.elems.chooser).attr('selectedIndex', this.indexOfModule(this.page));
       jquery(this.elems.chooser).change();
-      //this.changePage(this.page);
 
       jss.set('.external .internal', {
         'margin-left': (this.indexOfModule(page) * -100) + '%'

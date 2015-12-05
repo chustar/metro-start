@@ -1,4 +1,4 @@
-define([ 'jquery', 'pages/pagebase', 'utils/util', 'utils/storage', 'utils/defaults'],
+define([ 'jquery', 'pagebase/pagebase_grouped', 'utils/util', 'utils/storage', 'utils/defaults'],
 function(jquery, pagebase, util, storage, defaults) {
     var themes = {
         name: 'themes',
@@ -21,8 +21,8 @@ function(jquery, pagebase, util, storage, defaults) {
 
         init: function() {
             this.elems.rootNode = document.getElementById('internal_selector_themes');
-            this.localThemes = new pagebase(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
-            this.onlineThemes = new pagebase(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
+            this.localThemes = new pagebase(document, this.name, "grouped", this.elems.rootNode, this.templateFunc.bind(this));
+            this.onlineThemes = new pagebase(document, this.name, "grouped", this.elems.rootNode, this.templateFunc.bind(this));
             this.localThemes.pageItemCount = -1;
             this.onlineThemes.pageItemCount = -1;
             this.loadThemes();
