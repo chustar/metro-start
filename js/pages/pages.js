@@ -8,16 +8,17 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
 
     data: Array.prototype.slice.call(arguments, 3),
 
-    forEachModule: function(func, value) {
+    forEachModule: function(func) {
+      var thatArgs = arguments;
       this.data.forEach(function(module) {
         if (module[func]) {
-          module[func](value);
+          module[func].apply(module, Array.prototype.slice.call(thatArgs, 1));
         }
       });
     },
 
     init: function(document) {
-      this.forEachModule('init', document);
+      this.forEachModule('init', document, this.getPageItemCount());
 
       this.changePage(storage.get('page', 'links'));
 
@@ -47,12 +48,7 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
 
     // Compare document height to element height to fine the number of elements per page.
     windowResized: function() {
-      var pageHeight = jquery('body').height();
-      var headerHeight = jquery('h1').outerHeight(true);
-      var navBarHeight = jquery('.' + this.name + '-chooser').outerHeight(true);
-      var footerHeight = jquery('.footer').outerHeight(true);
-      var height =  pageHeight - (headerHeight + navBarHeight + footerHeight);
-
+      var height = this.getContentHeight();
       jss.set('.external', {
         'height': '' + height
       });
@@ -60,8 +56,20 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
         'height': '' + height
       });
 
-      var pageItemCount = Math.floor((height) / 60);
+      var pageItemCount = this.getPageItemCount();
       this.forEachModule('setPageItemCount', pageItemCount);
+    },
+
+    getContentHeight: function() {
+      var pageHeight = jquery('body').height();
+      var headerHeight = jquery('h1').outerHeight(true);
+      var navBarHeight = jquery('.' + this.name + '-chooser').outerHeight(true);
+      var footerHeight = jquery('.footer').outerHeight(true);
+      return pageHeight - (headerHeight + navBarHeight + footerHeight);
+    },
+
+    getPageItemCount: function() {
+      return Math.floor((this.getContentHeight()) / 60);
     },
 
     showOptionsChanged: function(showOptions) {

@@ -33,10 +33,10 @@ define(modules, function (document, jss, pages, widgets, defaults, script, stora
             },
 
             clickWrench: function() {
-                pages.showOptions = !pages.showOptions;
+                this.showOptions = !this.showOptions;
 
                 var that = this;
-                if (pages.showOptions) {
+                if (this.showOptions) {
                     document.body.removeChild(this.elems.hideRule);
                 } else {
                     document.body.appendChild(this.elems.hideRule);
@@ -50,7 +50,7 @@ define(modules, function (document, jss, pages, widgets, defaults, script, stora
 
                 this.modules.forEach(function(module) {
                     if (module.showOptionsChanged) {
-                        module.showOptionsChanged(that.data.showOptions);
+                        module.showOptionsChanged(that.showOptions);
                     }
                 });
                 _gaq.push(['_trackEvent', 'Page', 'Wrench']);

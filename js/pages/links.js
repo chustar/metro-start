@@ -1,4 +1,4 @@
-define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(pagebase, storage, util) {
+define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(pagebase_simple, storage, util) {
     var links = {
         name: 'links',
 
@@ -12,7 +12,7 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             editFragment: util.createElement('<span class="edit option options-color small-text clickable">edit</span>'),
         },
 
-        init: function(document) {
+        init: function(document, pageItemCount) {
             this.elems.rootDom = document.getElementById('internal_selector_links');
             this.elems.newUrl = document.getElementById('newUrl');
             this.elems.newUrlTitle = document.getElementById('newUrlTitle');
@@ -20,12 +20,18 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             this.elems.addLink.addEventListener('submit', this.addLink.bind(this));
 
             this.data = storage.get('links', [{'name': 'use the wrench to get started. . . ', 'url': ''}]);
-            this.links = new pagebase(document, this.name, "simple", this.elems.rootDom, this.templateFunc.bind(this));
+            this.links = new pagebase_simple();
+            this.links.init(document, this.name, this.elems.rootDom, this.templateFunc.bind(this));
+            this.links.setPageItemCount(pageItemCount);
             this.links.buildDom(this.data);
         },
 
         setPageItemCount: function(pageItemCount) {
             this.links.setPageItemCount(pageItemCount, this.data); //-1 to account for addLink
+        },
+
+        setShowOptions: function setShowOptions(showOptions) {
+            this.links.setShowOptions(showOptions);
         },
 
         templateFunc: function(item) {

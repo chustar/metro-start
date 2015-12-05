@@ -1,4 +1,4 @@
-define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase, util) {
+define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase_paneled, util) {
     var bookmarks = {
         name: 'bookmarks',
 
@@ -16,7 +16,8 @@ define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase, util) {
 
         init: function() {
             this.elems.rootNode = document.getElementById('internal_selector_bookmarks');
-            this.bookmarks = new pagebase(document, this.name, "paneled", this.elems.rootNode, this.templateFunc.bind(this));
+            this.bookmarks = new pagebase_paneled();
+            this.bookmarks.init(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
             this.bookmarks.pageItemCount = -1;
             this.loadBookmarks();
         },

@@ -1,13 +1,21 @@
 define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, metroSelect) {
 
-    var validPageBases = ['simple', 'grouped', 'paneled'],
+    var validPageBases = ['simple', 'grouped', 'paneled'];
 
     var templates = {
        column: util.createElement('<div class="page"></div>'),
        item: util.createElement('<div class="item"></div>')
     };
 
-    var pagebase = function pagebase(document, name, orientation, rootNode, templateFunc) {
+    var pagebase = function pagebase() {
+    };
+
+    // Callbacks
+    pagebase.prototype.addAllNodes = function() {
+      throw new "addAllNodes not implemented";
+    }
+
+    pagebase.prototype.init = function(document, name, rootNode, templateFunc) {
         this.elems = {};
         this.name = name;
         this.rootNode = rootNode;
@@ -15,12 +23,7 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         this.currentPage = 0;
         this.templateFunc = templateFunc;
         this.page = 0;
-        this.orientation = orientation;
 
-        this.init(document);
-    };
-
-    pagebase.prototype.init = function(document) {
         var that = this;
         var selector = $('#' + this.name + '-chooser');
         selector.attr('selectedIndex', this.sort ? 1 : 0);
@@ -34,8 +37,6 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
     pagebase.prototype.sortChanged = function sortChagned(sort) {
         this.sort = !this.sort;
         storage.save(this.name + '_sort', this.sort);
-
-        this.rebuildDom();
     };
 
     pagebase.prototype.compareFunc = function compareFunc(a, b) {
