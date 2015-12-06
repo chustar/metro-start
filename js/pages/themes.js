@@ -38,7 +38,7 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
             var that = this;
 
             that.themes.addAll({
-              'title': 'local themes',
+              'heading': 'my themes',
               'themes': storage.get('localThemes', [defaults.defaultTheme])
             });
 
@@ -55,12 +55,11 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
                 }
 
                 that.themes.addAll({
-                  'title': 'online themes',
+                  'heading': 'online themes',
                   'themes': data
                 });
             });
         },
-
 
         setPageItemCount: function(pageItemCount) {
             this.themes.setPageItemCount(pageItemCount, this.data); //-1 to account for addLink
@@ -81,7 +80,7 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 
             var author = this.templates.authorFragment.cloneNode(true);
             author.firstElementChild.textContent = theme.author.name;
-            // author.firstElementChild.href = theme.author.link;
+            author.firstElementChild.href = theme.author.link;
             fragment.appendChild(author);
 
             var share = this.templates.shareFragment.cloneNode(true);

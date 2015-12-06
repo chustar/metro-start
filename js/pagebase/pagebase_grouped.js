@@ -1,7 +1,9 @@
 define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, storage, pagebase) {
     var templates = {
+       group: util.createElement('<div class="group"></div>'),
        column: util.createElement('<div class="page"></div>'),
-       item: util.createElement('<div class="item"></div>')
+       item: util.createElement('<div class="item"></div>'),
+       heading: util.createElement('<div class="options-color"></div>')
     };
 
     var pagebase_grouped = function pagebase_grouped() {
@@ -15,7 +17,7 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
 
     pagebase_grouped.prototype.addAll = function addAll(rows) {
         var group = {};
-        group.title = rows.title;
+        group.heading = rows.heading;
         group.nodes = [];
 
         for (var i = 0; i < rows.themes.length; i++) {
@@ -24,10 +26,6 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
             item.firstElementChild.id = this.name + '_' + i;
             item.firstElementChild.appendChild(this.templateFunc(rows['themes'][i], this.currentPage));
             group.nodes.push(item);
-            // nodes.push({
-            //   'title': rows['title'],
-            //   'themes': item
-            // });
         }
         this.addAllNodes(group);
     };
@@ -42,34 +40,43 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
             });
         }
         if (nodes.length) {
-            // this.page = 0;
+            var groupNode = templates.group.cloneNode(true);
+
+            var heading = templates.heading.cloneNode(true);
+            heading.firstElementChild.textContent = group.heading;
+            groupNode.firstElementChild.appendChild(heading);
+
             var pageIndex = this.elems.internal_selector.children.length;
             var columnNode = templates.column.cloneNode(true);
             columnNode.firstElementChild.id = this.name + '_' + pageIndex;
-            var pageItemCount = this.pageItemCount;
-            if (this.showOptions) {
-                pageItemCount--; // If the options are showing, account for sort options.
-            }
-            if (this.name === 'link') {
-                pageItemCount--; // If its links page, account for add link options.
-            }
-            if (this.name === 'bookmarks') {
-                util.addClass(columnNode.firstElementChild, 'bookmark-page');
-            }
+            // columnNode.appendChild(heading);
+
+            var pageItemCount = this.pageItemCount - this.getReservedItemCount();
+
             //Add each row to an column and create new ones on the pageItemCount boundary.
             for (var i = 0; i < nodes.length; i++) {
                 if (i !== 0 && i % pageItemCount === 0 && pageItemCount > 0) { //Skip the first row.
-                    this.rootNode.appendChild(columnNode);
+                    groupNode.firstElementChild.appendChild(columnNode);
                     columnNode = templates.column.cloneNode(true);
                     columnNode.firstElementChild.id = this.name + '_' + pageIndex++;
                 }
                 columnNode.firstElementChild.appendChild(nodes[i]);
             }
             if ((i - 1) % this.pageItemCount !== 0 || this.pageItemCount === -1) { // - 1 to account for the for loop going one past last good index.
-                this.rootNode.appendChild(columnNode);
+                groupNode.firstElementChild.appendChild(columnNode);
             }
+            this.rootNode.appendChild(groupNode);
         }
-      // }
+    };
+
+    pagebase_grouped.prototype.getReservedItemCount = function getReservedItemCount() {
+      // If the options are showing, account for sort options.
+      if (this.showOptions) {
+        // If its links page, account for add link options.
+        return 1;
+      }
+
+      return 0;
     };
 
     return pagebase_grouped;
