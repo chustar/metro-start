@@ -9,7 +9,31 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
 
     pagebase_grouped.prototype = Object.create(pagebase.prototype);
 
-    pagebase_grouped.prototype.addAllNodes = function addAllNodes(nodes) {
+    pagebase_grouped.prototype.rebuildDom = function () {
+      console.log("nope");
+    };
+
+    pagebase_grouped.prototype.addAll = function addAll(rows) {
+        var group = {};
+        group.title = rows.title;
+        group.nodes = [];
+
+        for (var i = 0; i < rows.themes.length; i++) {
+            var item = templates.item.cloneNode(true);
+            item.id = this.name + '_' + i;
+            item.firstElementChild.id = this.name + '_' + i;
+            item.firstElementChild.appendChild(this.templateFunc(rows['themes'][i], this.currentPage));
+            group.nodes.push(item);
+            // nodes.push({
+            //   'title': rows['title'],
+            //   'themes': item
+            // });
+        }
+        this.addAllNodes(group);
+    };
+
+    pagebase_grouped.prototype.addAllNodes = function addAllNodes(group) {
+      var nodes = group.nodes;
         if (this.sort) {
             nodes.sort(this.compareFunc);
         } else {
@@ -45,6 +69,7 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
                 this.rootNode.appendChild(columnNode);
             }
         }
+      // }
     };
 
     return pagebase_grouped;

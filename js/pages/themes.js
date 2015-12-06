@@ -7,6 +7,8 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 
         elems: {},
 
+        themes: {},
+
         localThemes: {},
 
         onlineThemes: {},
@@ -21,18 +23,24 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 
         init: function() {
             this.elems.rootNode = document.getElementById('internal_selector_themes');
-            this.localThemes = new pagebase_grouped();
-            this.localThemes.init(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
-            this.onlineThemes = new pagebase_grouped();
-            this.onlineThemes.init(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
-            this.localThemes.pageItemCount = -1;
-            this.onlineThemes.pageItemCount = -1;
+            this.themes = new pagebase_grouped();
+            this.themes.init(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
+            // this.localThemes = new pagebase_grouped();
+            // this.localThemes.init(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
+            // this.onlineThemes = new pagebase_grouped();
+            // this.onlineThemes.init(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
+            // this.localThemes.pageItemCount = -1;
+            // this.onlineThemes.pageItemCount = -1;
             this.loadThemes();
         },
 
         loadThemes: function() {
             var that = this;
-            that.localThemes.addAll(storage.get('localThemes', [defaults.defaultTheme]));
+
+            that.themes.addAll({
+              'title': 'local themes',
+              'themes': storage.get('localThemes', [defaults.defaultTheme])
+            });
 
             // Load online themes.
             jquery.get('http://metro-start.appspot.com/themes.json', function(data) {
@@ -45,8 +53,21 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
                         'background-color': data[i].background_color,
                     };
                 }
-                that.onlineThemes.addAll(data);
+
+                that.themes.addAll({
+                  'title': 'online themes',
+                  'themes': data
+                });
             });
+        },
+
+
+        setPageItemCount: function(pageItemCount) {
+            this.themes.setPageItemCount(pageItemCount, this.data); //-1 to account for addLink
+        },
+
+        setShowOptions: function setShowOptions(showOptions) {
+            this.themes.setShowOptions(showOptions);
         },
 
         templateFunc: function(theme) {
