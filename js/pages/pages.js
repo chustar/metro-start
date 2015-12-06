@@ -55,11 +55,12 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
         'height': '' + height
       });
       jss.set('.bookmark-page', {
-        'height': '' + height //+ height % 60)
+        'height': '' + height
       });
 
       var pageItemCount = this.getPageItemCount();
       this.forEachModule('setPageItemCount', pageItemCount);
+      this.forEachModule('setHeight', height);
     },
 
     getContentHeight: function() {

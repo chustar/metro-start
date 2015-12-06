@@ -83,6 +83,12 @@ define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase_paneled, u
             return fragment;
         },
 
+        setHeight: function(height) {
+          jss.set('.bookmark-page', {
+              'height': height + 'px'
+          });
+        },
+        
         setPageItemCount: function(pageItemCount) {
             jss.set('.bookmark-page', {
                 'height': (pageItemCount * 60) + 'px'

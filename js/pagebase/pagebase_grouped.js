@@ -49,7 +49,6 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
             var pageIndex = this.elems.internal_selector.children.length;
             var columnNode = templates.column.cloneNode(true);
             columnNode.firstElementChild.id = this.name + '_' + pageIndex;
-            // columnNode.appendChild(heading);
 
             var pageItemCount = this.pageItemCount - this.getReservedItemCount();
 
