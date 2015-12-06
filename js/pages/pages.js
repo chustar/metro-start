@@ -20,6 +20,7 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
     init: function(document) {
       this.forEachModule('init', document, this.getPageItemCount());
 
+      this.showOptions = false;
       this.changePage(storage.get('page', 'links'));
 
       jquery(this.elems.chooser).metroSelect({
@@ -49,11 +50,12 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
     // Compare document height to element height to fine the number of elements per page.
     windowResized: function() {
       var height = this.getContentHeight();
+
       jss.set('.external', {
         'height': '' + height
       });
-      jss.set('.bookmark_page', {
-        'height': '' + height
+      jss.set('.bookmark-page', {
+        'height': '' + height //+ height % 60)
       });
 
       var pageItemCount = this.getPageItemCount();
@@ -73,6 +75,8 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
     },
 
     showOptionsChanged: function(showOptions) {
+      this.showOptions = showOptions;
+      this.windowResized();
       this.forEachModule('setShowOptions', showOptions);
     },
 

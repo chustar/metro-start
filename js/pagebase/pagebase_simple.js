@@ -22,8 +22,7 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
       var pageIndex = this.elems.internal_selector.children.length;
       var columnNode = templates.column.cloneNode(true);
       columnNode.firstElementChild.id = this.name + '_' + pageIndex;
-      var pageItemCount = this.pageItemCount;
-      pageItemCount -= this.getReservedItemCount(this.showOptions);
+      var pageItemCount = this.pageItemCount - this.getReservedItemCount();
 
       //Add each row to an column and create new ones on the pageItemCount boundary.
       for (var i = 0; i < nodes.length; i++) {

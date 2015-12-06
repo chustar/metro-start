@@ -9,7 +9,11 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
 
     pagebase_paneled.prototype = Object.create(pagebase.prototype);
 
-    pagebase.prototype.addAllNodes = function addAllNodes(nodes) {
+    pagebase_paneled.prototype.rebuildDom = function () {
+      console.log("nope");
+    };
+    
+    pagebase_paneled.prototype.addAllNodes = function addAllNodes(nodes) {
         if (this.sort) {
             nodes.sort(this.compareFunc);
         } else {
@@ -17,15 +21,12 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
                 return a.id.toLocaleLowerCase() > b.id.toLocaleLowerCase();
             });
         }
+
         if (nodes.length) {
-            // this.page = 0;
             var pageIndex = this.elems.internal_selector.children.length;
             var columnNode = templates.column.cloneNode(true);
             columnNode.firstElementChild.id = this.name + '_' + pageIndex;
-            var pageItemCount = this.pageItemCount;
-            if (this.showOptions) {
-                pageItemCount--; // If the options are showing, account for sort options.
-            }
+            var pageItemCount = this.pageItemCount - this.getReservedItemCount();
 
             if (this.name === 'bookmarks') {
                 util.addClass(columnNode.firstElementChild, 'bookmark-page');
@@ -43,6 +44,16 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
                 this.rootNode.appendChild(columnNode);
             }
         }
+    };
+
+    pagebase_paneled.prototype.getReservedItemCount = function getReservedItemCount() {
+      // If the options are showing, account for sort options.
+      if (this.showOptions) {
+        // If its links page, account for add link options.
+        return 1;
+      }
+
+      return 0;
     };
 
     return pagebase_paneled;
