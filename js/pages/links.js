@@ -20,6 +20,7 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             this.elems.addLink.addEventListener('submit', this.addLink.bind(this));
 
             this.data = storage.get('links', [{'name': 'use the wrench to get started. . . ', 'url': ''}]);
+
             this.links = new pagebase_simple();
             this.links.init(document, this.name, this.elems.rootDom, this.templateFunc.bind(this));
             this.links.setPageItemCount(pageItemCount);
