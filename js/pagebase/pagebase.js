@@ -10,11 +10,12 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
     var pagebase = function pagebase() {
     };
 
-    // Callbacks
-    pagebase.prototype.addAllNodes = function() {
-      throw new "addAllNodes not implemented";
+    // Adds all the provided HTML nodes to the page.
+    pagebase.prototype.addAllNodes = function(nodes) {
+      throw new "#notmyjob";
     }
 
+    // Initialize the module.
     pagebase.prototype.init = function(document, name, rootNode, templateFunc) {
         this.elems = {};
         this.name = name;
@@ -34,15 +35,22 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         this.elems.internal_selector = document.getElementById('internal_selector_' + this.name);
     };
 
+    // Ordering of elements on the page has changd.
+    // sort: New sort order.
     pagebase.prototype.sortChanged = function sortChagned(sort) {
         this.sort = !this.sort;
         storage.save(this.name + '_sort', this.sort);
     };
 
+    // Compare two different HTML nodes together.
+    // a: First node to compare.
+    // b: Second node to compare.
     pagebase.prototype.compareFunc = function compareFunc(a, b) {
         return a.firstElementChild.textContent > b.firstElementChild.textContent;
     };
 
+    // Rebuild the dom by removing all nodes and re-adding them.
+    // This is useful for clearing state.
     pagebase.prototype.rebuildDom = function() {
         var nodes = [];
         this.currentPage = 0;
@@ -58,6 +66,8 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         this.addAllNodes(nodes);
     };
 
+    // Build the dom.
+    // rows: HTML rows to be added to the Dom.
     pagebase.prototype.buildDom = function buildDom(rows) {
         this.currentPage = 0;
         while (this.rootNode.firstElementChild) {
@@ -66,6 +76,8 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         this.addAll(rows);
     };
 
+    // Add all rows to the page.
+    // rows: The new ros to be added to the page.
     pagebase.prototype.addAll = function addAll(rows) {
         var nodes = [];
         for (var i = 0; i < rows.length; i++) {
@@ -78,14 +90,19 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         this.addAllNodes(nodes);
     };
 
+    // Returns the pages in the module.
     pagebase.prototype.getPages = function getPages() {
         return Array.prototype.slice.call(this.elems.internal_selector.children);
     };
 
+    // Adds all provided HTML nodes to the page.
+    // nodes: The nodes to be added.
     pagebase.prototype.addAllNodes = function addAllNodes(nodes) {
       throw "#notmyjob";
     };
 
+    // Called when the number of items on a page changes.
+    // pageItemCount: New number of items per page.
     pagebase.prototype.setPageItemCount = function setPageItemCount(pageItemCount) {
         if (pageItemCount !== this.pageItemCount) {
             this.pageItemCount = Math.max(pageItemCount, 1);
@@ -93,11 +110,15 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         }
     };
 
+    // Called when the visibility of options changes.
+    // showOptions: True if options are now visible; false otherwise.
     pagebase.prototype.setShowOptions = function setShowOptions(showOptions) {
         this.showOptions = showOptions;
         this.rebuildDom();
     };
 
+    // Remove all the pages.
+    // pageNumber: The page to start removing data.
     pagebase.prototype.truncatePages = function truncatePages(pageNumber) {
         // var page_number = this.parentNode.id.remove('pages_');
         var nodes = Array.prototype.slice.call(this.elems.internal_selector.children);

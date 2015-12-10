@@ -12,7 +12,9 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
     pagebase_paneled.prototype.rebuildDom = function () {
       console.log("nope");
     };
-    
+
+    // Adds all the given HTML nodes to the DOM in one single column.
+    // nodes: List of nodes to be added.
     pagebase_paneled.prototype.addAllNodes = function addAllNodes(nodes) {
         if (this.sort) {
             nodes.sort(this.compareFunc);
@@ -46,6 +48,7 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
         }
     };
 
+    // Gets how much space to reserve when displaying items.
     pagebase_paneled.prototype.getReservedItemCount = function getReservedItemCount() {
       // If the options are showing, account for sort options.
       if (this.showOptions) {

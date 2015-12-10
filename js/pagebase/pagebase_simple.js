@@ -4,11 +4,12 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
     item: util.createElement('<div class="item"></div>')
   };
 
-  var pagebase_simple = function pagebase_simple() {
-  };
+  var pagebase_simple = function pagebase_simple() { };
 
   pagebase_simple.prototype = Object.create(pagebase.prototype);
 
+  // Adds all the given HTML nodes to the DOM, in a naive way (top to bottom, left to right).
+  // nodes: List of nodes to be added.
   pagebase_simple.prototype.addAllNodes = function addAllNodes(nodes) {
     if (this.sort) {
       nodes.sort(this.compareFunc);
@@ -41,6 +42,7 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
     }
   };
 
+  // Gets how much space to reserve when displaying items.
   pagebase_simple.prototype.getReservedItemCount = function getReservedItemCount() {
     // If the options are showing, account for sort options.
     if (this.showOptions) {

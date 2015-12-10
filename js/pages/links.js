@@ -12,6 +12,7 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             editFragment: util.createElement('<span class="edit option options-color small-text clickable">edit</span>'),
         },
 
+        // Initialize this module.
         init: function(document, pageItemCount) {
             this.elems.rootDom = document.getElementById('internal_selector_links');
             this.elems.newUrl = document.getElementById('newUrl');
@@ -27,14 +28,20 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             this.links.buildDom(this.data);
         },
 
+        // Sets the new number of pages for the block.
+        // pageItemCount: The maximum number of pages able to be displayed.
         setPageItemCount: function(pageItemCount) {
-            this.links.setPageItemCount(pageItemCount, this.data); //-1 to account for addLink
+            this.links.setPageItemCount(pageItemCount, this.data);
         },
 
+        // Sets whether options are currently showing.
+        // showOptions: true, if options are now showing; false otherwise.
         setShowOptions: function setShowOptions(showOptions) {
             this.links.setShowOptions(showOptions);
         },
 
+        // Returns an HTML link node item.
+        // item: The link item to be converted into a node.
         templateFunc: function(item) {
             var fragment = util.createElement('');
             var link = this.templates.linkFragment.cloneNode(true);
@@ -53,6 +60,8 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             return fragment;
         },
 
+        // Adds a new link, or completes editing an exiting link.
+        // event: Callback event data.
         addLink: function(event) {
             var newUrl = this.elems.newUrl.value.trim();
             var newUrlTitle = this.elems.newUrlTitle.value.trim();
@@ -64,6 +73,8 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
                 if (!newUrl.match(/https?\:\/\//)) {
                     newUrl = 'http://' + newUrl;
                 }
+
+                // If a link is currently being edited.
                 if (this.linkToEdit) {
                     this.linkToEdit.name = formatTitle(newUrlTitle);
                     this.linkToEdit.url = newUrl;
@@ -85,6 +96,8 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             event.preventDefault();
         },
 
+        // Begins editing a link.
+        // link: The link to be edited.
         editLink: function(link) {
             this.linkToEdit = link;
             this.elems.newUrlTitle.value = link.name;
@@ -92,6 +105,8 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             _gaq.push(['_trackEvent', 'Links', 'Start Editing Link']);
         },
 
+        // Removes a link from the app.
+        // link: The link to be removed.
         removeLink: function(link){
             for(var i = 0; i < this.data.length; i++) {
                 if (this.data[i] === link) {
