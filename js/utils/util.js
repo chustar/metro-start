@@ -1,4 +1,4 @@
-define(['utils/defaults', 'utils/script', 'utils/storage'], function Utils(defaults, script, storage) {
+define(['utils/defaults', 'utils/storage'], function Utils(defaults, storage) {
     var utils = {
       // Initialize this module.
         init: function(document) { },
@@ -53,6 +53,14 @@ define(['utils/defaults', 'utils/script', 'utils/storage'], function Utils(defau
                 oldClass.unshift(newClass);
                 elem.className = oldClass.join(' ');
             }
+        },
+
+        // Checks is a DOM element has a CSS class.
+        // elem: The DOM element to be checked.
+        // testlass: The class to be checked for.
+        hasClass: function hasClass(elem, testClass) {
+          var oldClass = elem.className.split(' ');
+          return oldClass.indexOf(testClass) !== -1;
         },
 
         // Removes a CSS class from a DOM element.

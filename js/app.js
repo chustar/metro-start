@@ -11,7 +11,7 @@ define(modules, function (document, jss, pages, widgets, defaults, script, stora
     data: {},
 
     elems: {},
-    
+
     showOptions: false,
 
     modules: Array.prototype.slice.call(arguments, 2),
@@ -28,7 +28,7 @@ define(modules, function (document, jss, pages, widgets, defaults, script, stora
       });
 
       this.elems.hideRule = document.getElementById('hideRule');
-      script.updateStyle(false);
+      // script.updateStyle(false);
       // $scope.updateWeather(false);
     },
 
