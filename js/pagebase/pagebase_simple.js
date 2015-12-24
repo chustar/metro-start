@@ -25,7 +25,7 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
       columnNode.firstElementChild.id = this.name + '_' + pageIndex;
       var pageItemCount = this.pageItemCount - this.getReservedItemCount();
 
-      //Add each row to an column and create new ones on the pageItemCount boundary.
+      // Add each row to an column and create new ones on the pageItemCount boundary.
       for (var i = 0; i < nodes.length; i++) {
         if (i % pageItemCount === 0) { //Skip the first row.
           this.rootNode.appendChild(columnNode);

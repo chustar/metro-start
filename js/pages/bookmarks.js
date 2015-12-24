@@ -14,6 +14,7 @@ define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase_paneled, u
             slashFragment: util.createElement('<span class="options-color">/</span>'),
         },
 
+        // Initialize this module.
         init: function() {
             this.elems.rootNode = document.getElementById('internal_selector_bookmarks');
             this.bookmarks = new pagebase_paneled();
@@ -22,6 +23,7 @@ define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase_paneled, u
             this.loadBookmarks();
         },
 
+        // Loads the bookmarks from Chrome local synced storage.
         loadBookmarks: function() {
             var that = this;
             chrome.bookmarks.getTree(function(data) {
@@ -30,40 +32,22 @@ define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase_paneled, u
             });
         },
 
-        clickBookmark: function(bookmark, bookmarkNode, event) {
-            if (bookmark.children && bookmark.children.length > 0) {
-                var currentPage = bookmarkNode.parentNode.parentNode.id;
-                this.activateBookmark(bookmarkNode);
-                this.bookmarks.truncatePages(currentPage.replace('bookmarks_', ''));
-                this.bookmarks.addAll(bookmark.children);
-                event.preventDefault();
-                _gaq.push(['_trackEvent', 'Bookmarks', 'Click Bookmark Folder']);
-            }
-            _gaq.push(['_trackEvent', 'Bookmarks', 'Click Bookmarked Page']);
-        },
-
-        removeBookmark: function(bookmark, page, index) {
-            chrome.bookmarks.removeTree(bookmark.id, function() {
-                $scope.$apply(function() {
-                    $scope.bookmarks[page].splice(index, 1);
-                });
+        // Sets the new number of pages for the block.
+        // pageItemCount: The maximum number of pages able to be displayed.
+        setPageItemCount: function(pageItemCount) {
+            jss.set('.bookmark-page', {
+                'height': (pageItemCount * 60) + 'px'
             });
-            _gaq.push(['_trackEvent', 'Bookmarks', 'Remove Bookmarked']);
         },
 
+        // Sets whether options are currently showing.
+        // showOptions: true, if options are now showing; false otherwise.
         setShowOptions: function setShowOptions(showOptions) {
             this.bookmarks.setShowOptions(showOptions);
         },
 
-        activateBookmark: function activateBookmark(bookmarkElem) {
-            var itemNode = bookmarkElem.parentNode;
-            var siblings = itemNode.parentNode.children;
-            Array.prototype.slice.call(siblings).forEach(function(item) {
-                util.removeClass(item.firstElementChild, 'bookmark-active');
-            });
-            util.addClass(itemNode.firstElementChild, 'bookmark-active');
-        },
-
+        // Returns an HTML link node item.
+        // item: The link item to be converted into a node.
         templateFunc: function(bookmark) {
             var fragment = util.createElement('');
             var title = this.templates.titleFragment.cloneNode(true);
@@ -77,22 +61,55 @@ define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase_paneled, u
             fragment.appendChild(title);
 
             var remove = this.templates.removeFragment.cloneNode(true);
-            remove.firstElementChild.addEventListener('click', this.removeBookmark.bind(this, bookmark));
+            remove.firstElementChild.addEventListener('click', this.removeBookmark.bind(this, bookmark, fragment));
             fragment.appendChild(remove);
 
             return fragment;
         },
 
+        // Called when a bookmark has been clicked.
+        // bookmark: The bookamrk that was clicked.
+        // bookmarkNode: The DOM node of the clicked bookmark.
+        // event: The JS event that triggered this function.
+        clickBookmark: function(bookmark, bookmarkNode, event) {
+            if (bookmark.children && bookmark.children.length > 0) {
+                var currentPage = bookmarkNode.parentNode.parentNode.id;
+                this.activateBookmark(bookmarkNode);
+                this.bookmarks.truncatePages(currentPage.replace('bookmarks_', ''));
+                this.bookmarks.addAll(bookmark.children);
+                event.preventDefault();
+                _gaq.push(['_trackEvent', 'Bookmarks', 'Click Bookmark Folder']);
+            }
+            _gaq.push(['_trackEvent', 'Bookmarks', 'Click Bookmarked Page']);
+        },
+
+        // Activiates a clicked bookmark folder.
+        // bookmarkNode: The DOM node of the clicked bookmark.
+        activateBookmark: function activateBookmark(bookmarkNode) {
+            var itemNode = bookmarkNode.parentNode;
+            var siblings = itemNode.parentNode.children;
+            Array.prototype.slice.call(siblings).forEach(function(item) {
+                util.removeClass(item.firstElementChild, 'bookmark-active');
+            });
+            util.addClass(itemNode.firstElementChild, 'bookmark-active');
+        },
+
+        // Removes a bookmark from the DOM and the chrome bookmark storage.
+        // bookmark: The bookmark to be removed.
+        // bookmarkNode: The DOM node of the bookmark to be removed.
+        removeBookmark: function(bookmark, page, index) {
+            chrome.bookmarks.removeTree(bookmark.id, function() {
+              bookmarkNode.remove();
+            });
+            _gaq.push(['_trackEvent', 'Bookmarks', 'Remove Bookmarked']);
+        },
+
+        // Sets the height of the bookmark module. This tells when to begin scrolling.
+        // height: The new height of the bookmark page.
         setHeight: function(height) {
           jss.set('.bookmark-page', {
               'height': height + 'px'
           });
-        },
-        
-        setPageItemCount: function(pageItemCount) {
-            jss.set('.bookmark-page', {
-                'height': (pageItemCount * 60) + 'px'
-            });
         }
     };
     return bookmarks;

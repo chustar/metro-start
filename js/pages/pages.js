@@ -28,8 +28,8 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
       });
 
       var that = this;
-      jquery(window).bind('resize', this.windowResized.bind(this));
-      this.windowResized();
+      jquery(window).bind('resize', this.onWindowResized.bind(this));
+      this.onWindowResized();
     },
 
     changePage: function changePage(page) {
@@ -48,7 +48,7 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
     },
 
     // Compare document height to element height to fine the number of elements per page.
-    windowResized: function() {
+    onWindowResized: function() {
       var height = this.getContentHeight();
 
       jss.set('.external', {
@@ -63,6 +63,7 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
       this.forEachModule('setHeight', height);
     },
 
+    // Gets the current height of the content page.
     getContentHeight: function() {
       var pageHeight = jquery('body').height();
       var headerHeight = jquery('h1').outerHeight(true);
@@ -71,16 +72,22 @@ function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
       return pageHeight - (headerHeight + navBarHeight + footerHeight);
     },
 
+    // Sets the new number of pages for the block.
+    // pageItemCount: The maximum number of pages able to be displayed.
     getPageItemCount: function() {
       return Math.floor((this.getContentHeight()) / 60);
     },
 
+    // Sets whether options are currently showing.
+    // showOptions: true, if options are now showing; false otherwise.
     showOptionsChanged: function(showOptions) {
       this.showOptions = showOptions;
-      this.windowResized();
+      this.onWindowResized();
       this.forEachModule('setShowOptions', showOptions);
     },
 
+    // Returns the index of a provided module.
+    // module: The module to find the index of.
     indexOfModule: function indexOfModule(moduleName) {
       return this.data.map(function(m) { return m.name; }).indexOf(moduleName);
     }

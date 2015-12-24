@@ -20,12 +20,15 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             this.elems.addLink = document.getElementById('addLink');
             this.elems.addLink.addEventListener('submit', this.addLink.bind(this));
 
-            this.data = storage.get('links', [{'name': 'use the wrench to get started. . . ', 'url': ''}]);
-
             this.links = new pagebase_simple();
             this.links.init(document, this.name, this.elems.rootDom, this.templateFunc.bind(this));
             this.links.setPageItemCount(pageItemCount);
-            this.links.buildDom(this.data);
+        },
+
+        // Loads the links from storage into the DOM.
+        loadLinks: function() {
+          this.data = storage.get('links', [{'name': 'use the wrench to get started. . . ', 'url': ''}]);
+          this.links.buildDom(this.data);
         },
 
         // Sets the new number of pages for the block.

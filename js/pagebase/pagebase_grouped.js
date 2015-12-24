@@ -6,8 +6,7 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
        heading: util.createElement('<div class="options-color"></div>')
     };
 
-    var pagebase_grouped = function pagebase_grouped() {
-    };
+    var pagebase_grouped = function pagebase_grouped() { };
 
     pagebase_grouped.prototype = Object.create(pagebase.prototype);
 

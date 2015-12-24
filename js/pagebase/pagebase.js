@@ -7,13 +7,7 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
        item: util.createElement('<div class="item"></div>')
     };
 
-    var pagebase = function pagebase() {
-    };
-
-    // Adds all the provided HTML nodes to the page.
-    pagebase.prototype.addAllNodes = function(nodes) {
-      throw new "#notmyjob";
-    }
+    var pagebase = function pagebase() { };
 
     // Initialize the module.
     pagebase.prototype.init = function(document, name, rootNode, templateFunc) {
@@ -42,15 +36,19 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         storage.save(this.name + '_sort', this.sort);
     };
 
-    // Compare two different HTML nodes together.
-    // a: First node to compare.
-    // b: Second node to compare.
-    pagebase.prototype.compareFunc = function compareFunc(a, b) {
-        return a.firstElementChild.textContent > b.firstElementChild.textContent;
+
+    // Build the dom.
+    // rows: HTML rows to be added to the Dom.
+    pagebase.prototype.buildDom = function buildDom(rows) {
+        this.currentPage = 0;
+        while (this.rootNode.firstElementChild) {
+            this.rootNode.firstElementChild.remove();
+        }
+        this.addAll(rows);
     };
 
     // Rebuild the dom by removing all nodes and re-adding them.
-    // This is useful for clearing state.
+    // This is useful for resetting state.
     pagebase.prototype.rebuildDom = function() {
         var nodes = [];
         this.currentPage = 0;
@@ -64,16 +62,6 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
             column.remove();
         }
         this.addAllNodes(nodes);
-    };
-
-    // Build the dom.
-    // rows: HTML rows to be added to the Dom.
-    pagebase.prototype.buildDom = function buildDom(rows) {
-        this.currentPage = 0;
-        while (this.rootNode.firstElementChild) {
-            this.rootNode.firstElementChild.remove();
-        }
-        this.addAll(rows);
     };
 
     // Add all rows to the page.
@@ -90,15 +78,27 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         this.addAllNodes(nodes);
     };
 
+    // Adds all provided HTML nodes to the page.
+    // nodes: The nodes to be added.
+    pagebase.prototype.addAllNodes = function addAllNodes(nodes) {
+      throw "#notmyjob";
+    };
+
     // Returns the pages in the module.
     pagebase.prototype.getPages = function getPages() {
         return Array.prototype.slice.call(this.elems.internal_selector.children);
     };
 
-    // Adds all provided HTML nodes to the page.
-    // nodes: The nodes to be added.
-    pagebase.prototype.addAllNodes = function addAllNodes(nodes) {
-      throw "#notmyjob";
+    // Remove pages.
+    // pageNumber: The page to start removing data.
+    pagebase.prototype.truncatePages = function truncatePages(pageNumber) {
+        // var page_number = this.parentNode.id.remove('pages_');
+        var nodes = Array.prototype.slice.call(this.elems.internal_selector.children);
+        console.log(parseInt(pageNumber) + 1);
+        nodes.splice(0, parseInt(pageNumber) + 1);
+        nodes.forEach(function(node) {
+            node.remove();
+        });
     };
 
     // Called when the number of items on a page changes.
@@ -117,16 +117,11 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         this.rebuildDom();
     };
 
-    // Remove all the pages.
-    // pageNumber: The page to start removing data.
-    pagebase.prototype.truncatePages = function truncatePages(pageNumber) {
-        // var page_number = this.parentNode.id.remove('pages_');
-        var nodes = Array.prototype.slice.call(this.elems.internal_selector.children);
-        console.log(parseInt(pageNumber) + 1);
-        nodes.splice(0, parseInt(pageNumber) + 1);
-        nodes.forEach(function(node) {
-            node.remove();
-        });
+    // Compare two different HTML nodes.
+    // a: First node to compare.
+    // b: Second node to compare.
+    pagebase.prototype.compareFunc = function compareFunc(a, b) {
+        return a.firstElementChild.textContent > b.firstElementChild.textContent;
     };
 
     return pagebase;

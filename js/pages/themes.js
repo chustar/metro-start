@@ -21,19 +21,15 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
             authorFragment: util.createElement('<a class="options-color gallery-bio small-text"></a>')
         },
 
+        // Initialize this module.
         init: function() {
             this.elems.rootNode = document.getElementById('internal_selector_themes');
             this.themes = new pagebase_grouped();
             this.themes.init(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
-            // this.localThemes = new pagebase_grouped();
-            // this.localThemes.init(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
-            // this.onlineThemes = new pagebase_grouped();
-            // this.onlineThemes.init(document, this.name, this.elems.rootNode, this.templateFunc.bind(this));
-            // this.localThemes.pageItemCount = -1;
-            // this.onlineThemes.pageItemCount = -1;
             this.loadThemes();
         },
 
+        // Loads the available themes from local and web storage
         loadThemes: function() {
             var that = this;
 
@@ -61,14 +57,20 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
             });
         },
 
+        // Sets the new number of pages for the block.
+        // pageItemCount: The maximum number of pages able to be displayed.
         setPageItemCount: function(pageItemCount) {
-            this.themes.setPageItemCount(pageItemCount, this.data); //-1 to account for addLink
+          this.themes.setPageItemCount(pageItemCount, this.data); //-1 to account for addLink
         },
 
+        // Sets the new number of pages for the block.
+        // pageItemCount: The maximum number of pages able to be displayed.
         setShowOptions: function setShowOptions(showOptions) {
             this.themes.setShowOptions(showOptions);
         },
 
+        // Returns an HTML link node item.
+        // item: The link item to be converted into a node.
         templateFunc: function(theme) {
             var fragment = util.createElement('');
 
@@ -94,18 +96,26 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
             return fragment;
         },
 
+        // Applies the provided theme to the whole app.
+        // theme: Theme to be applied.
         applyTheme: function(theme) {
 
         },
 
+        // Shares the provided theme to the web storage.
+        // theme: Theme to be shared.
         shareTheme: function(theme) {
 
         },
 
+        // Remove the provided theme from the local storage.
+        // theme: Theme to be removed.
         removeTheme: function(theme) {
 
         },
 
+        // Edits the provided theme.
+        // theme: Theme to be edited.
         editTheme: function(theme) {
 
         }
