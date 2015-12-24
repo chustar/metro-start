@@ -27,7 +27,7 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
 
       // Add each row to an column and create new ones on the pageItemCount boundary.
       for (var i = 0; i < nodes.length; i++) {
-        if (i % pageItemCount === 0) { //Skip the first row.
+        if (i != 0 && i % pageItemCount === 0) { //Skip the first row.
           this.rootNode.appendChild(columnNode);
           columnNode = templates.column.cloneNode(true);
           columnNode.firstElementChild.id = this.name + '_' + ++pageIndex;
