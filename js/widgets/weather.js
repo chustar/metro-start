@@ -82,6 +82,7 @@ define(['jquery', 'utils/util', 'utils/storage'], function(jquery, util, storage
         updateWeather: function(force) {
             var unit = this.data.unit;
             var city = this.data.city;
+            
             // If it has been more than an hour since last check.
             if(force || new Date().getTime() > parseInt(this.data.weatherUpdateTime, 10)) {
                 this.update('weatherUpdateTime', parseInt(new Date().getTime(), 10) + 3600000);
