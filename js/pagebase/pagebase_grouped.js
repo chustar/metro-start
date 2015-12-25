@@ -23,11 +23,13 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
         group.nodes = [];
 
         for (var i = 0; i < rows.themes.length; i++) {
+          if (rows.themes[i] !== null) {
             var item = templates.item.cloneNode(true);
             item.id = this.name + '_' + i;
             item.firstElementChild.id = this.name + '_' + i;
             item.firstElementChild.appendChild(this.templateFunc(rows['themes'][i], this.currentPage));
             group.nodes.push(item);
+          }
         }
         this.addAllNodes(group);
     };
