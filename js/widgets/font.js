@@ -2,7 +2,12 @@ define(['jquery', 'utils/script', 'utils/storage'], function(jquery, script, sto
     var font = {
         init: function(document) {
             var selector = jquery('#font-chooser');
-            selector.attr('selectedIndex', storage.get('fonts') == 'normal fonts' ? 0 : 1);
+            var index = 0;
+            console.log(storage.get('fonts'));
+            if (storage.get('fonts') === 'thin fonts') {
+              index = 1;
+            }
+            selector.attr('selectedIndex', index);
             selector.metroSelect({
                 'onchange': this.changeFont
             });
