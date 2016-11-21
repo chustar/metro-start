@@ -104,7 +104,7 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
     // Called when the number of items on a page changes.
     // pageItemCount: New number of items per page.
     pagebase.prototype.setPageItemCount = function setPageItemCount(pageItemCount) {
-        if (pageItemCount !== this.pageItemCount) {
+        if (this.pageItemCount !== pageItemCount) {
             this.pageItemCount = Math.max(pageItemCount, 1);
             this.rebuildDom();
         }
@@ -113,8 +113,10 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
     // Called when the visibility of options changes.
     // showOptions: True if options are now visible; false otherwise.
     pagebase.prototype.setShowOptions = function setShowOptions(showOptions) {
-        this.showOptions = showOptions;
-        this.rebuildDom();
+        if (this.showOptions !== showOptions) {
+            this.showOptions = showOptions;
+            this.rebuildDom();
+        }
     };
 
     // Compare two different HTML nodes.

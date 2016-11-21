@@ -44,7 +44,7 @@ define(['jquery'], function Storage(jquery) {
         // scope: The angularjs scope where the value will be saved.
         // callback: A callback function to run when value has been retrieved.
         get: function get(key, defaultValue, scope) {
-            var val = (this.cache && this.cache[key]) ? this.cache[key] : defaultValue;
+            var val = (this.cache !== null && this.cache[key] !== null) ? this.cache[key] : defaultValue;
             if (scope) {
                 scope[key] = val;
             }

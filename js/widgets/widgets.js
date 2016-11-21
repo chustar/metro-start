@@ -1,4 +1,4 @@
-define(['widgets/weather', 'widgets/themes', 'widgets/font'], function(weather) {
+define(['widgets/weather', 'widgets/themes', 'widgets/font'], function() {
     var widgets = {
         data: Array.prototype.slice.call(arguments),
 

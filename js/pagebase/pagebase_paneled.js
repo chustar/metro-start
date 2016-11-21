@@ -4,7 +4,7 @@ define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, stor
        item: util.createElement('<div class="item"></div>')
     };
 
-    var pagebase_paneled = function pagebase_paneled() { }
+    var pagebase_paneled = function pagebase_paneled() { };
 
     pagebase_paneled.prototype = Object.create(pagebase.prototype);
 

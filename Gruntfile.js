@@ -7,14 +7,14 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
             all: [
-                "js/*.js"
+                "js/**/*.js"
             ]
         },
         jasmine: {
             all : {
                 options : {
-                    specs : 'spec/*.spec.js',
-                    helpers: 'spec_helper.js',
+                    specs : 'spec/**/*.spec.js',
+                    helpers: 'spec/spec_helper.js',
                     template: require('grunt-template-jasmine-requirejs'),
                     templateOptions: {
                         requireConfig: {

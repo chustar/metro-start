@@ -7,8 +7,6 @@ define(['domReady!', 'jquery', 'utils/util', 'utils/storage', 'utils/defaults', 
         currentTheme: {},
 
         init: function() {
-            // this.data = storage.get('themes');
-
             this.currentTheme = storage.get('currentTheme', defaults.defaultTheme);
 
             this.elems.picker = document.getElementById('picker');

@@ -9,15 +9,12 @@
   "main": "start.html",
   "private": true,
   "dependencies": {
-    "requirejs": "~2.1.11",
-    "requirejs-domready": "~2.0.1",
+    "requirejs": "*",
+    "requirejs-domready": "*",
 
-    "jquery": "~2.1.1",
-    "jquery-ui": "~1.10.4",
-    "jquery-migrate": "~1.2.1",
-
+    "jquery": "*",
+    "jquery-ui": "*",
     "jss": "*",
-    "farbtastic": "~2.0.0-alpha.1",
     "metro-select": "*"
   }
 }
