@@ -1,4 +1,4 @@
-define([ 'jquery', 'pagebase/pagebase_grouped', 'utils/util', 'utils/storage', 'utils/defaults'],
+define([ 'jquery', '../pagebase/pagebase_grouped', '../utils/util', '../utils/storage', '../utils/defaults'],
 function(jquery, pagebase_grouped, util, storage, defaults) {
     var themes = {
         name: 'themes',
@@ -127,9 +127,9 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 //                 this.bookmarks.truncatePages(currentPage.replace('bookmarks_', ''));
 //                 this.bookmarks.addAll(bookmark.children);
 //                 event.preventDefault();
-//                 _gaq.push(['_trackEvent', 'Bookmarks', 'Click Bookmark Folder']);
+//                 
 //             }
-//             _gaq.push(['_trackEvent', 'Bookmarks', 'Click Bookmarked Page']);
+//             
 //         },
 //
 //         removeBookmark: function(bookmark, page, index) {
@@ -138,7 +138,7 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 //                     $scope.bookmarks[page].splice(index, 1);
 //                 });
 //             });
-//             _gaq.push(['_trackEvent', 'Bookmarks', 'Remove Bookmarked']);
+//             
 //         },
 //
 //         setShowOptions: function setShowOptions(showOptions) {
@@ -228,7 +228,7 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 //
 //             script.updateStyle(true);
 //
-//             _gaq.push(['_trackEvent', 'Theme', 'Reset Theme']);
+//             
 //         },
 //
 //         /**
@@ -240,7 +240,7 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 //
 //             script.updateStyle(true);
 //
-//             _gaq.push(['_trackEvent', 'Theme', 'Change Theme', newTheme.title]);
+//             
 //         },
 //
 //         /**
@@ -252,9 +252,9 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 //
 //             script.updateStyle(true);
 //             if (newFont === 0) {
-//                 _gaq.push(['_trackEvent', 'Theme', 'Change Font', 'Segoe/Helvetica']);
+//                 
 //             } else {
-//                 _gaq.push(['_trackEvent', 'Theme', 'Change Font', 'Raleway']);
+//                 
 //             }
 //         },
 //
@@ -270,7 +270,7 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 //                 '&titlecolor=' + encodeURIComponent(theme.colors['title-color']) +
 //                 '&backgroundcolor=' + encodeURIComponent(theme.colors['background-color']);
 //             window.open(url);
-//             _gaq.push(['_trackEvent', 'Theme', 'Share Theme']);
+//             
 //         },
 //
 //         /**
@@ -281,7 +281,7 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 //         removeTheme: function(page, index) {
 //             $scope.localThemes.remove(page, index);
 //             storage.save('localThemes', $scope.localThemes.flatten());
-//             _gaq.push(['_trackEvent', 'Theme', 'Remove Theme']);
+//             
 //         },
 //
 //         /**
@@ -298,9 +298,9 @@ function(jquery, pagebase_grouped, util, storage, defaults) {
 //                     storage.save('localThemes', $scope.localThemes.flatten());
 //                 }
 //
-//                 _gaq.push(['_trackEvent', 'Theme', 'Stop Editing Theme']);
+//                 
 //             } else {
-//                 _gaq.push(['_trackEvent', 'Theme', 'Start Editing Theme']);
+//                 
 //             }
 //
 //             $scope.editThemeText = 'edit themesave theme'.replace($scope.editThemeText, '');

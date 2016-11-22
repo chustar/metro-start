@@ -1,4 +1,4 @@
-define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(pagebase_simple, storage, util) {
+define(['../pagebase/pagebase_simple','../utils/storage', '../utils/util'], function(pagebase_simple, storage, util) {
     var apps = {
         name: 'apps',
 
@@ -76,7 +76,7 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             chrome.management.uninstall(app.id, { showConfirmDialog: true}, function() {
                 that.loadApps();
             });
-            _gaq.push(['_trackEvent', 'Apps', 'Uninstall App']);
+            
         }
     };
 

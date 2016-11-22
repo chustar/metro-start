@@ -10,6 +10,9 @@
     "type": "git",
     "url": "https://github.com/metro-start/metro-start.git"
   },
+  "dependencies": {
+    "jss": "git+https://github.com/Box9/jss.git"
+  },
   "devDependencies": {
     "grunt": "*",
     "grunt-contrib-jasmine": "*",

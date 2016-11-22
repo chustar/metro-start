@@ -1,4 +1,4 @@
-define(['jquery', 'jss', 'utils/util', 'utils/storage', 'utils/defaults'], function(jquery, jss, util, storage, defaults) {
+define(['jquery', 'jss', './util', './storage', './defaults'], function(jquery, jss, util, storage, defaults) {
   var fonts = ['"Segoe UI", Helvetica, Arial, sans-serif', 'Raleway, "Segoe UI", Helvetica, Arial, sans-serif'];
 
   var script = {

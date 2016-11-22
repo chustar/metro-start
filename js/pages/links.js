@@ -1,4 +1,4 @@
-define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(pagebase_simple, storage, util) {
+define(['../pagebase/pagebase_simple','../utils/storage', '../utils/util'], function(pagebase_simple, storage, util) {
     var links = {
         name: 'links',
 
@@ -82,14 +82,14 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
                     this.linkToEdit.name = formatTitle(newUrlTitle);
                     this.linkToEdit.url = newUrl;
 
-                    _gaq.push(['_trackEvent', 'Links', 'Finished Editing Link']);
+                    
                 } else {
                     this.data.push({
                         'name': formatTitle(newUrlTitle),
                         'url': newUrl
                     });
 
-                    _gaq.push(['_trackEvent', 'Links', 'Add New Link']);
+                    
                 }
                 storage.save('links', this.data);
                 this.links.buildDom(this.data);
@@ -105,7 +105,7 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             this.linkToEdit = link;
             this.elems.newUrlTitle.value = link.name;
             this.elems.newUrl.value = link.url;
-            _gaq.push(['_trackEvent', 'Links', 'Start Editing Link']);
+            
         },
 
         // Removes a link from the app.
@@ -119,7 +119,7 @@ define(['pagebase/pagebase_simple','utils/storage', 'utils/util'], function(page
             }
             storage.save('links', this.data);
             this.links.buildDom(this.data);
-            _gaq.push(['_trackEvent', 'Links', 'Remove Link']);
+            
         }
     };
 

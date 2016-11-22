@@ -1,4 +1,4 @@
-define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, metroSelect) {
+define(['jquery', '../utils/util', '../utils/storage', 'metro-select'], function(jquery, util, storage, metroSelect) {
 
     var validPageBases = ['simple', 'grouped', 'paneled'];
 
@@ -20,7 +20,7 @@ define(['utils/util', 'utils/storage', 'metro-select'], function(util, storage, 
         this.page = 0;
 
         var that = this;
-        var selector = $('#' + this.name + '-chooser');
+        var selector = jquery('#' + this.name + '-chooser');
         selector.attr('selectedIndex', this.sort ? 1 : 0);
         selector.metroSelect({
             'onchange': this.sortChanged.bind(this)

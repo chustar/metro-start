@@ -1,4 +1,4 @@
-define(['domReady!', 'jquery', 'utils/util', 'utils/storage', 'utils/defaults', 'utils/script'], function(document, jquery, util, storage, defaults, script) {
+define(['detect-dom-ready', 'jquery', '../utils/util', '../utils/storage', '../utils/defaults', '../utils/script'], function(domready, jquery, util, storage, defaults, script) {
     var themes = {
         data: {},
 
@@ -7,6 +7,7 @@ define(['domReady!', 'jquery', 'utils/util', 'utils/storage', 'utils/defaults', 
         currentTheme: {},
 
         init: function() {
+          domready(function() {
             this.currentTheme = storage.get('currentTheme', defaults.defaultTheme);
 
             this.elems.picker = document.getElementById('picker');
@@ -41,6 +42,7 @@ define(['domReady!', 'jquery', 'utils/util', 'utils/storage', 'utils/defaults', 
 
             script.addColorChangedHandler(this.colorChangedHandler.bind(this));
             // this.elems.optionsColor.addEventListener('change', this.updateColor.bind(this, 'options-color'));
+          });
         },
 
         resetTheme: function() {

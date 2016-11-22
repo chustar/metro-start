@@ -1,4 +1,4 @@
-define(['jquery', 'jss', 'utils/storage', 'pages/links', 'pages/apps', 'pages/bookmarks', 'pages/themes'],
+define(['jquery', 'jss', '../utils/storage', './links', './apps', './bookmarks', './themes'],
 function Pages(jquery, jss, storage, links, apps, bookmarks, themes) {
   var pages = {
 

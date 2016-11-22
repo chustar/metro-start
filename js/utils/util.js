@@ -1,4 +1,4 @@
-define(['utils/defaults', 'utils/storage'], function Utils(defaults, storage) {
+define(['./defaults', './storage'], function Utils(defaults, storage) {
     var utils = {
       // Initialize this module.
         init: function(document) { },

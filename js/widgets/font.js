@@ -1,4 +1,4 @@
-define(['jquery', 'utils/script', 'utils/storage'], function(jquery, script, storage) {
+define(['jquery', '../utils/script', '../utils/storage'], function(jquery, script, storage) {
     var font = {
         init: function(document) {
             var selector = jquery('#font-chooser');
@@ -25,7 +25,7 @@ define(['jquery', 'utils/script', 'utils/storage'], function(jquery, script, sto
             }
             storage.save('currentFont', font);
             script.updateFont();
-            _gaq.push(['_trackEvent', 'Theme', 'Change Font', font]);
+            
         },
     };
 

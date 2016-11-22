@@ -1,4 +1,4 @@
-define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase_paneled, util) {
+define(['jss', '../pagebase/pagebase_paneled', '../utils/util'], function(jss, pagebase_paneled, util) {
     var bookmarks = {
         name: 'bookmarks',
 
@@ -78,9 +78,9 @@ define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase_paneled, u
                 this.bookmarks.truncatePages(currentPage.replace('bookmarks_', ''));
                 this.bookmarks.addAll(bookmark.children);
                 event.preventDefault();
-                _gaq.push(['_trackEvent', 'Bookmarks', 'Click Bookmark Folder']);
+                
             }
-            _gaq.push(['_trackEvent', 'Bookmarks', 'Click Bookmarked Page']);
+            
         },
 
         // Activiates a clicked bookmark folder.
@@ -101,7 +101,7 @@ define(['pagebase/pagebase_paneled', 'utils/util'], function(pagebase_paneled, u
             chrome.bookmarks.removeTree(bookmark.id, function() {
               bookmarkNode.remove();
             });
-            _gaq.push(['_trackEvent', 'Bookmarks', 'Remove Bookmarked']);
+            
         },
 
         // Sets the height of the bookmark module. This tells when to begin scrolling.

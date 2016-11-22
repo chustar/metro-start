@@ -1,4 +1,4 @@
-define(['utils/util', 'utils/storage', 'pagebase/pagebase'], function(util, storage, pagebase) {
+define(['../utils/util', '../utils/storage', './pagebase'], function(util, storage, pagebase) {
     var templates = {
        column: util.createElement('<div class="page"></div>'),
        item: util.createElement('<div class="item"></div>')

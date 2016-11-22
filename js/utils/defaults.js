@@ -1,7 +1,7 @@
 /**
 The default theme for metro start.
 */
-define([], function() {
+define(function() {
     return {
         // Initializes the defalt settings and theme for the app.
         init: function() {

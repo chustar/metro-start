@@ -1,9 +1,5 @@
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-25604585-1']);
-_gaq.push(['_trackPageview']);
-
-var modules = ['domReady!', 'jss', 'pages/pages', 'widgets/widgets', 'utils/defaults', 'utils/script', 'utils/storage', 'utils/util'];
-define(modules, function (document, jss, pages, widgets, defaults, script, storage, util) {
+define(['detect-dom-ready', './pages/pages', './widgets/widgets', './utils/defaults', './utils/script', './utils/storage', './utils/util'], 
+  function (domready, pages, widgets, defaults, script, storage, util) {
   'use strict';
 
   var that = this;
@@ -14,20 +10,20 @@ define(modules, function (document, jss, pages, widgets, defaults, script, stora
 
     showOptions: false,
 
-    modules: Array.prototype.slice.call(arguments, 2),
+    modules: Array.prototype.slice.call(arguments, 1),
 
     init: function() {
-      this.modules.forEach(function(module) {
-        module.init(document);
-      });
+          this.modules.forEach(function(module) {
+            module.init(document);
+          });
 
-      var that = this;
-      var wrench = document.getElementById('wrench');
-      wrench.addEventListener('click', function() {
-        that.clickWrench();
-      });
+          var that = this;
+          var wrench = document.getElementById('wrench');
+          wrench.addEventListener('click', function() {
+            that.clickWrench();
+          });
 
-      this.elems.hideRule = document.getElementById('hideRule');
+          this.elems.hideRule = document.getElementById('hideRule');
       // script.updateStyle(false);
       // $scope.updateWeather(false);
     },
@@ -53,7 +49,7 @@ define(modules, function (document, jss, pages, widgets, defaults, script, stora
           module.showOptionsChanged(that.showOptions);
         }
       });
-      _gaq.push(['_trackEvent', 'Page', 'Wrench']);
+      
     },
 
     setPageItemCount: function(pageItemCount) {
@@ -84,7 +80,7 @@ define(modules, function (document, jss, pages, widgets, defaults, script, stora
             }
           }
         }
-        _gaq.push(['_trackEvent', 'Page', 'Show Unsorted Items']);
+        
       }
       else if ($scope.sort[key] == 1) {
         if (key == 'themes') {
@@ -106,10 +102,20 @@ define(modules, function (document, jss, pages, widgets, defaults, script, stora
         } else {
           $scope[key].sort();
         }
-        _gaq.push(['_trackEvent', 'Page', 'Show Sorted Items']);
+        
       }
     }
   };
+
+  storage.init().done(function() {
+    if (!!document) {
+      app.init();
+    } else {
+      domready(function() {
+        app.init();
+      });
+    }
+  });
 
   return app;
 });
