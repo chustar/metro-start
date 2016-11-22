@@ -80,7 +80,6 @@ define(['detect-dom-ready', './pages/pages', './widgets/widgets', './utils/defau
               }
             }
           }
-
         } else if ($scope.sort[key] == 1) {
           if (key == 'themes') {
             $scope.localThemes.sort();

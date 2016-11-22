@@ -6,11 +6,11 @@ module.exports = {
         sourceMapFileName: 'bundle.map'
     },
 
-resolve: {
-    alias: {
-        jss: '../../node_modules/jss/jss.js'
-    }
-},
+    resolve: {
+        alias: {
+            jss: '../../node_modules/jss/jss.js'
+        }
+    },
 
     // Source map option. Eval provides a little less info, but is faster
     devtool: 'eval',

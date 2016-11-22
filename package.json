@@ -4,6 +4,7 @@
   "homepage": "http://www.metro-start.com/",
   "version": "1.0.0",
   "scripts": {
+    "build": "grunt build",
     "test": "grunt test"
   },
   "repository": {
@@ -11,15 +12,19 @@
     "url": "https://github.com/metro-start/metro-start.git"
   },
   "dependencies": {
+    "jquery": "*",
+    "jquery-ui": "*",
+    "metro-select": "*",
+    "grunt-webpack": "*",
+    "requirejs": "*",
+    "requirejs-domready": "*",
     "jss": "git+https://github.com/Box9/jss.git"
   },
   "devDependencies": {
     "grunt": "*",
-    "grunt-contrib-jasmine": "*",
-    "grunt-contrib-jshint": "*",
-    "grunt-contrib-watch": "^*",
     "grunt-notify": "*",
-    "grunt-template-jasmine-requirejs": "*",
-    "jasmine": "^2.5.2"
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-watch": "*",
+    "webpack-dev-server": "*"
   }
 }
