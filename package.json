@@ -19,7 +19,7 @@
     "jss": "git+https://github.com/Box9/jss.git"
   },
   "devDependencies": {
-    "grunt": "*",
+    "grunt-cli": "*",
     "webpack": "*",
     "grunt-webpack": "*",
     "grunt-notify": "*",
