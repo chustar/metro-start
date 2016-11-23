@@ -2,19 +2,29 @@
   "name": "metro-start",
   "description": "A new start screen for Google Chrome, inspired by the Windows Phone Modern UI and its 'Glance and Go' philosophy",
   "homepage": "http://www.metro-start.com/",
+  "version": "1.0.0",
   "scripts": {
+    "build": "grunt build",
     "test": "grunt test"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/metro-start/metro-start.git"
   },
+  "dependencies": {
+    "jquery": "*",
+    "jquery-ui": "*",
+    "metro-select": "*",
+    "grunt-webpack": "*",
+    "requirejs": "*",
+    "requirejs-domready": "*",
+    "jss": "git+https://github.com/Box9/jss.git"
+  },
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-notify": "~0.3.0",
-    "grunt-contrib-jshint": "~0.6.0",
-    "grunt-contrib-jasmine": "^0.5.3",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-template-jasmine-requirejs": "^0.1.10"
+    "grunt": "*",
+    "grunt-notify": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-watch": "*",
+    "webpack-dev-server": "*"
   }
 }
