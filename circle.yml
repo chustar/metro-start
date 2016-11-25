@@ -1,3 +1,6 @@
 dependencies:
   override:
     - npm install --dev
+
+  post:
+    - npm run grunt_build
