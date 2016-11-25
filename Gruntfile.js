@@ -31,7 +31,11 @@ module.exports = function (grunt) {
                 module: {
                     loaders: [{
                         test: /\.html$/,
-                        loader: "mustache"
+                        loader: "file-loader?name=/dist/[name].[ext]"
+                    },
+                    {
+                        test: /\.(png)$/i, 
+                        loader: "file-loader?name=/dist/[name].[ext]"
                     }]
                 }
             }
@@ -60,6 +64,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
     grunt.registerTask('build', ['webpack']);
-    grunt.registerTask('test', ['jshint']);
+    grunt.registerTask('test', ['webpack', 'jshint']);
     grunt.registerTask('default', ['webpack', 'test']);
 };
