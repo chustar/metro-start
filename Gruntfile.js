@@ -1,5 +1,7 @@
 /* jshint node: true */
 
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 module.exports = function (grunt) {
     "use strict";
 
@@ -37,7 +39,16 @@ module.exports = function (grunt) {
                         test: /\.(png)$/i, 
                         loader: "file-loader?name=/dist/[name].[ext]"
                     }]
-                }
+                },
+
+                plugins: [
+                    new CopyWebpackPlugin([
+                        { from: 'css', to: 'css' },
+                        { from: 'icons', to: 'icons' },
+                        { from: 'manifest.json' },
+                        { from: 'start.html' }
+                    ])
+                ]
             }
         },
         jshint: {

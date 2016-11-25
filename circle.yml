@@ -1,6 +1,4 @@
 machine:
-  pre:
-    - mkdir ~/.yarn-cache
   node:
     version: stable
 dependencies:
