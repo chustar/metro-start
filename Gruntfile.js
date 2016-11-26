@@ -30,16 +30,6 @@ module.exports = function (grunt) {
                 // Source map option. Eval provides a little less info, but is faster
                 devtool: 'eval',
                 // Our loader configuration
-                module: {
-                    loaders: [{
-                        test: /\.html$/,
-                        loader: "file-loader?name=/dist/[name].[ext]"
-                    },
-                    {
-                        test: /\.(png)$/i, 
-                        loader: "file-loader?name=/dist/[name].[ext]"
-                    }]
-                },
 
                 plugins: [
                     new CopyWebpackPlugin([
