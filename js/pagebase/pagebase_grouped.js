@@ -22,16 +22,18 @@ define(['../utils/util', '../utils/storage', './pagebase'], function(util, stora
         group.heading = rows.heading;
         group.nodes = [];
 
-        for (var i = 0; i < rows.themes.length; i++) {
-          if (rows.themes[i] !== null) {
-            var item = templates.item.cloneNode(true);
-            item.id = this.name + '_' + i;
-            item.firstElementChild.id = this.name + '_' + i;
-            item.firstElementChild.appendChild(this.templateFunc(rows.themes[i], this.currentPage));
-            group.nodes.push(item);
-          }
+        if (!!rows && !!rows.themes) {
+                for (var i = 0; i < rows.themes.length; i++) {
+                if (rows.themes[i] !== null) {
+                    var item = templates.item.cloneNode(true);
+                    item.id = this.name + '_' + i;
+                    item.firstElementChild.id = this.name + '_' + i;
+                    item.firstElementChild.appendChild(this.templateFunc(rows.themes[i], this.currentPage));
+                    group.nodes.push(item);
+                }
+                }
+                this.addAllNodes(group);
         }
-        this.addAllNodes(group);
     };
 
     // Adds all the given HTML nodes to the DOM as a series of groups.

@@ -8,31 +8,34 @@ define(['jquery', '../utils/util', '../utils/storage'], function(jquery, util, s
 
         init: function(document) {
             this.data = storage.get('weather');
-            this.data.visible = !!this.data.visible;
-            var that = this;
-            this.nodes.forEach(function(name) {
-                that.elems[name] = document.getElementById(name);
-                that.elems[name].innerText = that.data[name];
-            });
+            if (!!this.data) {
+                this.data.visible = !!this.data.visible;
+                var that = this;
+                this.nodes.forEach(function(name) {
+                    that.elems[name] = document.getElementById(name);
+                    that.elems[name].innerText = that.data[name];
+                });
 
-            this.elems.weather = document.getElementById('weather');
-            this.elems.toggleWeather = document.getElementById('toggleWeather');
-            if (this.data.visible) {
-                this.showWeather();
-            } else {
-                this.hideWeather();
+                this.elems.weather = document.getElementById('weather');
+                this.elems.toggleWeather = document.getElementById('toggleWeather');
+
+                if (this.data.visible) {
+                    this.showWeather();
+                } else {
+                    this.hideWeather();
+                }
+
+                this.elems.toggleWeather.addEventListener('click', this.toggleWeather.bind(this));
+                document.getElementById('saveLocation').addEventListener('submit', saveLocation);
+
+                var chooser = jquery('#weather-unit-chooser');
+                chooser.attr('selectedIndex', this.unit === 'fahrenheit' ? 0 : 1);
+                chooser.metroSelect({
+                    'onchange': this.changeWeatherUnit.bind(this)
+                });
+
+                this.updateWeather(false);
             }
-
-            this.elems.toggleWeather.addEventListener('click', this.toggleWeather.bind(this));
-            document.getElementById('saveLocation').addEventListener('submit', saveLocation);
-
-            var chooser = jquery('#weather-unit-chooser');
-            chooser.attr('selectedIndex', this.unit === 'fahrenheit' ? 0 : 1);
-            chooser.metroSelect({
-                'onchange': this.changeWeatherUnit.bind(this)
-            });
-
-            this.updateWeather(false);
         },
 
         toggleWeather: function() {

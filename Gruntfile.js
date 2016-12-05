@@ -1,6 +1,7 @@
 /* jshint node: true */
 
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = function (grunt) {
     "use strict";
@@ -28,17 +29,26 @@ module.exports = function (grunt) {
                 },
 
                 // Source map option. Eval provides a little less info, but is faster
-                devtool: 'eval',
                 // Our loader configuration
+                loaders: [
+                    { test: /\.pug$/, loader: 'pug-static' }
+                ],
+
+                pug: {
+                    pretty: false,
+                },
 
                 plugins: [
                     new CopyWebpackPlugin([
                         { from: 'css', to: 'css' },
                         { from: 'icons', to: 'icons' },
                         { from: 'manifest.json' },
-                        { from: 'start.html' }
-                    ])
-                ]
+                    ]),
+
+                    new HtmlWebpackPlugin({
+                        filename: 'start.html',
+                        template: 'pug-static!start.pug'
+                    })]
             }
         },
         jshint: {
