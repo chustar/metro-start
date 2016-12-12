@@ -119,10 +119,12 @@ define(['jquery', '../utils/util', '../utils/storage'], function(jquery, util, s
         },
 
         rebuildDom: function() {
-            var that = this;
-            this.nodes.forEach(function(node) {
-                that.elems[node].innerText = that.data[node];
-            });
+            this.elems.city.innerText = this.data.city;
+            this.elems.currentTemp.innerText = this.data.currentTemp;
+            this.elems.highTemp.innerText = this.data.highTemp;
+            this.elems.lowTemp.innerText = this.data.lowTemp;
+            this.elems.condition.innerText = this.data.condition;
+            this.elems.unit.innerText = this.data.unit;
         },
 
         update: function(key, value) {

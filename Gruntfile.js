@@ -11,6 +11,7 @@ module.exports = function (grunt) {
         webpack: {
             all: {
                 entry: './js/app.js',
+                devtool: 'sourcemap',
                 output: {
                     filename: 'bundle.js',
                     path: './dist',
@@ -27,7 +28,6 @@ module.exports = function (grunt) {
                         jss: '../../node_modules/jss/jss.js'
                     }
                 },
-
                 plugins: [
                     new CopyWebpackPlugin([
                         { from: 'css', to: 'css' },
@@ -46,6 +46,8 @@ module.exports = function (grunt) {
             scripts: {
                 files: [
                     'js/**/*.js',
+                    'start.html',
+                    'css/*.css'
                 ],
                 tasks: ['test'],
                 options: {

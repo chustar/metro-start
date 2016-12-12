@@ -25,7 +25,7 @@ define(['detect-dom-ready', './pages/pages', './widgets/widgets', './utils/defau
 
         this.elems.hideRule = document.getElementById('hideRule');
         // widgets.weather.updateWeather(false);
-        // script.updateStyle(false);
+        // script.updateStyle(defaults.defaultTheme, false);
         // $scope.updateWeather(false);
       },
 
