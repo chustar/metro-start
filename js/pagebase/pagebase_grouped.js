@@ -11,7 +11,7 @@ define(['../utils/util', '../utils/storage', './pagebase'], function(util, stora
     pagebase_grouped.prototype = Object.create(pagebase.prototype);
 
     pagebase_grouped.prototype.rebuildDom = function () {
-      console.log("nope");
+      console.log("pagebase_grouped.rebuildDom was called.");
     };
 
     // Converts provided objects into HTML nodes, then adds them to the page.

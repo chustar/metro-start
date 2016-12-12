@@ -28,27 +28,13 @@ module.exports = function (grunt) {
                     }
                 },
 
-                // Source map option. Eval provides a little less info, but is faster
-                // Our loader configuration
-                loaders: [
-                    { test: /\.pug$/, loader: 'pug-static' }
-                ],
-
-                pug: {
-                    pretty: false,
-                },
-
                 plugins: [
                     new CopyWebpackPlugin([
                         { from: 'css', to: 'css' },
                         { from: 'icons', to: 'icons' },
                         { from: 'manifest.json' },
-                    ]),
-
-                    new HtmlWebpackPlugin({
-                        filename: 'start.html',
-                        template: 'pug-static!start.pug'
-                    })]
+                        { from: 'start.html' }
+                    ])]
             }
         },
         jshint: {

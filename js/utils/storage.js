@@ -4,7 +4,6 @@ define(['jquery'], function Storage(jquery) {
     // value: The value to be saved.
     var storage = {
         cache: undefined,
-
         deferred: undefined,
 
         // Initializes the module.
