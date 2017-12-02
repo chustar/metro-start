@@ -12,7 +12,7 @@ module.exports = function (grunt) {
         haml: {                              // Task 
             dist: {                            // Target 
                 files: {                         // Dictionary of files 
-                    'dist/start.html': 'start.haml'       // 'destination': 'source' 
+                    'dist/start.html': 'haml/start.haml'       // 'destination': 'source' 
                 }
             },
         },
