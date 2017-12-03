@@ -18,6 +18,7 @@ define(['jquery', '../utils/util', '../utils/storage'], function(jquery, util, s
         
         init: function(document) {
             this.data = storage.get('weather');
+
             if (!!this.data) {
                 this.elems.city.innerText = this.data.city;
                 this.elems.currentTemp.innerText = this.data.currentTemp;
@@ -80,8 +81,11 @@ define(['jquery', '../utils/util', '../utils/storage'], function(jquery, util, s
          * Sets the visibility of the weather panel.
          */
         setWeatherVisibility: function(visible) {
-            util.removeClass(this.elems.weather, visible ? 'hide' : 'show');
-            util.addClass(this.elems.weather, visible ? 'show' : 'hide');
+            if (visible) {
+                util.removeClass(this.elems.weather, 'hide');
+            } else {
+                util.addClass(this.elems.weather, 'hide');
+            }
 
             this.elems.toggleWeather.innerText = visible ? 'hide weather' : 'show weather';
             this.update('visible', visible);
@@ -127,7 +131,7 @@ define(['jquery', '../utils/util', '../utils/storage'], function(jquery, util, s
         },
 
         update: function(key, value) {
-            if (!!key && !!value) {
+            if (!!key) {
                 this.data[key] = value;
             }
             storage.save('weather', this.data);
