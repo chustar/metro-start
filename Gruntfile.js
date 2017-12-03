@@ -75,7 +75,7 @@ module.exports = function (grunt) {
                 files: [
 					'js/**/*.js',
 					'css/*.css',
-                    'start.haml',
+                    'haml/start.haml',
                 ],
                 tasks: ['test'],
                 options: {

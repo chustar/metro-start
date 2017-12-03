@@ -257,16 +257,6 @@ define(['jquery', 'spectrum-colorpicker', 'throttle-debounce', '../utils/modal',
                 script.updateTheme(this.data, true);
             },
 
-            automaticPalette: function () {
-                if (this.data['palette-chooser'] === 'automatic') {
-                    var baseColor = tinycolor(this.data.baseColor);
-                    this.data.backgroundColor = baseColor.toHexString();
-                    this.data.mainColor = this.getReadable(tinycolor(this.data.baseColor));
-                    this.data.optionsColor = this.getReadable(tinycolor(this.data.baseColor).spin(45));
-                    this.data.titleColor = this.getReadable(tinycolor(this.data.baseColor).spin(120));
-                }
-            },
-
             /**
              * Updates the values provided in storage and then updates the theme.
              * 
@@ -289,31 +279,48 @@ define(['jquery', 'spectrum-colorpicker', 'throttle-debounce', '../utils/modal',
                 this.resetInputs();
             },
 
+            automaticPalette: function () {
+                if (this.data['palette-chooser'] === 'automatic') {
+                    var baseColor = tinycolor(this.data.baseColor);
+                    this.data.backgroundColor = baseColor.toHexString();
+                    this.data.titleColor = this.getReadable(tinycolor(this.data.baseColor), -1.6);
+                    this.data.mainColor = this.getReadable(tinycolor(this.data.baseColor), 1.8);
+                    this.data.optionsColor = this.getReadable(tinycolor(this.data.baseColor), 1.25);
+                }
+            },
+
             // TODO: Does undo still make sense?
             undoChanges: function () {
                 var previousTheme = storage.get('previousTheme', this.data);
                 script.updateTheme(previousTheme, true);
             },
 
-            getReadable: function (color) {
+            /**
+             * Generates a palette of colors and then returns the most readable.
+             * 
+             * @param {any} color The color to base the palette on.
+             * @param {any} multiplier A value to scale the spin by to add some variance.
+             * @returns The most readable color.
+             */
+            getReadable: function (color, multiplier) {
                 return tinycolor.mostReadable(color, 
                 [
                     // My reckons for good color stops :shrug:
-                    tinycolor(color.toHexString()).spin(38),
-                    tinycolor(color.toHexString()).spin(100),
-                    tinycolor(color.toHexString()).spin(190),
-                    tinycolor(color.toHexString()).spin(242),
-                    tinycolor(color.toHexString()).spin(303),
-                    tinycolor(color.toHexString()).spin(38).darken(25),
-                    tinycolor(color.toHexString()).spin(100).darken(25),
-                    tinycolor(color.toHexString()).spin(190).darken(25),
-                    tinycolor(color.toHexString()).spin(242).darken(25),
-                    tinycolor(color.toHexString()).spin(303).darken(25),
-                    tinycolor(color.toHexString()).spin(38).brighten(25),
-                    tinycolor(color.toHexString()).spin(100).brighten(25),
-                    tinycolor(color.toHexString()).spin(190).brighten(25),
-                    tinycolor(color.toHexString()).spin(242).brighten(25),
-                    tinycolor(color.toHexString()).spin(303).brighten(25),
+                    tinycolor(color.toHexString()).spin(multiplier * 38),
+                    tinycolor(color.toHexString()).spin(multiplier * 100),
+                    tinycolor(color.toHexString()).spin(multiplier * 190),
+                    tinycolor(color.toHexString()).spin(multiplier * 242),
+                    tinycolor(color.toHexString()).spin(multiplier * 303),
+                    tinycolor(color.toHexString()).spin(multiplier * 38).darken(25),
+                    tinycolor(color.toHexString()).spin(multiplier * 100).darken(25),
+                    tinycolor(color.toHexString()).spin(multiplier * 190).darken(25),
+                    tinycolor(color.toHexString()).spin(multiplier * 242).darken(25),
+                    tinycolor(color.toHexString()).spin(multiplier * 303).darken(25),
+                    tinycolor(color.toHexString()).spin(multiplier * 38).brighten(25),
+                    tinycolor(color.toHexString()).spin(multiplier * 100).brighten(25),
+                    tinycolor(color.toHexString()).spin(multiplier * 190).brighten(25),
+                    tinycolor(color.toHexString()).spin(multiplier * 242).brighten(25),
+                    tinycolor(color.toHexString()).spin(multiplier * 303).brighten(25),
                 ],
                 { includeFallbackColors: false }).toHexString();
             }

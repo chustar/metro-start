@@ -100,42 +100,42 @@
     #themeEditor
       %h3.title-color theme editor
       .picker
-        .theme-section.options-color font options
-        .theme-editor-section
-          %select#font-chooser.chooser.font-chooser
+        .theme-section font options
+        .theme-editor-section.options-color
+          %select#font-chooser.chooser
             %option.clickable{:value => "0"} normal fonts
             %option.clickable{:value => "1"} thin fonts
 
-        .theme-section.options-color color options
-        .palette
+        .theme-section color palette options
+        .palette.options-color
           %select#palette-chooser.chooser
             %option.clickable automatic
             %option.clickable custom
 
         .theme-editor-section
           #automatic.section.palette-section
-            .theme-section.options-color automatic palette options
+            .theme-section automatic options
             %div
-              %span.picker-text base
+              %span.small-text base
               %input#baseColor{:size => "9", :type => "text"}/
 
           #custom.section.palette-section
-            .theme-section.options-color custom palette options
+            .theme-section custom options
             %div
-              %span.picker-text title
+              %span.small-text title
               %input#titleColor{:size => "9", :type => "text"}/
             %div
-              %span.picker-text main
+              %span.small-text main
               %input#mainColor{:size => "9", :type => "text"}/
             %div
-              %span.picker-text options
+              %span.small-text options
               %input#optionsColor{:size => "9", :type => "text"}/
             %div
-              %span.picker-text background
+              %span.small-text background
               %input#backgroundColor{:size => "9", :type => "text"}/
 
-        .theme-section.options-color background options
-        .background
+        .theme-section background options
+        .background.options-color
           %select#background-chooser.chooser.theme-editor-section
             %option.clickable{:value => "0"} trianglify
             %option.clickable{:value => "1"} none
@@ -143,14 +143,14 @@
         .theme-editor-section
           #none.section.background-section
           #trianglify.section.background-section
-            .theme-section.options-color trianglify options
+            .theme-section trianglify options
             %table.metro-table
               %tbody
                 %tr
                   %td
-                    %span.tri-small-text style
+                    %span.small-text style
                   %td
-                    .tristyle-section
+                    .tristyle-section.options-color
                       %select#tristyle-chooser.chooser
                         %option.clickable Neighbors
                         %option.clickable Triad
@@ -160,33 +160,33 @@
                         %option.clickable Split Complements
                 %tr
                   %td
-                    %span.tri-small-text size
+                    %span.small-text size
                   %td
-                    .trisize-section
+                    .trisize-section.options-color
                       %select#trisize-chooser.chooser
                         %option.clickable{:value => "10"} small
                         %option.clickable{:value => "70"} medium
                         %option.clickable{:value => "125"} large
                 %tr
                   %td
-                    %span.tri-small-text variance
+                    %span.small-text variance
                   %td
-                    .trivariance-section
+                    .trivariance-section.options-color
                       %select#trivariance-chooser.chooser
                         %option.clickable{:value => "0"} uniform
                         %option.clickable{:value => "0.75"} freeform
-        .theme-section.options-color.options-color author info
+        .theme-section author info
         .theme-editor-section.section
           %table.metro-table
             %tbody
               %tr
                 %td
-                  %span.tri-small-text title
+                  %span.small-text title
                 %td
                   %input#title{:placeholder => "title", :size => "20", :type => "text"}/
               %tr
                 %td
-                  %span.tri-small-text author
+                  %span.small-text author
                 %td
                   %input#author{:placeholder => "author", :size => "20", :type => "text"}/
     /
