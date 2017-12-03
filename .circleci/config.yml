@@ -11,6 +11,9 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
+          name: Install haml
+          command: gem install haml
+      - run:
           name: Install packages
           command: npm install
       - run:
