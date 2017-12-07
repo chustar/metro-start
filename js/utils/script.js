@@ -1,5 +1,5 @@
-define(['jquery', 'jquery-color', 'jss', 'trianglify', './util', './storage', './defaults'],
-  function (jquery, jqueryColor, jss, trianglify, util, storage, defaults) {
+define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './defaults'],
+  function (jquery, tinycolor, jss, trianglify, util, storage, defaults) {
     var fonts = {
       'normal fonts': '"Segoe UI", Helvetica, Arial, sans-serif',
       'thin fonts': 'Raleway, "Segoe UI", Helvetica, Arial, sans-serif'
@@ -89,15 +89,25 @@ define(['jquery', 'jquery-color', 'jss', 'trianglify', './util', './storage', '.
         });
       },
 
+      /**
+       * Updates the current background.
+       * @param {any} data What to change the background to.
+       */
       updateBackground: function (data) {
         var jBody = jquery('body');
         if (data['background-chooser'] === 'trianglify') {
           var xColors = [data.backgroundColor];
+          var yColors = null;
 
+          // Convert variance from my option to actual values.
           var triVariance = 0.75;
           switch (data['trivariance-chooser'].toLowerCase()) {
             case 'uniform':
               triVariance = 0;
+              break;
+            
+            case 'bent':
+              triVariance = 0.375;
               break;
 
             case 'freeform':
@@ -129,16 +139,43 @@ define(['jquery', 'jquery-color', 'jss', 'trianglify', './util', './storage', '.
           }
 
           switch (data['tristyle-chooser'].toLowerCase()) {
-            case 'neighbors':
-              var hsl = tinycolor(data.backgroundColor).toHsl();
+            case 'dark woods':
               xColors = [
-                data.backgroundColor,
-                tinycolor({ h: hsl.h + 90 % 360, s: hsl.s, l: hsl.l }).toHexString(),
-                tinycolor({ h: hsl.h + 180 % 360, s: hsl.s, l: hsl.l }).toHexString(),
-                tinycolor({ h: hsl.h + 270 % 360, s: hsl.s, l: hsl.l }).toHexString()
+                tinycolor.mix(data.backgroundColor, 'green', 100).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'green', 85).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'green', 25).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'green', 50).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'green', 25).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'green', 85).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'green', 100).toHexString()
               ];
               break;
-
+            case 'bright skies':
+              xColors = [
+                tinycolor.mix(data.backgroundColor, 'red', 100).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'red', 64).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'red', 8).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'red', 64).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'red', 100).toHexString()
+              ];
+              yColors = [
+                tinycolor.mix(data.backgroundColor, 'blue', 100).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'blue', 85).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'blue', 64).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'blue', 8).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'blue', 4).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'blue', 2).toHexString()
+              ];
+              break;
+            case 'engulfed in flames':
+              xColors = [
+                tinycolor.mix(data.backgroundColor, 'red', 100).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'red', 64).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'red', 8).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'red', 64).toHexString(),
+                tinycolor.mix(data.backgroundColor, 'red', 100).toHexString()
+              ];
+              break;
             case 'triad':
               xColors = tinycolor(data.backgroundColor).triad().map(v => v.toHexString());
               break;
@@ -159,14 +196,19 @@ define(['jquery', 'jquery-color', 'jss', 'trianglify', './util', './storage', '.
               break;
           }
 
+          if (!yColors) {
+            yColors = xColors;
+          }
+
           console.log(xColors);
+          console.log(yColors);
 
           var bodyPattern = trianglify({
             width: jBody.prop('scrollWidth'),
             height: jBody.prop('scrollHeight'),
             variance: triVariance,
             cell_size: triSize,
-            x_colors: xColors
+            x_colors: xColors,
           });
 
           var modalPattern = trianglify({
@@ -174,7 +216,7 @@ define(['jquery', 'jquery-color', 'jss', 'trianglify', './util', './storage', '.
             height: jBody.prop('scrollHeight') * 0.85,
             variance: triVariance,
             cell_size: triSize,
-            x_colors: xColors
+            x_colors: xColors,
           });
 
           jss.set('body', {
