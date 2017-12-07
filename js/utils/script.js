@@ -157,9 +157,6 @@ define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './d
             case 'monochromatic':
               xColors = tinycolor(data.backgroundColor).monochromatic().map(v => v.toHexString());
               break;
-            case 'analogous':
-              xColors = tinycolor(data.backgroundColor).analogous().map(v => v.toHexString());
-              break;
             case 'split complements':
               xColors = tinycolor(data.backgroundColor).splitcomplement().map(v => v.toHexString());
               break;

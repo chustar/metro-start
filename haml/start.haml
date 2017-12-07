@@ -16,6 +16,7 @@
         %option.clickable.apps-option apps
         %option.clickable.bookmarks-option bookmarks
         %option.clickable.themes-option themes
+
     .external
       .internal
         .todos.collection
@@ -31,6 +32,7 @@
             %form#addTodo.add.option
               %input#newTodo.option{:name => "newTodo", :placeholder => "new todo", :size => "26", :type => "text"}/
               %input.options-color.option{:type => "submit", :value => "save"}/
+
         .sessions.collection
           #sessions
             .options-color.option.sort
@@ -41,6 +43,7 @@
                   sorted
             #external_selector_sessions.external_selector
               #internal_selector_sessions.internal_selector
+
         .apps.collection
           #apps
             .options-color.option.sort
@@ -51,6 +54,7 @@
                   sorted
             #external_selector_apps.external_selector
               #internal_selector_apps.internal_selector
+
         .bookmarks.collection
           #bookmarks
             .options-color.option.sort
@@ -61,6 +65,7 @@
                   sorted
             #external_selector_bookmarks.external_selector
               #internal_selector_bookmarks.internal_selector
+
         .themes.collection
           #themes
             .options-color.option.sort
@@ -71,6 +76,7 @@
                   sorted
             #external_selector_themes.external_selector
               #internal_selector_themes.internal_selector
+
     .weather
       #toggleWeather.options-color.option.clickable
       #weather.hide
@@ -94,6 +100,7 @@
           %span#lowTemp
           %span.options-color lo
         %p#condition
+
     .footer
       %p#wrench.options-color.wrench.clickable wrench
       %p#editThemeButton.option.options-color.clickable.theme-button edit theme
@@ -155,9 +162,9 @@
                         %option.clickable Triad
                         %option.clickable Tetrad
                         %option.clickable Monochromatic
-                        %option.clickable Analogous
                         %option.clickable Split Complements
                         %option.clickable Engulfed in Flames
+
                 %tr
                   %td
                     %span.small-text size
@@ -167,6 +174,7 @@
                         %option.clickable{:value => "10"} small
                         %option.clickable{:value => "70"} medium
                         %option.clickable{:value => "125"} large
+
                 %tr
                   %td
                     %span.small-text variance
@@ -176,6 +184,7 @@
                         %option.clickable{:value => "0"} uniform
                         %option.clickable{:value => "0.375"} bent
                         %option.clickable{:value => "0.75"} freeform
+
         .theme-section author info
         .theme-editor-section.section
           %table.metro-table
