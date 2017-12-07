@@ -153,10 +153,8 @@
                     .tristyle-section.options-color
                       %select#tristyle-chooser.chooser
                         %option.clickable Triad
-                        %option.clickable Dark Woods
                         %option.clickable Tetrad
                         %option.clickable Monochromatic
-                        %option.clickable Bright Skies
                         %option.clickable Analogous
                         %option.clickable Split Complements
                         %option.clickable Engulfed in Flames
@@ -196,18 +194,17 @@
       Rule to hide all options when page first loads.
       Removes option elements added after the calls to hide .option were made.
     %style#hideRule{:type => "text/css"}
-      :cdata
-        \.option {
-        display: none;
-        }
+      \.option {
+      display: none;
+      }
 
-        \/* Remove extra space that was added for sorting. */
-        \.external_selector {
-        height: 100%;
-        }
-        
-        \#external_selector_todos {
-        height: 100%;
-        }
+      \/* Remove extra space that was added for sorting. */
+      \.external_selector {
+      height: 100%;
+      }
+      
+      \#external_selector_todos {
+      height: 100%;
+      }
 
     %script{:src => "metro-start.js"}

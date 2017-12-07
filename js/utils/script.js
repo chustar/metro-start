@@ -139,34 +139,6 @@ define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './d
           }
 
           switch (data['tristyle-chooser'].toLowerCase()) {
-            case 'dark woods':
-              xColors = [
-                tinycolor.mix(data.backgroundColor, 'green', 100).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'green', 85).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'green', 25).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'green', 50).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'green', 25).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'green', 85).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'green', 100).toHexString()
-              ];
-              break;
-            case 'bright skies':
-              xColors = [
-                tinycolor.mix(data.backgroundColor, 'red', 100).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'red', 64).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'red', 8).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'red', 64).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'red', 100).toHexString()
-              ];
-              yColors = [
-                tinycolor.mix(data.backgroundColor, 'blue', 100).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'blue', 85).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'blue', 64).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'blue', 8).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'blue', 4).toHexString(),
-                tinycolor.mix(data.backgroundColor, 'blue', 2).toHexString()
-              ];
-              break;
             case 'engulfed in flames':
               xColors = [
                 tinycolor.mix(data.backgroundColor, 'red', 100).toHexString(),
@@ -201,14 +173,13 @@ define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './d
           }
 
           console.log(xColors);
-          console.log(yColors);
 
           var bodyPattern = trianglify({
             width: jBody.prop('scrollWidth'),
             height: jBody.prop('scrollHeight'),
             variance: triVariance,
             cell_size: triSize,
-            x_colors: xColors,
+            x_colors: xColors
           });
 
           var modalPattern = trianglify({
@@ -216,7 +187,7 @@ define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './d
             height: jBody.prop('scrollHeight') * 0.85,
             variance: triVariance,
             cell_size: triSize,
-            x_colors: xColors,
+            x_colors: xColors
           });
 
           jss.set('body', {
