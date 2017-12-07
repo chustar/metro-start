@@ -105,29 +105,32 @@ h3 {
 	transition: all .2s linear;
 	width: 500%;
 }
-
-.collection {
-	height: 100%;
-	width: 20%;
-	float: left;
-}
-
-.collection>div {
-	height: 100%;
-}
-
 .external_selector {
 	overflow: auto;
 	width: 100%;
 	height: calc(100% - 42px);
 }
-
 .internal_selector {
 	height: 100%;
 	white-space: nowrap;
 	margin-left: 50px;
 }
+.collection {
+	height: 100%;
+	width: 20%;
+	float: left;
+}
+.collection > div {
+	height: 100%;
+}
 
+/* Pagebase */
+.pagebase > .group {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
 .page {
 	display: inline-block;
 	vertical-align: top;
@@ -149,13 +152,6 @@ h3 {
 	padding: 5px;
 }
 
-/* Pagebase */
-.pagebase>.group {
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
-}
 /* Grouped Pagebase */
 .pagebase-grouped {
 	display: flex;
