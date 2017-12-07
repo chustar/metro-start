@@ -1,17 +1,13 @@
 define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './defaults'],
   function (jquery, tinycolor, jss, trianglify, util, storage, defaults) {
-    var fonts = {
-      'normal fonts': '"Segoe UI", Helvetica, Arial, sans-serif',
-      'thin fonts': 'Raleway, "Segoe UI", Helvetica, Arial, sans-serif'
-    };
-
     var script = {
       init: function () { },
 
       /**
-      Changes the style to whatever is in the scope.
-      theme: The new theme to change to.
-      transition: A bool indicating whether to slowly transition or immediately change.
+      * Changes the style to whatever is in the scope.
+      *
+      * @param {any} data: The new theme to change to.
+      * @param {any} transition: A bool indicating whether to slowly transition or immediately change.
       */
       updateTheme: function (data, transition) {
         var theme = util.upgradeTheme(data, defaults.defaultTheme);
@@ -91,7 +87,8 @@ define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './d
 
       /**
        * Updates the current background.
-       * @param {any} data What to change the background to.
+       * 
+       * @param {any} data Theme object with the new background settings.
        */
       updateBackground: function (data) {
         var jBody = jquery('body');
@@ -169,8 +166,6 @@ define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './d
             yColors = xColors;
           }
 
-          console.log(xColors);
-
           var bodyPattern = trianglify({
             width: jBody.prop('scrollWidth'),
             height: jBody.prop('scrollHeight'),
@@ -207,9 +202,26 @@ define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './d
         }
       },
 
-      updateFont: function (theme) {
+      /**
+       * Upates the currently selected font.
+       * 
+       * @param {any} data The theme object with the new font settings.
+       */
+      updateFont: function (data) {
+        var currentFont = 'sans-serif';
+
+        switch (data['font-chooser'].toLowerCase()) {
+          case 'normal fonts':
+          currentFont = '"Segoe UI", Helvetica, Arial, sans-serif';
+          break;
+
+          case 'thin fonts':
+          currentFont = 'Raleway, "Segoe UI", Helvetica, Arial, sans-serif';
+          break;
+        }
+
         jss.set('body', {
-          'font-family': fonts[theme['font-chooser']],
+          'font-family': currentFont,
         });
       },
     };

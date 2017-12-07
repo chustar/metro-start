@@ -106,7 +106,7 @@
       %p#editThemeButton.option.options-color.clickable.theme-button edit theme
     #themeEditor
       %h3.title-color theme editor
-      .picker
+      .theme-content
         .theme-section font options
         .theme-editor-section.options-color
           %select#font-chooser.chooser
@@ -120,13 +120,13 @@
             %option.clickable custom
 
         .theme-editor-section
-          #automatic.section.palette-section
+          #automatic.modal-section.palette-section
             .theme-section automatic options
             %div
               %span.small-text base
               %input#baseColor{:size => "9", :type => "text"}/
 
-          #custom.section.palette-section
+          #custom.modal-section.palette-section
             .theme-section custom options
             %div
               %span.small-text title
@@ -148,8 +148,8 @@
             %option.clickable{:value => "1"} none
 
         .theme-editor-section
-          #none.section.background-section
-          #trianglify.section.background-section
+          #none.modal-section.background-section
+          #trianglify.modal-section.background-section
             .theme-section trianglify options
             %table.metro-table
               %tbody
@@ -186,7 +186,7 @@
                         %option.clickable{:value => "0.75"} freeform
 
         .theme-section author info
-        .theme-editor-section.section
+        .theme-editor-section.modal-section
           %table.metro-table
             %tbody
               %tr

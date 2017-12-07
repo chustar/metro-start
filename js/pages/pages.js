@@ -24,6 +24,11 @@ function Pages(jquery, jss, storage, defaults, todos, sessions, apps, bookmarks,
       });
     },
 
+    /**
+     * Change the currently selected page.
+     * 
+     * @param {any} page The new page.
+     */
     changePage: function changePage(page) {
       this.page = page;
       storage.save('page', page);

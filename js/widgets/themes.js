@@ -322,8 +322,6 @@ define(['jquery', 'spectrum-colorpicker', 'throttle-debounce', '../utils/modal',
                 var title = '';
                 title += this.data['font-chooser'][0];
                 title += this.data['palette-chooser'] === 'automatic' ? 'A' : 'C';
-
-
             },
 
             /**
