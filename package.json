@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "build": "grunt build",
-    "test": "grunt test"
+    "test": "grunt test",
+    "compress": "grunt compress"
   },
   "repository": {
     "type": "git",
