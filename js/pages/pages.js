@@ -22,6 +22,9 @@ function Pages(jquery, jss, storage, defaults, todos, sessions, apps, bookmarks,
         'initial': this.page,
         'onchange': this.changePage.bind(this)
       });
+
+      // Set the initial page.
+      this.changePage(this.page);
     },
 
     /**

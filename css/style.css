@@ -22,10 +22,7 @@ body {
 	height: 100%;
 }
 
-/* Metro Styles */
-#none {
-	display: none;
-}
+/* Document wide styles */
 .show {
 	display: block;
 }
@@ -101,10 +98,22 @@ h3 {
 	overflow: hidden;
 }
 .internal {
+	height: 100%;
+	width: 500%;
 	-webkit-transition: all .2s linear;
 	transition: all .2s linear;
-	width: 500%;
 }
+
+.collection {
+	height: 100%;
+	width: 20%;
+	float: left;
+}
+
+.collection > div {
+	height: 100%;
+}
+
 .external_selector {
 	overflow: auto;
 	width: 100%;
@@ -280,14 +289,7 @@ h3 {
 	margin: auto;
 	margin-top: 0;
 }
-.theme-content {
-	display: flex;
-	flex-direction: column;
-}
-.theme-content > div {
-	padding: 4px;
-}
-.theme-section {
+.theme-section-title {
 	font-style: italic;
 	border-bottom: 2px solid;
 	align-content: left;	
@@ -296,15 +298,33 @@ h3 {
 .theme-editor-section {
 	margin-bottom: 16px;
 }
+.theme-editor-border {
+	border-left-style: solid;
+	border-bottom-style: solid;
+	border-left-width: 2px;
+	border-bottom-width: 2px;
+	padding-left: 8px;
+	padding-bottom: 8px;
+	margin-left: 12.5%;
+}
+.modal-info .clickable {
+	padding: 6px;
+	margin-bottom: 8px;
+	margin-right: 4px;
+}
+.modal-info .clickable:first {
+	margin-right: 4px;
+}
+.modal-content > p {
+	text-align: center;
+	height: 10%;
+	margin: 10% 0;
+}
 .tristyle-section, .trisize-section, .trivariance-section {
 	display: flex;
 	align-items: center;
 }
-.spectrum-replacer {
-	margin-right: 4px;
-}
-
-/* Metro Table */
+/* Table formatting */
 .metro-table {
 	border-spacing: 8px;
 }

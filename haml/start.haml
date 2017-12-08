@@ -104,30 +104,31 @@
     .footer
       %p#wrench.options-color.wrench.clickable wrench
       %p#editThemeButton.option.options-color.clickable.theme-button edit theme
+
     #themeEditor
       %h3.title-color theme editor
-      .theme-content
-        .theme-section font options
+      .picker
+        .theme-section-title font options
         .theme-editor-section.options-color
           %select#font-chooser.chooser
             %option.clickable{:value => "0"} normal fonts
             %option.clickable{:value => "1"} thin fonts
 
-        .theme-section color palette options
-        .palette.options-color
+        .theme-section-title color palette options
+        .theme-editor-section.options-color
           %select#palette-chooser.chooser
             %option.clickable automatic
             %option.clickable custom
 
         .theme-editor-section
-          #automatic.modal-section.palette-section
-            .theme-section automatic options
+          #automatic.theme-editor-border.palette-section
+            .theme-section-title automatic options
             %div
               %span.small-text base
               %input#baseColor{:size => "9", :type => "text"}/
 
-          #custom.modal-section.palette-section
-            .theme-section custom options
+          #custom.theme-editor-border.palette-section
+            .theme-section-title custom options
             %div
               %span.small-text title
               %input#titleColor{:size => "9", :type => "text"}/
@@ -141,16 +142,16 @@
               %span.small-text background
               %input#backgroundColor{:size => "9", :type => "text"}/
 
-        .theme-section background options
-        .background.options-color
+        .theme-section-title background options
+        .theme-editor-section.options-color
           %select#background-chooser.chooser.theme-editor-section
             %option.clickable{:value => "0"} trianglify
             %option.clickable{:value => "1"} none
 
         .theme-editor-section
-          #none.modal-section.background-section
-          #trianglify.modal-section.background-section
-            .theme-section trianglify options
+          #none.theme-editor-border.background-section.hide
+          #trianglify.theme-editor-border.background-section
+            .theme-section-title trianglify options
             %table.metro-table
               %tbody
                 %tr
@@ -185,23 +186,24 @@
                         %option.clickable{:value => "0.375"} bent
                         %option.clickable{:value => "0.75"} freeform
 
-        .theme-section author info
-        .theme-editor-section.modal-section
-          %table.metro-table
-            %tbody
-              %tr
-                %td
-                  %span.small-text title
-                %td
-                  %input#title{:placeholder => "title", :size => "20", :type => "text"}/
-              %tr
-                %td
-                  %span.small-text author
-                %td
-                  %input#author{:placeholder => "author", :size => "20", :type => "text"}/
-    /
-      Rule to hide all options when page first loads.
-      Removes option elements added after the calls to hide .option were made.
+        .theme-section-title author info
+        .theme-editor-section
+          #author.theme-editor-border
+            %table.metro-table
+              %tbody
+                %tr
+                  %td
+                    %span.small-text title
+                  %td
+                    %input#title{:placeholder => "title", :size => "20", :type => "text"}/
+                %tr
+                  %td
+                    %span.small-text author
+                  %td
+                    %input#author{:placeholder => "author", :size => "20", :type => "text"}/
+
+    // Rule to hide all options when page first loads.
+    // Removes option elements added after the calls to hide .option were made.
     %style#hideRule{:type => "text/css"}
       \.option {
       display: none;
