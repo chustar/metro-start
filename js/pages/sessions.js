@@ -51,7 +51,7 @@ function(jquery, pagebase_grouped, util) {
             var fragment = util.createElement('');
 
             var title = this.templates.titleFragment.cloneNode(true);
-            title.firstElementChild.id = 'session_' + tab.id;
+            title.firstElementChild.id = 'session_' + tab.index;
             title.firstElementChild.href = tab.url;
             title.firstElementChild.textContent = tab.title;
             // title.firstElementChild.addEventListener('click', this.openTab.bind(this, tab));

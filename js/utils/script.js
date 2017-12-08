@@ -37,7 +37,7 @@ define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './d
         });
 
         jss.set('::-webkit-input-placeholder', {
-          'background': mainColor
+          'background': optionsColor
         });
 
         // Animate the color transition.
@@ -58,7 +58,7 @@ define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './d
         jss.set('input', {
           'color': mainColor,
         });
-        jss.set('.theme-section', {
+        jss.set('.theme-section-title', {
           'border-bottom-color': mainColor
         });
         jss.set('.options-color', {
@@ -168,8 +168,6 @@ define(['jquery', 'tinycolor2', 'jss', 'trianglify', './util', './storage', './d
           if (!yColors) {
             yColors = xColors;
           }
-
-          console.log(xColors);
 
           var bodyPattern = trianglify({
             width: jBody.prop('scrollWidth'),
