@@ -20,7 +20,6 @@ define(function() {
             'titleColor': '#4a4a4a',
             'optionsColor': '#ff0000',
             'backgroundColor': '#000000',
-            'palette-chooser': 'automatic',
             'background-chooser': 'none',
             'trivariance-chooser': 'freeform',
             'trisize-chooser': 'medium',

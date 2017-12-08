@@ -76,16 +76,16 @@ h3 {
 	font-size: 58px;
 	margin: 12px auto;
 }
-.option {
-	display: inline-block;
-}
 .small-text {
 	font-size: 24px;
 	display: inline-block;
 	margin-right: 20px;
 }
+.option {
+	display: inline-block;
+}
 
-/* Header  */
+/* Header */
 .pages-chooser, .sort {
 	margin-left: 50px;
 	margin-bottom: 10px;
@@ -103,17 +103,14 @@ h3 {
 	-webkit-transition: all .2s linear;
 	transition: all .2s linear;
 }
-
 .collection {
 	height: 100%;
 	width: 20%;
 	float: left;
 }
-
 .collection > div {
 	height: 100%;
 }
-
 .external_selector {
 	overflow: auto;
 	width: 100%;
@@ -178,7 +175,6 @@ h3 {
 	overflow-y: auto;
 }
 
-
 /* Paneled Pagebase */
 .panel-page {
 	margin-right: 10px;
@@ -188,6 +184,9 @@ h3 {
 .panel-page>.item>div {
 	display: flex;
 	flex-direction: row;
+}
+.panel-item-wrap {
+	padding: 10px;
 }
 .panel-item {
 	display: block;
@@ -209,6 +208,7 @@ h3 {
 /* Bookmarks */
 .slash {
 	font-weight: bold;
+	padding-left: 2px;
 	padding-right: 4px;
 }
 
