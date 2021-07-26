@@ -20,29 +20,43 @@ export default {
         this.showOptions = false;
         this.page = storage.get('page', 'todos');
 
+        var isSafari = /^((?!chrome|android).)*safari/i.test(
+            navigator.userAgent
+        );
         const that = this;
         chrome.permissions.getAll(function (perms) {
-            if (chrome.management && perms.permissions.includes('management')) {
-                jquery('.apps-option').removeClass('removed');
-                apps.enabled = true;
-            } else if (that.page == 'apps') {
-                that.page = 'todos';
-            }
+            if (isSafari) {
+                jquery('.apps-option').addClass('safari-removed');
+                jquery('.bookmarks-option').addClass('safari-removed');
+                jquery('.sessions-option').addClass('safari-removed');
+            } else {
+                if (
+                    chrome.management &&
+                    perms.permissions.includes('management')
+                ) {
+                    jquery('.apps-option').removeClass('removed');
+                    apps.enabled = true;
+                } else if (that.page == 'apps') {
+                    that.page = 'todos';
+                }
 
-            if (chrome.bookmarks && perms.permissions.includes('bookmarks')) {
-                jquery('.bookmarks-option').removeClass('removed');
-                bookmarks.enabled = true;
-            } else if (that.page == 'bookmarks') {
-                that.page = 'todos';
-            }
+                if (
+                    chrome.bookmarks &&
+                    perms.permissions.includes('bookmarks')
+                ) {
+                    jquery('.bookmarks-option').removeClass('removed');
+                    bookmarks.enabled = true;
+                } else if (that.page == 'bookmarks') {
+                    that.page = 'todos';
+                }
 
-            if (chrome.sessions && perms.permissions.includes('sessions')) {
-                jquery('.sessions-option').removeClass('removed');
-                sessions.enabled = true;
-            } else if (that.page == 'sessions') {
-                that.page = 'todos';
+                if (chrome.sessions && perms.permissions.includes('sessions')) {
+                    jquery('.sessions-option').removeClass('removed');
+                    sessions.enabled = true;
+                } else if (that.page == 'sessions') {
+                    that.page = 'todos';
+                }
             }
-
             that.modules.forEach((module) => {
                 module.init(document);
             });
@@ -50,7 +64,7 @@ export default {
             jquery(that.elems.chooser).metroSelect({
                 initial: that.page,
                 add_remove_class: 'addremove_button option options-color',
-                parent_removed_class: 'option',
+                parent_removed_class: 'option safari-removed',
                 onchange: that.changePage.bind(that),
                 onvisibilitychange: that.visibilityChanged.bind(that),
             });
