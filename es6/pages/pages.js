@@ -49,10 +49,8 @@ export default {
 
             jquery(that.elems.chooser).metroSelect({
                 initial: that.page,
-                add_text: '[+]',
-                remove_text: '[x]',
-                adder_remover_class: 'addremove_button option options-color',
-                parent_removed_class: 'option disabled',
+                add_remove_class: 'addremove_button option options-color',
+                parent_removed_class: 'option',
                 onchange: that.changePage.bind(that),
                 onvisibilitychange: that.visibilityChanged.bind(that),
             });
@@ -96,7 +94,8 @@ export default {
 
         jquery('.external .internal .collection').addClass('off-screen');
         jquery(`.external .internal .collection.${page}`).removeClass('off-screen');
-        
+        // jquery(`.metro-select-option .${page}-option`).removeClass('removed disabled');
+
         jss.set('.external .internal', {
             'margin-left': `${moduleIndex * -100}%`,
         });
@@ -108,7 +107,8 @@ export default {
         });
         if (modules.length) {
             let module = modules[0];
-            if (module.setPermissionVisibility && module.supported) {
+            console.log('module', module);
+            if (module.setPermissionVisibility) {
                 module.setPermissionVisibility(visibility, cb);
             }
         }

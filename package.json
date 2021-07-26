@@ -13,10 +13,10 @@
     "url": "https://github.com/metro-start/metro-start.git"
   },
   "dependencies": {
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.0",
     "jquery-color": "github:jquery/jquery-color",
     "jss": "github:dvtng/jss",
-    "metro-select": "github:chustar/metro-select",
+    "metro-select": "file:../metro-select",
     "requirejs": "^2.3.2",
     "spectrum-colorpicker": "^1.8.1",
     "throttle-debounce": "^3.0.1",
@@ -27,8 +27,10 @@
     "addons-linter": "^2.18.0",
     "copy-webpack-plugin": "^7.0.0",
     "css-loader": "^5.0.2",
+    "download": "^8.0.0",
     "eslint": "^7.20.0",
     "eslint-config-google": "^0.14.0",
+    "safe-compare": "^1.1.4",
     "sass": "^1.32.7",
     "sass-loader": "^11.0.1",
     "style-loader": "^2.0.0",
