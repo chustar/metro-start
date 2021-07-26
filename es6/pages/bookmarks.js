@@ -7,31 +7,33 @@ export default {
     enabled: false,
     isSupported: () => !!chrome.bookmarks,
 
-    setPermissionVisibility: function(visible, cb) {
+    setPermissionVisibility: function (visible, cb) {
         let that = this;
         if (visible) {
-            chrome.permissions.request({
-                permissions: ['bookmarks']
-            },
-            function(granted) {
-                that.enabled = granted;
-                if (cb) {
-                    cb(granted);
+            chrome.permissions.request(
+                {
+                    permissions: ['bookmarks'],
+                },
+                function (granted) {
+                    that.enabled = granted;
+                    if (cb) {
+                        cb(granted);
+                    }
+                    that.loadBookmarks();
                 }
-                that.loadBookmarks();
-            }
             );
         } else {
-            chrome.permissions.remove({
-                permissions: ['bookmarks']
-            },
-            function(granted) {
-                that.enabled = !granted;
-                if (cb) {
-                    cb(granted);
+            chrome.permissions.remove(
+                {
+                    permissions: ['bookmarks'],
+                },
+                function (granted) {
+                    that.enabled = !granted;
+                    if (cb) {
+                        cb(granted);
+                    }
+                    that.loadBookmarks();
                 }
-                that.loadBookmarks();
-            }
             );
         }
     },
@@ -59,7 +61,7 @@ export default {
         ),
     },
 
-    init: function() {
+    init: function () {
         this.bookmarks = new PagebasePaneled();
         this.bookmarks.init(
             document,
@@ -76,20 +78,22 @@ export default {
      *
      * @param {any} newSort The new sort order.
      */
-    sortChanged: function(newSort) {
+    sortChanged: function (newSort) {
         this.bookmarks.sortChanged(newSort);
     },
 
     /**
      * Load the current set of bookmarks.
      */
-    loadBookmarks: function() {
+    loadBookmarks: function () {
         this.bookmarks.clear();
         if (!this.enabled) {
-            this.bookmarks.addAll([{
-                title: 'View and manage bookmarks.',
-                url: 'url'
-            }, ]);
+            this.bookmarks.addAll([
+                {
+                    title: 'View and manage bookmarks.',
+                    url: 'url',
+                },
+            ]);
             return;
         }
 
@@ -106,7 +110,7 @@ export default {
      * @param {any} bookmark The bookmark that should be turned into an element.
      * @return {any} The HTML element.
      */
-    templateFunc: function(bookmark) {
+    templateFunc: function (bookmark) {
         let fragment = util.createElement('');
         let titleWrap = this.templates.titleWrapFragment.cloneNode(true);
         let title = this.templates.titleFragment.cloneNode(true);
@@ -155,7 +159,7 @@ export default {
      * @param {any} bookmark The bookmark that was clicked.
      * @param {any} bookmarkNode The bookmark node has the data to be activated.
      */
-    clickBookmark: function(bookmark, bookmarkNode) {
+    clickBookmark: function (bookmark, bookmarkNode) {
         let currentPage = bookmarkNode.parentNode.parentNode.id;
         let itemNode = bookmarkNode.parentNode;
         let siblings = itemNode.parentNode.children;
@@ -179,10 +183,11 @@ export default {
      * @param {any} bookmark The bookmark element that will be removed.
      * @param {any} bookmarkNode The bookmark node that has the data to be removed.
      */
-    removeBookmark: function(bookmark, bookmarkNode) {
+    removeBookmark: function (bookmark, bookmarkNode) {
         modal.createModal(
             `bookmark-${bookmark.id}`,
-            `${bookmark.title} will be removed.`, (res) => {
+            `${bookmark.title} will be removed.`,
+            (res) => {
                 if (res) {
                     chrome.bookmarks.removeTree(bookmark.id, () => {
                         bookmarkNode.parentNode.remove();

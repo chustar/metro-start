@@ -20,7 +20,7 @@ export default {
         units: document.getElementById('units'),
     },
 
-    init: function() {
+    init: function () {
         this.data = storage.get('weather', defaults.defaultWeather);
         this.upgradeWeather(defaults.defaultWeather);
 
@@ -55,7 +55,7 @@ export default {
      *
      * @param {any} newWeatherUnit The new weather units.
      */
-    updateWeatherUnit: function(newWeatherUnit) {
+    updateWeatherUnit: function (newWeatherUnit) {
         this.update('units', newWeatherUnit);
         this.updateWeather(true);
     },
@@ -63,7 +63,7 @@ export default {
     /**
      * Updates the current weather location when the weather form is submitted.
      */
-    updateLocation: function() {
+    updateLocation: function () {
         let location = this.elems.newLocation.value;
         if (this.data.city !== location) {
             this.update('city', location);
@@ -76,14 +76,16 @@ export default {
      *
      * @param {any} visible: True is the weather element should be visible.
      */
-    setWeatherVisibility: function(visible) {
+    setWeatherVisibility: function (visible) {
         if (visible) {
             util.removeClass(this.elems.weather, 'hide');
         } else {
             util.addClass(this.elems.weather, 'hide');
         }
 
-        this.elems.toggleWeather.innerText = visible ? 'hide weather' : 'show weather';
+        this.elems.toggleWeather.innerText = visible
+            ? 'hide weather'
+            : 'show weather';
         this.update('visible', visible);
     },
 
@@ -92,7 +94,7 @@ export default {
      *
      * @param {any} force Skip timeout check.
      */
-    updateWeather: function(force) {
+    updateWeather: function (force) {
         this.upgradeWeather(defaults.defaultWeather);
         // If it has been more than an hour since last check.
         if (
@@ -103,8 +105,7 @@ export default {
                 'weatherUpdateTime',
                 parseInt(new Date().getTime(), 10) + 3600000
             );
-            let units =
-                this.data.units == 'celsius' ? 'metric' : 'imperial';
+            let units = this.data.units == 'celsius' ? 'metric' : 'imperial';
             let url = `${defaults.defaultWebservice}/weather?location=${this.data.city}&units=${units}`;
             let that = this;
             jquery.ajax(url).done((result) => {
@@ -125,7 +126,7 @@ export default {
         }
     },
 
-    update: function(key, value) {
+    update: function (key, value) {
         if (key) {
             this.data[key] = value;
         }
@@ -140,7 +141,7 @@ export default {
         this.elems.units.innerText = this.data.units[0];
     },
 
-    upgradeWeather: function(defaultWeather) {
+    upgradeWeather: function (defaultWeather) {
         if (!this.data.units) {
             this.data = defaultWeather;
         }

@@ -4,32 +4,34 @@ export default {
     name: 'apps',
     enabled: false,
     supported: !!chrome.management,
-    
-    setPermissionVisibility: function(visible, cb) {
+
+    setPermissionVisibility: function (visible, cb) {
         let that = this;
         if (visible) {
-            chrome.permissions.request({
-                permissions: ['management']
-            },
-            function(granted) {
-                that.enabled = granted;
-                if (cb) {
-                    cb(granted);
+            chrome.permissions.request(
+                {
+                    permissions: ['management'],
+                },
+                function (granted) {
+                    that.enabled = granted;
+                    if (cb) {
+                        cb(granted);
+                    }
+                    that.loadApps();
                 }
-                that.loadApps();
-            }
             );
         } else {
-            chrome.permissions.remove({
-                permissions: ['management']
-            },
-            function(granted) {
-                that.enabled = !granted;
-                if (cb) {
-                    cb(granted);
+            chrome.permissions.remove(
+                {
+                    permissions: ['management'],
+                },
+                function (granted) {
+                    that.enabled = !granted;
+                    if (cb) {
+                        cb(granted);
+                    }
+                    that.loadApps();
                 }
-                that.loadApps();
-            }
             );
         }
     },
@@ -59,10 +61,8 @@ export default {
         ),
     },
 
-    init: function(document) {
-        this.elems.rootNode = document.getElementById(
-            'internal-selector-apps'
-        );
+    init: function (document) {
+        this.elems.rootNode = document.getElementById('internal-selector-apps');
 
         this.apps = new Pagebase();
         this.apps.init(
@@ -80,19 +80,21 @@ export default {
      *
      * @param {any} newSort The new sort order.
      */
-    sortChanged: function(newSort) {
+    sortChanged: function (newSort) {
         this.bookmarks.sortChanged(newSort, false);
     },
 
-    loadApps: function() {
+    loadApps: function () {
         this.apps.clear();
         if (!this.enabled) {
             this.apps.addAll({
                 heading: 'apps',
-                data: [{
-                    name: 'Manage installed apps.',
-                    enabled: true,
-                }, ],
+                data: [
+                    {
+                        name: 'Manage installed apps.',
+                        enabled: true,
+                    },
+                ],
             });
             return;
         }
@@ -102,15 +104,16 @@ export default {
             that.apps.clear();
             that.apps.addAll({
                 heading: 'apps',
-                data: [{
-                    name: 'Chrome Webstore',
-                    appLaunchUrl: 'https://chrome.google.com/webstore',
-                    enabled: true,
-                }, ].concat(
+                data: [
+                    {
+                        name: 'Chrome Webstore',
+                        appLaunchUrl: 'https://chrome.google.com/webstore',
+                        enabled: true,
+                    },
+                ].concat(
                     res.filter((item) => {
                         return (
-                            item.type !== 'extension' &&
-                            item.type !== 'theme'
+                            item.type !== 'extension' && item.type !== 'theme'
                         );
                     })
                 ),
@@ -136,7 +139,7 @@ export default {
      * @param {any} app The app that should be turned into an element.
      * @return {any} The HTML element.
      */
-    templateFunc: function(app) {
+    templateFunc: function (app) {
         const fragment = util.createElement('');
 
         const title = this.templates.titleFragment.cloneNode(true);
@@ -153,9 +156,7 @@ export default {
         fragment.appendChild(title);
 
         if (app.homepageUrl !== '') {
-            const homepage = this.templates.homepageFragment.cloneNode(
-                true
-            );
+            const homepage = this.templates.homepageFragment.cloneNode(true);
             homepage.firstElementChild.addEventListener(
                 'click',
                 this.openHomepageUrl.bind(this, app)
@@ -203,7 +204,7 @@ export default {
      *
      * @param {any} app The app to open launch URl.
      */
-    openAppLaunchUrl: function(app) {
+    openAppLaunchUrl: function (app) {
         window.location.href = app.appLaunchUrl;
     },
 
@@ -212,7 +213,7 @@ export default {
      *
      * @param {any} app The app to open its homepage.
      */
-    openHomepageUrl: function(app) {
+    openHomepageUrl: function (app) {
         window.location.href = app.homepageUrl;
     },
 
@@ -221,7 +222,7 @@ export default {
      *
      * @param {any} app The app to open its options.
      */
-    openOptionsUrl: function(app) {
+    openOptionsUrl: function (app) {
         window.location.href = app.optionsUrl;
     },
 
@@ -230,7 +231,7 @@ export default {
      *
      * @param {any} app The app to disable.
      */
-    toggleEnabled: function(app) {
+    toggleEnabled: function (app) {
         const that = this;
         chrome.management.setEnabled(app.id, !app.enabled, () => {
             that.loadApps();
@@ -242,13 +243,15 @@ export default {
      *
      * @param {any} app The app to be uninstalled.
      */
-    removeApp: function(app) {
+    removeApp: function (app) {
         const that = this;
 
         chrome.management.uninstall(
-            app.id, {
+            app.id,
+            {
                 showConfirmDialog: true,
-            }, () => {
+            },
+            () => {
                 that.loadApps();
             }
         );

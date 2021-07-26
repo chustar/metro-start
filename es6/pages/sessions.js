@@ -5,33 +5,35 @@ export default {
     enabled: false,
     // supported: !!chrome.sessions,
 
-    setPermissionVisibility: function(visible, cb) {
+    setPermissionVisibility: function (visible, cb) {
         let that = this;
         if (visible) {
             util.log('request sessions', chrome.permissions);
-            chrome.permissions.request({
-                permissions: ['sessions']
-            },
-            function(granted) {
-                console.log('granted sessions', granted);
-                that.enabled = granted;
-                if (cb) {
-                    cb(granted);
+            chrome.permissions.request(
+                {
+                    permissions: ['sessions'],
+                },
+                function (granted) {
+                    console.log('granted sessions', granted);
+                    that.enabled = granted;
+                    if (cb) {
+                        cb(granted);
+                    }
+                    that.loadSessions();
                 }
-                that.loadSessions();
-            }
             );
         } else {
-            chrome.permissions.request({
-                permissions: ['sessions']
-            },
-            function(granted) {
-                that.enabled = !granted;
-                if (cb) {
-                    cb(granted);
+            chrome.permissions.request(
+                {
+                    permissions: ['sessions'],
+                },
+                function (granted) {
+                    that.enabled = !granted;
+                    if (cb) {
+                        cb(granted);
+                    }
+                    that.loadSessions();
                 }
-                that.loadSessions();
-            }
             );
         }
     },
@@ -43,15 +45,11 @@ export default {
     sessions: {},
 
     templates: {
-        itemFragment: util.createElement(
-            '<div class="session_item"></div>'
-        ),
-        titleFragment: util.createElement(
-            '<a class="title clickable"></a>'
-        ),
+        itemFragment: util.createElement('<div class="session_item"></div>'),
+        titleFragment: util.createElement('<a class="title clickable"></a>'),
     },
 
-    init: function() {
+    init: function () {
         this.elems.rootNode = document.getElementById(
             'internal-selector-sessions'
         );
@@ -71,7 +69,7 @@ export default {
      *
      * @param {any} newSort The new sort order.
      */
-    sortChanged: function(newSort) {
+    sortChanged: function (newSort) {
         this.sessions.sortChanged(newSort, false);
     },
 
@@ -79,15 +77,17 @@ export default {
     /**
      * Loads the available sessions from local and web storage
      */
-    loadSessions: function() {
+    loadSessions: function () {
         util.log(sessions, this.sessions, chrome.sessions);
         this.sessions.clear();
         if (!this.enabled) {
             this.sessions.addAll({
                 heading: 'sessions',
-                data: [{
-                    title: 'Show open tabs and sessions.'
-                }],
+                data: [
+                    {
+                        title: 'Show open tabs and sessions.',
+                    },
+                ],
             });
             return;
         }
@@ -134,7 +134,7 @@ export default {
      * @param {any} tab The tab session that should be turned into an element.
      * @return {any} The HTML element.
      */
-    templateFunc: function(tab) {
+    templateFunc: function (tab) {
         let fragment = util.createElement('');
 
         let title = this.templates.titleFragment.cloneNode(true);

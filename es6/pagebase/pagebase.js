@@ -13,10 +13,7 @@ export default class Pagebase {
         this.className = 'pagebase';
     }
 
-    init(document,
-        name,
-        rootNode,
-        templateFunc) {
+    init(document, name, rootNode, templateFunc) {
         this.name = name;
         this.rootNode = rootNode;
         this.sort = storage.get(`${this.name}_sort`, false);

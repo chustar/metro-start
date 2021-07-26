@@ -1,9 +1,10 @@
-// Generic Styles
 $default-background: #fff;
 html {
     box-sizing: border-box;
 }
-*, *:before, *:after {
+*,
+*:before,
+*:after {
     box-sizing: inherit;
 }
 body {
@@ -46,7 +47,8 @@ input {
 .show {
     display: block;
 }
-.hide, .removed {
+.hide,
+.removed {
     display: none !important; // sass-lint:disable-line no-important
 }
 .option {
@@ -60,8 +62,10 @@ input {
         pointer-events: all;
     }
 }
-.done, .disabled, .empty {
-    opacity: .5;
+.done,
+.disabled,
+.empty {
+    opacity: 0.5;
     text-decoration: line-through;
 }
 h1 {
@@ -112,7 +116,7 @@ h5 {
 .small-text {
     display: inline-block;
     font-size: inherit;
-    font-size: .8em; 
+    font-size: 0.8em;
     margin-right: 20px;
 }
 
@@ -131,7 +135,7 @@ h5 {
     overflow-x: hidden;
 
     .internal {
-        transition: margin .3s ease-in-out;
+        transition: margin 0.3s ease-in-out;
         height: 100%;
         width: 500%;
     }
@@ -143,7 +147,8 @@ h5 {
 #internal-selector-themes > .group > .page > .item {
     padding-bottom: 10px;
 }
-.pages-chooser, .sort {
+.pages-chooser,
+.sort {
     margin-bottom: 10px;
     margin-left: 25px;
 }
@@ -156,7 +161,8 @@ h5 {
         }
     }
 }
-.panel-item, .item > .title {
+.panel-item,
+.item > .title {
     overflow: hidden;
     padding: 10px 0;
     text-overflow: ellipsis;
@@ -173,7 +179,7 @@ h5 {
 }
 .page {
     height: 100%;
-    .item  .active {
+    .item .active {
         padding-left: 10px;
     }
 }
@@ -195,7 +201,7 @@ h5 {
 .info {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start; 
+    justify-content: flex-start;
 }
 .footer {
     display: flex;
@@ -204,13 +210,11 @@ h5 {
     margin: 15px;
 }
 
-
-// Metro Modal
 .overlay-wrap {
     background-color: $default-background;
     height: 100%;
     left: 0;
-    opacity: .6;
+    opacity: 0.6;
     position: fixed;
     top: 0;
     width: 100vw;
@@ -226,6 +230,7 @@ h5 {
     max-height: 85%;
     overflow-y: auto;
     position: fixed;
+    padding: 8px;
     right: 0;
     top: 0;
     width: 75%;
@@ -262,7 +267,6 @@ h5 {
     }
 }
 
-// Theme Editor
 #themeEditor {
     margin: auto;
     margin-top: 0;
@@ -276,7 +280,9 @@ h5 {
 .theme-editor-section {
     margin-bottom: 16px;
 }
-.tristyle-section, .trisize-section, .trivariance-section {
+.tristyle-section,
+.trisize-section,
+.trivariance-section {
     align-items: center;
     display: flex;
 }
@@ -298,28 +304,10 @@ h5 {
     }
 }
 @media only screen and (max-width: 480px) {
-    // h1 {
-    //     font-size: 1.8em;
-    //     margin: 0 0 15px 25px;
-    // }
-    // h2 {
-    //     font-size: 1.6em;
-    //     margin: 12px auto;
-    // }
-    // h3 {
-    //     font-size: 1.4em;
-    //     margin: 12px auto;
-    // }
-    // h4 {
-    //     font-size: 1.2em;
-    //     margin: 12px auto;
-    // }
-    // h5 {
-    //     font-size: 1.1em;
-    //     margin: 12px auto;
-    // }
     .show-options #weather {
-        #city, #temp, #condition {
+        #city,
+        #temp,
+        #condition {
             display: none;
         }
     }
@@ -341,7 +329,7 @@ h5 {
         margin: 25px;
         margin-bottom: 0;
     }
-    .theme-editor-section input[type="text"] {
+    .theme-editor-section input[type='text'] {
         width: 100%;
     }
     .theme-editor-border {
@@ -351,29 +339,9 @@ h5 {
         border-left-width: 2px;
         padding-bottom: 4px;
         padding-left: 4px;
-    }    
+    }
 }
 @media only screen and (min-width: 480px) {
-    // h1 {
-    //     font-size: 4em;
-    //     margin: 0 0 15px 25px;
-    // }
-    // h2 {
-    //     font-size: 3.2em;
-    //     margin: 12px auto;
-    // }
-    // h3 {
-    //     font-size: 2.6em;
-    //     margin: 12px auto;
-    // }
-    // h4 {
-    //     font-size: 2em;
-    //     margin: 12px auto;
-    // }
-    // h5 {
-    //     font-size: 1.4em;
-    //     margin: 12px auto;
-    // }
     .external-selector {
         overflow: auto;
         width: 100%;
@@ -408,7 +376,8 @@ h5 {
         margin-right: 10px;
         overflow-y: auto;
     }
-    .panel-item, .item > .title {
+    .panel-item,
+    .item > .title {
         max-width: 375px;
     }
     .weather {
@@ -426,5 +395,5 @@ h5 {
         margin-left: 12.5%;
         padding-bottom: 4px;
         padding-left: 4px;
-    }    
+    }
 }

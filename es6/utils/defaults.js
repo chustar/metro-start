@@ -2,7 +2,7 @@
 The default theme for metro start.
 */
 export default {
-    init: function() {},
+    init: function () {},
 
     // defaultFonts: ['system', 'raleway', 'source', 'wire one', 'im fell'],
 
@@ -18,10 +18,12 @@ export default {
 
     defaultWebservice: 'https://api.metro-start.com',
 
-    defaultTodos: [{
-        name: 'use the wrench to get started. . . ',
-        done: false,
-    }, ],
+    defaultTodos: [
+        {
+            name: 'use the wrench to get started. . . ',
+            done: false,
+        },
+    ],
 
     // The default theme for the app.
     defaultTheme: {
@@ -67,25 +69,28 @@ export default {
         visible: true,
     },
 
-    systemThemes: [{
-        title: 'randomize',
-        author: 'metro start',
+    systemThemes: [
+        {
+            title: 'randomize',
+            author: 'metro start',
 
-        optionsColor: '#ff0000',
-        mainColor: '#ffffff',
-        titleColor: '#4a4a4a',
-        backgroundColor: '#000000',
+            optionsColor: '#ff0000',
+            mainColor: '#ffffff',
+            titleColor: '#4a4a4a',
+            backgroundColor: '#000000',
 
-        online: true,
-    }, {
-        title: 'metro start',
-        author: 'metro start',
+            online: true,
+        },
+        {
+            title: 'metro start',
+            author: 'metro start',
 
-        optionsColor: '#ff0000',
-        mainColor: '#ffffff',
-        titleColor: '#4a4a4a',
-        backgroundColor: '#000000',
+            optionsColor: '#ff0000',
+            mainColor: '#ffffff',
+            titleColor: '#4a4a4a',
+            backgroundColor: '#000000',
 
-        online: true,
-    }, ],
+            online: true,
+        },
+    ],
 };

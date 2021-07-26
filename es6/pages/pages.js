@@ -16,12 +16,12 @@ export default {
 
     modules: [todos, sessions, apps, bookmarks, themes],
 
-    init: function(document) {
+    init: function (document) {
         this.showOptions = false;
         this.page = storage.get('page', 'todos');
 
         const that = this;
-        chrome.permissions.getAll(function(perms) {
+        chrome.permissions.getAll(function (perms) {
             if (chrome.management && perms.permissions.includes('management')) {
                 jquery('.apps-option').removeClass('removed');
                 apps.enabled = true;
@@ -60,7 +60,7 @@ export default {
         });
     },
 
-    changeToValidPage: function() {
+    changeToValidPage: function () {
         let page = this.page;
         if (page == 'apps' && !apps.enabled) {
             page = 'todos';
@@ -93,7 +93,9 @@ export default {
             .indexOf(page);
 
         jquery('.external .internal .collection').addClass('off-screen');
-        jquery(`.external .internal .collection.${page}`).removeClass('off-screen');
+        jquery(`.external .internal .collection.${page}`).removeClass(
+            'off-screen'
+        );
         // jquery(`.metro-select-option .${page}-option`).removeClass('removed disabled');
 
         jss.set('.external .internal', {

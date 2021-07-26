@@ -4,7 +4,7 @@ let loggingEnabled = true;
 let hasOwnProperty = Object.prototype.hasOwnProperty;
 
 export default {
-    init: function() {
+    init: function () {
         this.lastLogTime = Date.now();
         this.loggingEnabled = false;
     },
@@ -14,7 +14,7 @@ export default {
      *
      * @param {any} msg The message to log.
      */
-    log: function(msg) {
+    log: function (msg) {
         if (!loggingEnabled) {
             return;
         }
@@ -33,7 +33,7 @@ export default {
      *
      * @param {any} msg The warning to log.
      */
-    warn: function(msg) {
+    warn: function (msg) {
         if (!loggingEnabled) {
             return;
         }
@@ -52,7 +52,7 @@ export default {
      *
      * @param {any} msg  The error to log.
      */
-    error: function(msg) {
+    error: function (msg) {
         if (!loggingEnabled) {
             return;
         }
@@ -71,7 +71,7 @@ export default {
      * @param {any} key The field that has been changed.
      * @param {any} val The value that was changed to.
      */
-    logChange: function(key, val) {
+    logChange: function (key, val) {
         if (!loggingEnabled) {
             return;
         }
@@ -189,7 +189,7 @@ export default {
      * @param {any} arr Array to retrieve a random element of.
      * @return {any} A random item.
      */
-    randomize: function(arr) {
+    randomize: function (arr) {
         return arr[Math.floor(Math.random() * arr.length)];
     },
 
@@ -200,7 +200,7 @@ export default {
      * @param {any} defaultTheme The theme to use to back-fill.
      * @return {any} The upgraded theme.
      */
-    upgradeTheme: function(oldTheme, defaultTheme) {
+    upgradeTheme: function (oldTheme, defaultTheme) {
         let metadataFields = ['title', 'author', 'online'];
         let themeContentFields = {
             optionsColor: 'options_color',
@@ -245,14 +245,11 @@ export default {
         };
 
         let newTheme = {
-            themeContent: {}
+            themeContent: {},
         };
 
         for (let metadataField of metadataFields) {
-            newTheme[metadataField] = valueForMetadata(
-                oldTheme,
-                metadataField
-            );
+            newTheme[metadataField] = valueForMetadata(oldTheme, metadataField);
         }
 
         for (let valueField of Object.keys(themeContentFields)) {
@@ -263,9 +260,10 @@ export default {
         }
 
         // Upgrade the font.
-        if (!defaults.defaultFonts
-            .concat(['custom'])
-            .includes(newTheme.themeContent['font-chooser'])
+        if (
+            !defaults.defaultFonts
+                .concat(['custom'])
+                .includes(newTheme.themeContent['font-chooser'])
         ) {
             newTheme.themeContent['font-chooser'] =
                 defaultTheme.themeContent['font-chooser'];

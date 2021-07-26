@@ -25,11 +25,8 @@ export default {
         ),
     },
 
-    init: function(document) {
-        this.elems.saveTodo.addEventListener(
-            'click',
-            this.addTodo.bind(this)
-        );
+    init: function (document) {
+        this.elems.saveTodo.addEventListener('click', this.addTodo.bind(this));
 
         this.todos = new PagebaseGrouped();
         this.todos.init(
@@ -47,14 +44,14 @@ export default {
      *
      * @param {any} newSort The new sort order.
      */
-    sortChanged: function(newSort) {
+    sortChanged: function (newSort) {
         this.todos.sortChanged(newSort, false);
     },
 
     /**
      * Loads the todos from storage into the DOM.
      */
-    loadTodos: function() {
+    loadTodos: function () {
         this.data = storage.get('todos', defaults.defaultTodos);
 
         this.todos.clear();
@@ -78,7 +75,7 @@ export default {
      * @param {any} todo The todo that should be turned into an element.
      * @return {any} The HTML element.
      */
-    templateFunc: function(todo) {
+    templateFunc: function (todo) {
         let fragment = util.createElement('');
 
         let title = this.templates.titleFragment.cloneNode(true);
@@ -112,7 +109,7 @@ export default {
      *
      * @param {any} event This parameter is unused.
      */
-    addTodo: function(event) {
+    addTodo: function (event) {
         event.preventDefault();
         let title = this.elems.newTodo.value.trim();
         if (title === '') {
@@ -140,7 +137,7 @@ export default {
      *
      * @param {any} todo The todo to be edited.
      */
-    todoToggle: function(todo) {
+    todoToggle: function (todo) {
         todo.done = !todo.done;
         storage.save('todos', this.data);
         this.loadTodos();
@@ -151,7 +148,7 @@ export default {
      * The todo to be edited.
      * @param {any} todo
      */
-    editTodo: function(todo) {
+    editTodo: function (todo) {
         this.todoToEdit = todo;
         this.elems.newTodo.value = todo.name;
     },
@@ -161,7 +158,7 @@ export default {
      *
      * @param {any} todo The todo to be removed.
      */
-    removeTodo: function(todo) {
+    removeTodo: function (todo) {
         for (let i = 0; i < this.data.length; i++) {
             if (this.data[i] === todo) {
                 this.data.splice(i, 1);

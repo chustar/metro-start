@@ -1,6 +1,6 @@
 import jquery from 'jquery';
 import tinycolor from 'tinycolor2';
-import {throttle} from 'throttle-debounce';
+import { throttle } from 'throttle-debounce';
 import modal from '../utils/modal';
 import util from '../utils/util';
 import storage from '../utils/storage';
@@ -53,18 +53,16 @@ export default {
         document.getElementById('tristyle-chooser'),
     ],
 
-    themeAdded: function() {},
-    themeRemoved: function() {},
+    themeAdded: function () {},
+    themeRemoved: function () {},
 
-    init: function() {
+    init: function () {
         // this.data = defaults.defaultTheme;
         this.data = storage.get('currentTheme', defaults.defaultTheme);
         this.data = util.upgradeTheme(this.data, defaults.defaultTheme);
         this.oldTheme = this.data;
 
-        this.elems.themeEditor.parentNode.removeChild(
-            this.elems.themeEditor
-        );
+        this.elems.themeEditor.parentNode.removeChild(this.elems.themeEditor);
         this.elems.editThemeButton.addEventListener(
             'click',
             this.openThemeEditor.bind(this)
@@ -79,12 +77,14 @@ export default {
     /**
      * Reset the input elements to match this.data.
      */
-    resetInputs: function() {
+    resetInputs: function () {
         // Do not try to reset inputs if they haven't been bound.
         if (this.isBound) {
             for (let i = 0; i < this.textInputs.length; i++) {
                 let inputElement = this.textInputs[i];
-                inputElement.value = this.data.themeContent[inputElement.id] ? this.data.themeContent[inputElement.id] : '';
+                inputElement.value = this.data.themeContent[inputElement.id]
+                    ? this.data.themeContent[inputElement.id]
+                    : '';
             }
 
             for (let j = 0; j < this.colorInputs.length; j++) {
@@ -105,7 +105,7 @@ export default {
     /**
      * Shows the theme editor modal window.
      */
-    openThemeEditor: function() {
+    openThemeEditor: function () {
         this.sessionUpdateCount = 0;
 
         this.data = storage.get('currentTheme', defaults.defaultTheme);
@@ -148,7 +148,7 @@ export default {
      *
      * @param {any} res How the modal was closed. True if the 'okay' option was selected.
      */
-    themeEditorClosed: function(res) {
+    themeEditorClosed: function (res) {
         util.log(`theme editor closed with result: ${res}`);
 
         if (!res) {
@@ -212,7 +212,7 @@ export default {
      *
      * @param {any} inputElement The name of the field to collect inputs from.
      */
-    bindTextInput: function(inputElement) {
+    bindTextInput: function (inputElement) {
         jquery(inputElement).on('input', (event) => {
             let target = jquery(event.target);
             if (target.data('lastval') !== target.val()) {
@@ -228,7 +228,7 @@ export default {
      *
      * @param {any} inputElement The name of the field to turn into a metro-select.
      */
-    bindSelectInput: function(inputElement) {
+    bindSelectInput: function (inputElement) {
         jquery(inputElement).metroSelect({
             initial: this.data.themeContent[inputElement.id],
             onchange: this.updateSelect.bind(this, inputElement.id),
@@ -245,7 +245,7 @@ export default {
      *
      * @param {any} inputElement The name of the field to turn into a spectrum.
      */
-    bindColorInput: function(inputElement) {
+    bindColorInput: function (inputElement) {
         jquery(inputElement).spectrum({
             chooseText: 'save color',
             replacerClassName: 'spectrum-replacer',
@@ -266,29 +266,29 @@ export default {
      * @param {any} inputId The name of the metro-select that's changing.
      * @param {any} val The new value.
      */
-    updateSelect: function(inputId, val) {
+    updateSelect: function (inputId, val) {
         if (this.data[inputId] === val) {
             return;
         }
         switch (inputId.toLowerCase()) {
-        // These are the choosers that have something to hide.
-        case 'background-chooser':
-        case 'palette-chooser':
-        case 'font-chooser':
-        case 'fontfamily-chooser':
-            var elems = document.getElementsByClassName(
-                `${inputId}-section`
-            );
-            for (let i = 0; i < elems.length; i++) {
-                // If this element has the same id as our new select value, make it visible.
-                if (elems[i].id === val) {
-                    util.removeClass(elems[i], 'hide');
-                    // Otherwise ensure its hidden.
-                } else if (!util.hasClass(elems[i], 'hide')) {
-                    util.addClass(elems[i], 'hide');
+            // These are the choosers that have something to hide.
+            case 'background-chooser':
+            case 'palette-chooser':
+            case 'font-chooser':
+            case 'fontfamily-chooser':
+                var elems = document.getElementsByClassName(
+                    `${inputId}-section`
+                );
+                for (let i = 0; i < elems.length; i++) {
+                    // If this element has the same id as our new select value, make it visible.
+                    if (elems[i].id === val) {
+                        util.removeClass(elems[i], 'hide');
+                        // Otherwise ensure its hidden.
+                    } else if (!util.hasClass(elems[i], 'hide')) {
+                        util.addClass(elems[i], 'hide');
+                    }
                 }
-            }
-            break;
+                break;
         }
 
         this.updateCurrentTheme(inputId, val);
@@ -300,7 +300,7 @@ export default {
      * @param {any} inputId The name of the color field that's changing.
      * @param {any} color The new color.
      */
-    updateColor: function(inputId, color) {
+    updateColor: function (inputId, color) {
         if (this.data[inputId] === color.toHexString()) {
             return;
         }
@@ -313,17 +313,17 @@ export default {
      * @param {any} theme The theme to be shared.
      * @param {function} callback Function to call sharing completes.
      */
-    shareTheme: function(theme, callback) {
+    shareTheme: function (theme, callback) {
         let url = `${defaults.defaultWebservice}/newtheme`;
         jquery.ajax({
             url: url,
             type: 'POST',
             data: JSON.stringify(theme),
-            success: function() {
+            success: function () {
                 util.log('Theme shared to the web.');
                 callback(true, '');
             },
-            error: function(jqxhr, status, ex) {
+            error: function (jqxhr, status, ex) {
                 util.error(
                     `Theme was not shared to the web with status: ${status} and ex: ${ex}`
                 );
@@ -337,7 +337,7 @@ export default {
      *
      * @param {any} theme The theme to be removed. Only checks by name.
      */
-    removeTheme: function(theme) {
+    removeTheme: function (theme) {
         let themesLocal = storage.get('themesLocal', []);
 
         for (let i = 0; i < themesLocal.length; i++) {
@@ -357,7 +357,7 @@ export default {
      * @param {any} inputId The theme setting that has changed.
      * @param {any} val The new theme setting.
      */
-    updateCurrentTheme: function(inputId, val) {
+    updateCurrentTheme: function (inputId, val) {
         if (this.data[inputId] === val) {
             return;
         }
@@ -410,11 +410,12 @@ export default {
         }
     },
 
-    autoPaletteAdjust: function() {
+    autoPaletteAdjust: function () {
         let baseColor = tinycolor(this.data.themeContent.baseColor);
         this.data.themeContent.backgroundColor = baseColor.toHexString();
         this.data.themeContent.titleColor = this.getReadable(
-            tinycolor(this.data.themeContent.baseColor), -1.6
+            tinycolor(this.data.themeContent.baseColor),
+            -1.6
         );
         this.data.themeContent.mainColor = this.getReadable(
             tinycolor(this.data.themeContent.baseColor),
@@ -433,10 +434,11 @@ export default {
      * @param {any} multiplier A value to scale the spin by to add some variance.
      * @return {any} The most readable color.
      */
-    getReadable: function(color, multiplier) {
+    getReadable: function (color, multiplier) {
         return tinycolor
             .mostReadable(
-                color, [
+                color,
+                [
                     // My reckons for good color stops :shrug:
                     tinycolor(color.toHexString()).spin(multiplier * 38),
                     tinycolor(color.toHexString()).spin(multiplier * 100),
@@ -473,7 +475,8 @@ export default {
                     tinycolor(color.toHexString())
                         .spin(multiplier * 303)
                         .brighten(25),
-                ], {
+                ],
+                {
                     includeFallbackColors: false,
                 }
             )

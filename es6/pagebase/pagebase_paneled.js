@@ -6,7 +6,7 @@ let templates = {
 };
 
 export default class PagebasePaneled extends Pagebase {
-    constructor() { 
+    constructor() {
         super();
         this.className = 'pagebase-grouped';
     }

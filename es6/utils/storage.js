@@ -4,7 +4,7 @@ export default {
     cache: {},
     deferred: undefined,
 
-    init: function() {
+    init: function () {
         if (!this.deferred) {
             this.deferred = new jquery.Deferred();
             let that = this;

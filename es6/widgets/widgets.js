@@ -8,7 +8,7 @@ export default {
 
     data: [weather, themes, about],
 
-    init: function(document) {
+    init: function (document) {
         this.data.forEach((module) => {
             module.init(document);
         });

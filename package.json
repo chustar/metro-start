@@ -1,43 +1,43 @@
 {
-  "name": "metro-start",
-  "description": "A new tab page for Google Chrome inspired by Zune",
-  "homepage": "http://www.metro-start.com/",
-  "version": "10.10.1",
-  "license": "MIT",
-  "private": true,
-  "scripts": {
-    "build": "npx webpack"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/metro-start/metro-start.git"
-  },
-  "dependencies": {
-    "jquery": "^3.6.0",
-    "jquery-color": "github:jquery/jquery-color",
-    "jss": "github:dvtng/jss",
-    "metro-select": "file:../metro-select",
-    "requirejs": "^2.3.2",
-    "spectrum-colorpicker": "^1.8.1",
-    "throttle-debounce": "^3.0.1",
-    "tinycolor2": "^1.4.2",
-    "trianglify": "^4.1.1"
-  },
-  "devDependencies": {
-    "addons-linter": "^2.18.0",
-    "copy-webpack-plugin": "^7.0.0",
-    "css-loader": "^5.0.2",
-    "download": "^8.0.0",
-    "eslint": "^7.20.0",
-    "eslint-config-google": "^0.14.0",
-    "safe-compare": "^1.1.4",
-    "sass": "^1.32.7",
-    "sass-loader": "^11.0.1",
-    "style-loader": "^2.0.0",
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2",
-    "webpack-sources": "^2.2.0",
-    "zip-webpack-plugin": "^4.0.1"
-  }
+    "name": "metro-start",
+    "description": "A new tab page for Google Chrome inspired by Zune",
+    "homepage": "http://www.metro-start.com/",
+    "version": "10.10.1",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+        "build": "npx webpack"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/metro-start/metro-start.git"
+    },
+    "dependencies": {
+        "jquery": "^3.6.0",
+        "jquery-color": "github:jquery/jquery-color",
+        "jss": "github:dvtng/jss",
+        "metro-select": "file:../metro-select",
+        "requirejs": "^2.3.2",
+        "spectrum-colorpicker": "^1.8.1",
+        "throttle-debounce": "^3.0.1",
+        "tinycolor2": "^1.4.2",
+        "trianglify": "^4.1.1"
+    },
+    "devDependencies": {
+        "addons-linter": "^2.18.0",
+        "copy-webpack-plugin": "^7.0.0",
+        "css-loader": "^5.0.2",
+        "download": "^8.0.0",
+        "eslint": "^7.20.0",
+        "eslint-config-google": "^0.14.0",
+        "safe-compare": "^1.1.4",
+        "sass": "^1.32.7",
+        "sass-loader": "^11.0.1",
+        "style-loader": "^2.0.0",
+        "webpack": "^5.38.1",
+        "webpack-cli": "^4.5.0",
+        "webpack-dev-server": "^3.11.2",
+        "webpack-sources": "^2.2.0",
+        "zip-webpack-plugin": "^4.0.1"
+    }
 }

@@ -21,7 +21,7 @@ export default {
 
     modalCallbacks: {},
 
-    init: function() {},
+    init: function () {},
 
     /**
      * Creates a new modal window.
@@ -32,7 +32,7 @@ export default {
      * @param {any} confirmText The text to display for confirmation. If empty, no confirm button will be shown.
      * @param {any} cancelText The tex to display for cancellation. If empty, no cancel button will be shown.
      */
-    createModal: function(id, content, callback, confirmText, cancelText) {
+    createModal: function (id, content, callback, confirmText, cancelText) {
         this.modalCallbacks[id] = callback;
 
         let overlay = this.templates.overlay.cloneNode(true);
@@ -70,7 +70,9 @@ export default {
         modalContent.firstElementChild.id = id;
         util.addClass(modalContent.firstElementChild, id);
         modalContent.firstElementChild.appendChild(
-            typeof content === 'string' ? util.createElement(`<p>${content}</p>`) : content
+            typeof content === 'string'
+                ? util.createElement(`<p>${content}</p>`)
+                : content
         );
         modalContent.firstElementChild.appendChild(info);
 
@@ -85,7 +87,7 @@ export default {
      * @param {any} id The id of the modal that closed.
      * @param {any} res The result of the closing modal.
      */
-    modalClosed: function(id, res) {
+    modalClosed: function (id, res) {
         let elems = document.getElementsByClassName(id);
         while (elems.length > 0) {
             elems[0].remove();

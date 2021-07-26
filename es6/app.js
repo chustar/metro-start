@@ -19,7 +19,7 @@ let app = {
 
     modules: [utils, widgets, pages],
 
-    init: function() {
+    init: function () {
         this.modules.forEach((module) => {
             module.init(document);
         });
@@ -35,7 +35,7 @@ let app = {
     /**
      * Shows the options on the page when the wrench is clicked.
      */
-    clickWrench: function() {
+    clickWrench: function () {
         this.showOptions = !this.showOptions;
 
         if (this.showOptions) {

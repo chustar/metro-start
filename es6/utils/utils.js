@@ -13,7 +13,7 @@ export default {
 
     modules: [util, storage, defaults, script, modal],
 
-    init: function() {
+    init: function () {
         this.modules.forEach((module) => {
             module.init(document);
         });
