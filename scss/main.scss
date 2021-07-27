@@ -73,7 +73,7 @@ input {
 }
 h1 {
     font-size: 3.6em;
-    margin: 0 0 15px 25px;
+    margin: 0 0 10px 25px;
     white-space: nowrap;
 }
 h2 {
@@ -94,6 +94,7 @@ h5 {
 }
 #addTodo {
     margin-left: 25px;
+    margin-right: 25px;
     display: flex;
     max-width: min(100%, 375px);
     #newTodo {
@@ -281,7 +282,7 @@ h5 {
     font-style: italic;
 }
 .theme-editor-section {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 .tristyle-section,
 .trisize-section,
@@ -307,13 +308,16 @@ h5 {
     }
 }
 @media only screen and (max-width: 480px) {
-    // .show-options #weather {
-    //     #city,
-    //     #temp,
-    //     #condition {
-    //         display: none;
-    //     }
-    // }
+    .show-options .location-option {
+        display: flex;
+        input {
+            flex-grow: 1;
+            margin-right: 25px;
+        }
+        span {
+            align-self: center;
+        }
+    }
     .external-selector .internal-selector {
         white-space: nowrap;
     }
@@ -330,7 +334,14 @@ h5 {
     .weather {
         font-style: normal;
         margin: 25px;
+        margin-top: max(25px, env(safe-area-inset-top));
         margin-bottom: 0;
+        #toggleWeather {
+            margin-bottom: 10px;
+        }
+        #weather > *:not(:last-child) {
+            margin-bottom: 10px;
+        }
     }
     .theme-editor-section input[type='text'] {
         width: 100%;
