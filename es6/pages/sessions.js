@@ -1,9 +1,12 @@
+import jquery from 'jquery';
 import PagebaseGrouped from '../pagebase/pagebase_grouped';
 import util from '../utils/util';
+
 export default {
     name: 'sessions',
     enabled: false,
-    // supported: !!chrome.sessions,
+    isSupported: () =>
+        !!chrome.sessions.getDevices || !!chrome.sessions.getRecentlyClosed,
 
     setPermissionVisibility: function (visible, cb) {
         let that = this;
@@ -92,6 +95,13 @@ export default {
             return;
         }
 
+        if (!this.isSupported()) {
+            window.location.reload();
+            return;
+        } else {
+            jquery('.sessions-option').removeClass('safari-removed');
+        }
+
         let that = this;
         if (chrome.sessions.getDevices) {
             chrome.sessions.getDevices(null, (devices) => {
@@ -110,7 +120,8 @@ export default {
                     });
                 }
             });
-        } else {
+        }
+        if (chrome.sessions.getRecentlyClosed) {
             chrome.sessions.getRecentlyClosed(null, (sessions) => {
                 let data = [];
                 for (let session of sessions) {

@@ -1,3 +1,4 @@
+import jquery from 'jquery';
 import PagebasePaneled from '../pagebase/pagebase_paneled';
 import modal from '../utils/modal';
 import util from '../utils/util';
@@ -5,7 +6,7 @@ import util from '../utils/util';
 export default {
     name: 'bookmarks',
     enabled: false,
-    isSupported: () => !!chrome.bookmarks,
+    isSupported: () => !!chrome.bookmarks.getTree,
 
     setPermissionVisibility: function (visible, cb) {
         let that = this;
@@ -97,6 +98,12 @@ export default {
             return;
         }
 
+        if (!this.isSupported()) {
+            window.location.reload();
+            return;
+        } else {
+            jquery('.bookmarks-option').removeClass('safari-removed');
+        }
         let that = this;
         chrome.bookmarks.getTree((data) => {
             that.data = data[0].children;

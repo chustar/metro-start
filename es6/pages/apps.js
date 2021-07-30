@@ -1,9 +1,10 @@
+import jquery from 'jquery';
 import Pagebase from '../pagebase/pagebase_grouped';
 import util from '../utils/util';
 export default {
     name: 'apps',
     enabled: false,
-    supported: !!chrome.management,
+    isSupported: () => !!chrome.management.getAll,
 
     setPermissionVisibility: function (visible, cb) {
         let that = this;
@@ -13,6 +14,9 @@ export default {
                     permissions: ['management'],
                 },
                 function (granted) {
+                    util.log(
+                        `granted perms, ${chrome.permissions}, ${granted}`
+                    );
                     that.enabled = granted;
                     if (cb) {
                         cb(granted);
@@ -26,6 +30,7 @@ export default {
                     permissions: ['management'],
                 },
                 function (granted) {
+                    util.log('granted perms', chrome.permissions, granted);
                     that.enabled = !granted;
                     if (cb) {
                         cb(granted);
@@ -97,6 +102,13 @@ export default {
                 ],
             });
             return;
+        }
+
+        if (!this.isSupported()) {
+            window.location.reload();
+            return;
+        } else {
+            jquery('.apps-option').removeClass('safari-removed');
         }
 
         const that = this;

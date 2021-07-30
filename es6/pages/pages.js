@@ -6,6 +6,7 @@ import sessions from './sessions';
 import apps from './apps';
 import bookmarks from './bookmarks';
 import themes from './themes';
+import util from '../utils/util';
 import 'metro-select';
 export default {
     name: 'pages',
@@ -26,10 +27,12 @@ export default {
         const that = this;
         chrome.permissions.getAll(function (perms) {
             if (isSafari) {
+                util.log('safari detected');
                 jquery('.apps-option').addClass('safari-removed');
                 jquery('.bookmarks-option').addClass('safari-removed');
                 jquery('.sessions-option').addClass('safari-removed');
             } else {
+                util.log('non-safari detected');
                 if (
                     chrome.management &&
                     perms.permissions.includes('management')
@@ -64,7 +67,8 @@ export default {
             jquery(that.elems.chooser).metroSelect({
                 initial: that.page,
                 add_remove_class: 'addremove_button option options-color',
-                parent_removed_class: 'option safari-removed',
+                removed_class: 'removed',
+                parent_removed_class: 'option',
                 onchange: that.changePage.bind(that),
                 onvisibilitychange: that.visibilityChanged.bind(that),
             });
@@ -110,8 +114,6 @@ export default {
         jquery(`.external .internal .collection.${page}`).removeClass(
             'off-screen'
         );
-        // jquery(`.metro-select-option .${page}-option`).removeClass('removed disabled');
-
         jss.set('.external .internal', {
             'margin-left': `${moduleIndex * -100}%`,
         });
