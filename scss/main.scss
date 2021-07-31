@@ -212,6 +212,7 @@ h5 {
     flex-direction: row;
     justify-content: space-between;
     margin: 15px;
+    margin-bottom: max(15px, env(safe-area-inset-bottom));
 }
 
 .overlay-wrap {
