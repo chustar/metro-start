@@ -105,6 +105,7 @@ export default {
         let that = this;
         if (chrome.sessions.getDevices) {
             chrome.sessions.getDevices(null, (devices) => {
+                util.log(`Sessions ${JSON.stringify(devices)}`);
                 for (let device of devices) {
                     let data = [];
                     for (let session of device.sessions) {
@@ -121,22 +122,23 @@ export default {
                 }
             });
         }
-        if (chrome.sessions.getRecentlyClosed) {
-            chrome.sessions.getRecentlyClosed(null, (sessions) => {
-                let data = [];
-                for (let session of sessions) {
-                    if (session.tab) {
-                        data = data.concat(session);
-                    } else if (session.window) {
-                        data = data.concat(session.window.tabs);
-                    }
-                }
-                that.sessions.addAll({
-                    heading: 'recently closed',
-                    data: data,
-                });
-            });
-        }
+        // if (chrome.sessions.getRecentlyClosed) {
+        //     chrome.sessions.getRecentlyClosed(null, (sessions) => {
+        //         let data = [];
+        //         util.log(`Sessions ${JSON.stringify(sessions)}`);
+        //         for (let session of sessions) {
+        //             if (session.tab) {
+        //                 data = data.concat(session);
+        //             } else if (session.window) {
+        //                 data = data.concat(session.window.tabs);
+        //             }
+        //         }
+        //         that.sessions.addAll({
+        //             heading: 'recently closed',
+        //             data: data,
+        //         });
+        //     });
+        // }
     },
 
     /**

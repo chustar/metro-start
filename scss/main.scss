@@ -8,9 +8,9 @@ html {
     box-sizing: inherit;
 }
 body {
-    font: -apple-system-body;
     -webkit-font-smoothing: antialiased;
     font-family: Helvetica, 'Segoe UI', Arial, sans-serif;
+    font-size: 24px;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -238,7 +238,6 @@ h5 {
     padding: 8px;
     right: 0;
     top: 0;
-    width: 75%;
 }
 .modal-content > p {
     height: 10%;
@@ -355,6 +354,9 @@ h5 {
         padding-bottom: 4px;
         padding-left: 4px;
     }
+	.modal-content {
+		padding: 2px;
+	}
 }
 @media only screen and (min-width: 480px) {
     .external-selector {
@@ -411,4 +413,7 @@ h5 {
         padding-bottom: 4px;
         padding-left: 4px;
     }
+	.modal-content {
+		width: 75%;
+	}
 }

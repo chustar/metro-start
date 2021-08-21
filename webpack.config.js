@@ -58,6 +58,7 @@ var chromeConfig = Object.assign({}, config, {
                     transform(content) {
                         let manifest = JSON.parse(content.toString());
                         manifest.version = packageJson.version;
+						manifest.optional_permissions = ["management", "bookmarks", "sessions", "tabs"];
                         return JSON.stringify(manifest);
                     }
                 }]}),
@@ -88,6 +89,7 @@ var firefoxConfig = Object.assign({}, config, {
                             strict_min_version: '77.0'
                         }
                     };
+					manifest.optional_permissions = ["management", "bookmarks", "sessions", "tabs"];
                     return JSON.stringify(manifest);
                 }
             }]
