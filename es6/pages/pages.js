@@ -27,10 +27,8 @@ export default {
         const that = this;
         chrome.permissions.getAll(function (perms) {
             if (isSafari) {
+                jquery('body').addClass('safari-detected');
                 util.log('safari detected');
-                jquery('.apps-option').addClass('safari-removed');
-                jquery('.bookmarks-option').addClass('safari-removed');
-                jquery('.sessions-option').addClass('safari-removed');
             } else {
                 util.log('non-safari detected');
                 if (
@@ -68,7 +66,8 @@ export default {
                 initial: that.page,
                 add_remove_class: 'addremove_button option options-color',
                 removed_class: 'removed',
-                parent_removed_class: 'option',
+                parent_removed_class: 'option safari-removed',
+                parent_added_class: 'parent-added safari-removed',
                 onchange: that.changePage.bind(that),
                 onvisibilitychange: that.visibilityChanged.bind(that),
             });

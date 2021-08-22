@@ -107,8 +107,6 @@ export default {
         if (!this.isSupported()) {
             window.location.reload();
             return;
-        } else {
-            jquery('.apps-option').removeClass('safari-removed');
         }
 
         const that = this;

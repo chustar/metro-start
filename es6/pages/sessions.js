@@ -98,9 +98,7 @@ export default {
         if (!this.isSupported()) {
             window.location.reload();
             return;
-        } else {
-            jquery('.sessions-option').removeClass('safari-removed');
-        }
+        } 
 
         let that = this;
         if (chrome.sessions.getDevices) {

@@ -101,9 +101,8 @@ export default {
         if (!this.isSupported()) {
             window.location.reload();
             return;
-        } else {
-            jquery('.bookmarks-option').removeClass('safari-removed');
         }
+        
         let that = this;
         chrome.bookmarks.getTree((data) => {
             that.data = data[0].children;
