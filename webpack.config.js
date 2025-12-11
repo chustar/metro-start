@@ -82,6 +82,7 @@ var firefoxConfig = Object.assign({}, config, {
                 transform(content) {
                     let manifest = JSON.parse(content.toString());
                     manifest.version = packageJson.version;
+                    manifest.manifest_version = 2;
                     manifest.browser_specific_settings = {
                         gecko: {
                             id: 'metro-start@metro-start.com',
