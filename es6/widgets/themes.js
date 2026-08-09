@@ -18,6 +18,12 @@ const getTinycolor = async () => {
 let _spectrumLoaded = false;
 const ensureSpectrum = async () => {
     if (!_spectrumLoaded) {
+        // Load CSS then JS for spectrum so styles are not pulled into the main bundle.
+        try {
+            await import('spectrum-colorpicker/spectrum.css');
+        } catch (e) {
+            // importing CSS might be a no-op in some bundler configs; ignore failures.
+        }
         await import('spectrum-colorpicker');
         _spectrumLoaded = true;
     }
