@@ -8,20 +8,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Use Node.js 14.x
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
         node-version: 14.x
     - run: npm ci
     - run: npx webpack
     - name: Upload Chrome Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'Chrome Extension'
         path: 'dist/*chrome.zip'
     - name: Upload Firefox Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'Firefox Extension'
         path: 'dist/*firefox.zip'
