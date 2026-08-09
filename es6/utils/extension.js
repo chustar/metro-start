@@ -25,12 +25,10 @@ function _hasSafari() {
 }
 
 // Storage shim: expose storage.sync.get(keys, cb) and storage.sync.set(obj, cb)
+// Falls back to localStorage for browser environments without extension APIs
 const storage = {
     sync: {
         get: function (keys, callback) {
-            if (_hasBrowser()) {
-                return _wrapPromiseCall(browser.storage.sync.get(keys), callback);
-            }
             if (_hasChrome()) {
                 // chrome API expects callback
                 try {
@@ -41,47 +39,47 @@ const storage = {
                     if (typeof callback === 'function') callback({});
                 }
             }
-            if (_hasSafari()) {
-                // Safari legacy extension fallback: use localStorage
+            if (_hasBrowser()) {
                 try {
-                    const keysToReturn = {};
-                    if (!keys) {
-                        // return all stored keys
-                        for (let i = 0; i < localStorage.length; i++) {
-                            const k = localStorage.key(i);
-                            try { keysToReturn[k] = JSON.parse(localStorage.getItem(k)); } catch { keysToReturn[k] = localStorage.getItem(k); }
-                        }
-                    } else if (Array.isArray(keys)) {
-                        keys.forEach(k => {
-                            try { keysToReturn[k] = JSON.parse(localStorage.getItem(k)); } catch { keysToReturn[k] = localStorage.getItem(k); }
-                        });
-                    } else if (typeof keys === 'object') {
-                        // keys is an object with default values
-                        Object.keys(keys).forEach(k => {
-                            const val = localStorage.getItem(k);
-                            keysToReturn[k] = val === null ? keys[k] : (function () { try { return JSON.parse(val); } catch { return val; } })();
-                        });
-                    } else {
-                        const val = localStorage.getItem(keys);
-                        try { keysToReturn[keys] = JSON.parse(val); } catch { keysToReturn[keys] = val; }
-                    }
-                    if (typeof callback === 'function') callback(keysToReturn);
-                    return Promise.resolve(keysToReturn);
+                    return _wrapPromiseCall(browser.storage.sync.get(keys), callback);
                 } catch (e) {
                     console.error(e);
                     if (typeof callback === 'function') callback({});
-                    return Promise.resolve({});
                 }
             }
-            // No storage available
-            const empty = {};
-            if (typeof callback === 'function') callback(empty);
-            return Promise.resolve(empty);
+            
+            // Fallback to localStorage (Safari, demo mode, or any non-extension environment)
+            try {
+                const keysToReturn = {};
+                if (!keys) {
+                    // return all stored keys
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const k = localStorage.key(i);
+                        try { keysToReturn[k] = JSON.parse(localStorage.getItem(k)); } catch { keysToReturn[k] = localStorage.getItem(k); }
+                    }
+                } else if (Array.isArray(keys)) {
+                    keys.forEach(k => {
+                        try { keysToReturn[k] = JSON.parse(localStorage.getItem(k)); } catch { keysToReturn[k] = localStorage.getItem(k); }
+                    });
+                } else if (typeof keys === 'object') {
+                    // keys is an object with default values
+                    Object.keys(keys).forEach(k => {
+                        const val = localStorage.getItem(k);
+                        keysToReturn[k] = val === null ? keys[k] : (function () { try { return JSON.parse(val); } catch { return val; } })();
+                    });
+                } else {
+                    const val = localStorage.getItem(keys);
+                    try { keysToReturn[keys] = JSON.parse(val); } catch { keysToReturn[keys] = val; }
+                }
+                if (typeof callback === 'function') callback(keysToReturn);
+                return Promise.resolve(keysToReturn);
+            } catch (e) {
+                console.error(e);
+                if (typeof callback === 'function') callback({});
+                return Promise.resolve({});
+            }
         },
         set: function (obj, callback) {
-            if (_hasBrowser()) {
-                return _wrapPromiseCall(browser.storage.sync.set(obj), callback);
-            }
             if (_hasChrome()) {
                 try {
                     return chrome.storage.sync.set(obj, callback);
@@ -90,21 +88,27 @@ const storage = {
                     if (typeof callback === 'function') callback();
                 }
             }
-            if (_hasSafari()) {
+            if (_hasBrowser()) {
                 try {
-                    Object.keys(obj).forEach(k => {
-                        try { localStorage.setItem(k, JSON.stringify(obj[k])); } catch { localStorage.setItem(k, String(obj[k])); }
-                    });
-                    if (typeof callback === 'function') callback();
-                    return Promise.resolve();
+                    return _wrapPromiseCall(browser.storage.sync.set(obj), callback);
                 } catch (e) {
                     console.error(e);
                     if (typeof callback === 'function') callback();
-                    return Promise.resolve();
                 }
             }
-            if (typeof callback === 'function') callback();
-            return Promise.resolve();
+            
+            // Fallback to localStorage (Safari, demo mode, or any non-extension environment)
+            try {
+                Object.keys(obj).forEach(k => {
+                    try { localStorage.setItem(k, JSON.stringify(obj[k])); } catch { localStorage.setItem(k, String(obj[k])); }
+                });
+                if (typeof callback === 'function') callback();
+                return Promise.resolve();
+            } catch (e) {
+                console.error(e);
+                if (typeof callback === 'function') callback();
+                return Promise.resolve();
+            }
         }
     }
 };
