@@ -9,6 +9,12 @@ const baseConfig = {
     mode: 'production',
     optimization: {
         minimize: false,
+        splitChunks: {
+            chunks: 'all',
+            maxInitialRequests: 25,
+            minSize: 20000,
+        },
+        runtimeChunk: 'single',
     },
     stats: {
         colors: true,
