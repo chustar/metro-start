@@ -44,9 +44,14 @@ const config = {
 
 var chromeConfig = Object.assign({}, config, {
     output: {
+        // Main entry remains metro-start.js (single-file for extension packaging).
         filename: 'metro-start.js',
+        // Lazy-loaded chunks use a predictable pattern so they can be included in the extension
+        // package directory alongside metro-start.js when needed.
+        chunkFilename: '[name].[contenthash].js',
         path: `${__dirname}/dist/chrome`,
     },
+    // Keep default optimization (no splitChunks/runtimeChunk) so vendors/runtime stay in the main bundle.
     plugins: [
         new CopyPlugin({
             patterns: [
@@ -122,4 +127,19 @@ var xcodeConfig = Object.assign({}, config, {
         filename: 'metro-start-xcode.zip',
     })]});
     
-module.exports = [chromeConfig, firefoxConfig, xcodeConfig];
+module.exports = (env = {}) => {
+    // Allow selecting a specific target via --env target=chrome|firefox|xcode|all
+    const target = env.target || process.env.BUILD_TARGET || 'chrome';
+    switch (target) {
+        case 'chrome':
+            return chromeConfig;
+        case 'firefox':
+            return firefoxConfig;
+        case 'xcode':
+            return xcodeConfig;
+        case 'all':
+            return [chromeConfig, firefoxConfig, xcodeConfig];
+        default:
+            return chromeConfig;
+    }
+};
