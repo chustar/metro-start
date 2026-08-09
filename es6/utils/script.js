@@ -497,7 +497,6 @@ export default {
 
 
     jssSetMultiple: function(selectors, style) {
-        console.log(selectors, style);
         for (let selector of selectors) {
             jss.set(selector, style);
         }

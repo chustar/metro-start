@@ -112,7 +112,7 @@ export default {
      * @return {any} True if the elem has the class; false otherwise.
      */
     hasClass: function hasClass(elem, testClass) {
-        let oldClass = elem.className.split(' ');
+        let oldClass = elem.className ? elem.className.split(' ') : [];
         return oldClass.indexOf(testClass) !== -1;
     },
 

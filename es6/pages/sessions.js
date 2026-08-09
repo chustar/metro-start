@@ -14,7 +14,6 @@ export default {
                 permissions: ['sessions']
             },
             function(granted) {
-                console.log('granted sessions', granted);
                 that.enabled = granted;
                 if (cb) {
                     cb(granted);
@@ -81,7 +80,6 @@ export default {
      * Loads the available sessions from local and web storage
      */
     loadSessions: function() {
-        util.log('sessions shim', this.sessions, ext.sessions);
         this.sessions.clear();
         if (!this.enabled) {
             this.sessions.addAll({
