@@ -476,9 +476,25 @@ export default {
     },
 
     getShadow: function(data, color) {
-        let shadow = tinycolor(color);
-        return data.themeContent['fontreadability-chooser'] === 'on' ? `${shadow.spin(90)} 0 0 0.1em, ${shadow.spin(180)} 0 0 0.2em` : 'none';
+        // Avoid importing tinycolor synchronously here. If tinycolor has been
+        // lazy-loaded already, use it; otherwise return a simple fallback so
+        // the UI doesn't force tinycolor into the main bundle.
+        if (!color) return 'none';
+        try {
+            if (_tinycolor) {
+                const tc = _tinycolor(color);
+                return data.themeContent['fontreadability-chooser'] === 'on'
+                    ? `${tc.spin(90)} 0 0 0.1em, ${tc.spin(180)} 0 0 0.2em`
+                    : 'none';
+            }
+        } catch (e) {
+            // fallthrough to fallback
+        }
+        return data.themeContent['fontreadability-chooser'] === 'on'
+            ? `${color} 0 0 0.1em, ${color} 0 0 0.2em`
+            : 'none';
     },
+
 
     jssSetMultiple: function(selectors, style) {
         console.log(selectors, style);
