@@ -116,23 +116,51 @@ const storage = {
 // Permissions shim: request, remove, getAll
 const permissions = {
     request: function (permObj, callback) {
-        if (_hasBrowser()) return _wrapPromiseCall(browser.permissions.request(permObj), callback);
         if (_hasChrome()) return chrome.permissions.request(permObj, callback);
-        // Safari: no explicit permissions API for web extensions; resolve as true
-        if (_hasSafari()) { if (typeof callback === 'function') callback(true); return Promise.resolve(true); }
-        if (typeof callback === 'function') callback(true); return Promise.resolve(true);
+        if (_hasBrowser()) {
+            try {
+                return _wrapPromiseCall(browser.permissions.request(permObj), callback);
+            } catch (e) {
+                console.error(e);
+                if (typeof callback === 'function') callback(true);
+                return Promise.resolve(true);
+            }
+        }
+        // Safari and demo: no explicit permissions API; resolve as granted
+        if (typeof callback === 'function') callback(true); 
+        return Promise.resolve(true);
     },
     remove: function (permObj, callback) {
-        if (_hasBrowser()) return _wrapPromiseCall(browser.permissions.remove(permObj), callback);
         if (_hasChrome()) return chrome.permissions.remove(permObj, callback);
-        if (_hasSafari()) { if (typeof callback === 'function') callback(true); return Promise.resolve(true); }
-        if (typeof callback === 'function') callback(true); return Promise.resolve(true);
+        if (_hasBrowser()) {
+            try {
+                return _wrapPromiseCall(browser.permissions.remove(permObj), callback);
+            } catch (e) {
+                console.error(e);
+                if (typeof callback === 'function') callback(true);
+                return Promise.resolve(true);
+            }
+        }
+        // Safari and demo: no explicit permissions API; resolve as granted
+        if (typeof callback === 'function') callback(true); 
+        return Promise.resolve(true);
     },
     getAll: function (callback) {
-        if (_hasBrowser()) return _wrapPromiseCall(browser.permissions.getAll(), callback);
-        if (_hasChrome()) return chrome.permissions.getAll(callback);
-        if (_hasSafari()) { if (typeof callback === 'function') callback({permissions: [], origins: []}); return Promise.resolve({permissions: [], origins: []}); }
-        if (typeof callback === 'function') callback({permissions: [], origins: []}); return Promise.resolve({permissions: [], origins: []});
+        if (_hasChrome() && chrome.permissions && chrome.permissions.getAll) {
+            return chrome.permissions.getAll(callback);
+        }
+        if (_hasBrowser() && browser.permissions && browser.permissions.getAll) {
+            try {
+                return _wrapPromiseCall(browser.permissions.getAll(), callback);
+            } catch (e) {
+                console.error(e);
+                if (typeof callback === 'function') callback({permissions: [], origins: []});
+                return Promise.resolve({permissions: [], origins: []});
+            }
+        }
+        // Safari and demo: no permissions API; return empty
+        if (typeof callback === 'function') callback({permissions: [], origins: []}); 
+        return Promise.resolve({permissions: [], origins: []});
     }
 };
 
