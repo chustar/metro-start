@@ -30,6 +30,7 @@ const ensureSpectrum = async () => {
 };
 
 export default {
+    name: 'themes',
     isBound: false,
 
     sessionUpdateCount: 0,
