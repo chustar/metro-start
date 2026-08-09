@@ -66,16 +66,9 @@ const sampleJs = Object.keys(sampleData).map(k => {
 fs.writeFileSync(path.join(demoDir, 'sample-data.js'), sampleJs, 'utf8');
 console.log('Wrote demo/sample-data.js');
 
-// Copy all generated JS/CSS assets from dist/chrome into demo/dist
-const distDir = path.join(repoRoot, 'dist', 'chrome');
-const assets = fs.readdirSync(distDir);
-assets.forEach(f => {
-    const ext = path.extname(f).toLowerCase();
-    if (['.js', '.css', '.map'].includes(ext) || f === 'metro-start.js') {
-        fs.copyFileSync(path.join(distDir, f), path.join(demoDist, f));
-        console.log('Copied', f, 'to demo/dist');
-    }
-});
+// Copy the built bundle to demo/dist
+fs.copyFileSync(distSrc, path.join(demoDist, 'metro-start.js'));
+console.log('Copied bundle to demo/dist/metro-start.js');
 
 // Read start.html and modify it for demo usage: insert sample-data.js and point script to dist/metro-start.js
 let html = fs.readFileSync(htmlPath, 'utf8');

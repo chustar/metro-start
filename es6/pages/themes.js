@@ -1,5 +1,6 @@
 import jquery from 'jquery';
 import PagebaseGrouped from '../pagebase/pagebase_grouped';
+import themesWidget from '../widgets/themes';
 import modal from '../utils/modal';
 import util from '../utils/util';
 import storage from '../utils/storage';
@@ -39,7 +40,7 @@ export default {
         infoFragment: util.createElement('<span class="info"></span>'),
     },
 
-    init: async function() {
+    init: function() {
         this.elems.rootNode = document.getElementById(
             'internal-selector-themes'
         );
@@ -51,23 +52,11 @@ export default {
             this.templateFunc.bind(this)
         );
 
-        // Lazy-load the themes widget so the heavy theme/editor code is only
-        // loaded when the themes page is initialized.
-        try {
-            const mod = await import('../widgets/themes');
-            this.themesWidget = mod.default || mod;
-            if (this.themesWidget) {
-                this.themesWidget.themeAdded = this.themeAdded.bind(this);
-                this.themesWidget.themeRemoved = this.themeRemoved.bind(this);
-            }
-        } catch (e) {
-            util.error('Could not load themes widget: ' + e);
-            this.themesWidget = null;
-        }
+        this.themesWidget.themeAdded = this.themeAdded.bind(this);
+        this.themesWidget.themeRemoved = this.themeRemoved.bind(this);
 
         this.loadThemes();
     },
-
 
     /**
      * Called when the sort order has been changed.
@@ -136,12 +125,8 @@ export default {
         let titleWrap = this.templates.titleWrapFragment.cloneNode(true);
         titleWrap.firstElementChild.appendChild(title);
 
-        try {
-            if (this.themesWidget && this.themesWidget.data && this.themesWidget.data.title === theme.title) {
-                util.addClass(titleWrap.firstElementChild, 'active');
-            }
-        } catch (e) {
-            // ignore if themesWidget isn't available yet
+        if (this.themesWidget.data.title === theme.title) {
+            util.addClass(titleWrap.firstElementChild, 'active');
         }
 
         fragment.appendChild(titleWrap);
