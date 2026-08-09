@@ -54,8 +54,6 @@ var chromeConfig = Object.assign({}, config, {
             maxInitialRequests: 25,
             minSize: 20000,
         },
-        // keep runtime separate so vendor splitting is effective
-        runtimeChunk: 'single',
         // minify the chrome demo build to reduce bundle size
         minimize: true,
     }),
