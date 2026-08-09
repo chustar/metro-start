@@ -127,4 +127,19 @@ const xcodeConfig = createConfig('xcode', {
     ],
 });
 
-module.exports = [chromeConfig, firefoxConfig, xcodeConfig];
+module.exports = (env = {}) => {
+    // Allow selecting a specific target via --env target=chrome|firefox|xcode|all
+    const target = env.target || process.env.BUILD_TARGET || 'chrome';
+    switch (target) {
+        case 'chrome':
+            return chromeConfig;
+        case 'firefox':
+            return firefoxConfig;
+        case 'xcode':
+            return xcodeConfig;
+        case 'all':
+            return [chromeConfig, firefoxConfig, xcodeConfig];
+        default:
+            return chromeConfig;
+    }
+};
