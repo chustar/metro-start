@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "npx webpack",
+    "build": "npx webpack --env target=chrome",
     "build:demo": "npm run build && node scripts/generate-demo.js"
   },
   "repository": {
