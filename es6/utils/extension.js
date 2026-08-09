@@ -1,6 +1,6 @@
-/* global chrome, browser, safari */
+/* global chrome, browser */
 
-// Unified extension API shim for Chrome, Firefox (browser) and Safari.
+// Unified extension API shim for Chrome and Firefox (browser).
 // Exposes a chrome-like API (callback style) while using browser.* promises when available.
 
 function _wrapPromiseCall(promise, callback) {
@@ -19,9 +19,6 @@ function _hasBrowser() {
 }
 function _hasChrome() {
     return typeof chrome !== 'undefined' && typeof chrome.runtime !== 'undefined';
-}
-function _hasSafari() {
-    return typeof safari !== 'undefined' && safari && safari.extension;
 }
 
 // Storage shim: expose storage.sync.get(keys, cb) and storage.sync.set(obj, cb)
