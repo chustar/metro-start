@@ -29,17 +29,15 @@ function _hasSafari() {
 const storage = {
     sync: {
         get: function (keys, callback) {
-            if (_hasChrome()) {
-                // chrome API expects callback
+            if (_hasChrome() && chrome.storage && chrome.storage.sync) {
                 try {
                     return chrome.storage.sync.get(keys, callback);
                 } catch (e) {
-                    // some contexts might not allow chrome.storage
                     console.error(e);
                     if (typeof callback === 'function') callback({});
                 }
             }
-            if (_hasBrowser()) {
+            if (_hasBrowser() && browser.storage && browser.storage.sync) {
                 try {
                     return _wrapPromiseCall(browser.storage.sync.get(keys), callback);
                 } catch (e) {
@@ -80,7 +78,7 @@ const storage = {
             }
         },
         set: function (obj, callback) {
-            if (_hasChrome()) {
+            if (_hasChrome() && chrome.storage && chrome.storage.sync) {
                 try {
                     return chrome.storage.sync.set(obj, callback);
                 } catch (e) {
@@ -88,7 +86,7 @@ const storage = {
                     if (typeof callback === 'function') callback();
                 }
             }
-            if (_hasBrowser()) {
+            if (_hasBrowser() && browser.storage && browser.storage.sync) {
                 try {
                     return _wrapPromiseCall(browser.storage.sync.set(obj), callback);
                 } catch (e) {
