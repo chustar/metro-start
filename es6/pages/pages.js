@@ -92,16 +92,13 @@ export default {
         if (page === 'themes') {
             if (!this.modules.find((m) => m.name === 'themes')) {
                 try {
-            // Load the page module for themes lazily (this will manage its own
-            // lazy-loading of the themes widget).
-            const mod = await import('./themes');
-            const themesPage = mod.default || mod;
-            // Initialize the page module so its DOM hooks are wired.
-            if (themesPage.init) themesPage.init(document);
-            this.modules.push(themesPage);
-        } catch (e) {
-            util.error('Failed to load themes page module: ' + e);
-        }
+                    const mod = await import('../widgets/themes');
+                    const themes = mod.default || mod;
+                    themes.init(document);
+                    this.modules.push(themes);
+                } catch (e) {
+                    util.error('Failed to load themes module: ' + e);
+                }
             }
         }
 
