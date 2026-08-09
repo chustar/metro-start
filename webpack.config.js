@@ -9,12 +9,6 @@ const baseConfig = {
     mode: 'production',
     optimization: {
         minimize: false,
-        splitChunks: {
-            chunks: 'all',
-            maxInitialRequests: 25,
-            minSize: 20000,
-        },
-        runtimeChunk: 'single',
     },
     stats: {
         colors: true,
@@ -73,7 +67,16 @@ const createCopyPatterns = (manifestTransform) => [
 const chromeConfig = createConfig('chrome', {
     output: {
         filename: 'metro-start.js',
+        chunkFilename: '[name].[contenthash].js',
         path: `${__dirname}/dist/chrome`,
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+            maxInitialRequests: 25,
+            minSize: 20000,
+        },
+        runtimeChunk: 'single',
     },
     plugins: [
         new CopyPlugin({patterns: createCopyPatterns()}),
