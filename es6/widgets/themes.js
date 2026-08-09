@@ -1,5 +1,4 @@
 import jquery from 'jquery';
-import tinycolor from 'tinycolor2';
 import {throttle} from 'throttle-debounce';
 import modal from '../utils/modal';
 import util from '../utils/util';
@@ -7,7 +6,22 @@ import storage from '../utils/storage';
 import defaults from '../utils/defaults';
 import script from '../utils/script';
 import 'metro-select';
-import 'spectrum-colorpicker';
+// Lazy-load spectrum and tinycolor where needed to reduce initial bundle size
+let _tinycolor = null;
+const getTinycolor = async () => {
+    if (!_tinycolor) {
+        const mod = await import('tinycolor2');
+        _tinycolor = mod.default || mod;
+    }
+    return _tinycolor;
+};
+let _spectrumLoaded = false;
+const ensureSpectrum = async () => {
+    if (!_spectrumLoaded) {
+        await import('spectrum-colorpicker');
+        _spectrumLoaded = true;
+    }
+};
 
 export default {
     isBound: false,
@@ -246,19 +260,23 @@ export default {
      * @param {any} inputElement The name of the field to turn into a spectrum.
      */
     bindColorInput: function(inputElement) {
-        jquery(inputElement).spectrum({
-            chooseText: 'save color',
-            replacerClassName: 'spectrum-replacer',
-            appendTo: inputElement.parentNode,
-            showButtons: false,
-            color: this.data.themeContent[inputElement.id],
-            move: throttle(
-                125,
-                this.updateColor.bind(this, inputElement.id),
-                true
-            ),
-        });
+        // Ensure spectrum plugin is loaded before initializing
+        ensureSpectrum().then(() => {
+            jquery(inputElement).spectrum({
+                chooseText: 'save color',
+                replacerClassName: 'spectrum-replacer',
+                appendTo: inputElement.parentNode,
+                showButtons: false,
+                color: this.data.themeContent[inputElement.id],
+                move: throttle(
+                    125,
+                    this.updateColor.bind(this, inputElement.id),
+                    true
+                ),
+            });
+        }).catch((e) => { util.error('Failed to load spectrum: ' + e); });
     },
+
 
     /**
      * Handles changes to metro-select elements.
@@ -411,19 +429,61 @@ export default {
     },
 
     autoPaletteAdjust: function() {
-        let baseColor = tinycolor(this.data.themeContent.baseColor);
-        this.data.themeContent.backgroundColor = baseColor.toHexString();
-        this.data.themeContent.titleColor = this.getReadable(
-            tinycolor(this.data.themeContent.baseColor), -1.6
-        );
-        this.data.themeContent.mainColor = this.getReadable(
-            tinycolor(this.data.themeContent.baseColor),
-            1.8
-        );
-        this.data.themeContent.optionsColor = this.getReadable(
-            tinycolor(this.data.themeContent.baseColor),
-            1.25
-        );
+        // Lazy-load tinycolor and compute palette asynchronously
+        getTinycolor().then((tinycolor) => {
+            try {
+                const baseColor = tinycolor(this.data.themeContent.baseColor);
+                this.data.themeContent.backgroundColor = baseColor.toHexString();
+
+                const computeReadable = (color, multiplier) => {
+                    return tinycolor
+                        .mostReadable(
+                            color,
+                            [
+                                tinycolor(color.toHexString()).spin(multiplier * 38),
+                                tinycolor(color.toHexString()).spin(multiplier * 100),
+                                tinycolor(color.toHexString()).spin(multiplier * 190),
+                                tinycolor(color.toHexString()).spin(multiplier * 242),
+                                tinycolor(color.toHexString()).spin(multiplier * 303),
+                                tinycolor(color.toHexString()).spin(multiplier * 38).darken(25),
+                                tinycolor(color.toHexString()).spin(multiplier * 100).darken(25),
+                                tinycolor(color.toHexString()).spin(multiplier * 190).darken(25),
+                                tinycolor(color.toHexString()).spin(multiplier * 242).darken(25),
+                                tinycolor(color.toHexString()).spin(multiplier * 303).darken(25),
+                                tinycolor(color.toHexString()).spin(multiplier * 38).brighten(25),
+                                tinycolor(color.toHexString()).spin(multiplier * 100).brighten(25),
+                                tinycolor(color.toHexString()).spin(multiplier * 190).brighten(25),
+                                tinycolor(color.toHexString()).spin(multiplier * 242).brighten(25),
+                                tinycolor(color.toHexString()).spin(multiplier * 303).brighten(25),
+                            ],
+                            { includeFallbackColors: false }
+                        )
+                        .toHexString();
+                };
+
+                this.data.themeContent.titleColor = computeReadable(
+                    tinycolor(this.data.themeContent.baseColor),
+                    -1.6
+                );
+                this.data.themeContent.mainColor = computeReadable(
+                    tinycolor(this.data.themeContent.baseColor),
+                    1.8
+                );
+                this.data.themeContent.optionsColor = computeReadable(
+                    tinycolor(this.data.themeContent.baseColor),
+                    1.25
+                );
+
+                // Apply updated theme
+                const updatedTheme = script.updateTheme(this.data, this.oldTheme, true);
+                this.oldTheme = updatedTheme;
+                storage.save('currentTheme', updatedTheme);
+            } catch (e) {
+                util.error('Failed to compute auto palette: ' + e);
+            }
+        }).catch((e) => {
+            util.error('Could not load tinycolor for auto palette: ' + e);
+        });
     },
 
     /**
@@ -433,50 +493,4 @@ export default {
      * @param {any} multiplier A value to scale the spin by to add some variance.
      * @return {any} The most readable color.
      */
-    getReadable: function(color, multiplier) {
-        return tinycolor
-            .mostReadable(
-                color, [
-                    // My reckons for good color stops :shrug:
-                    tinycolor(color.toHexString()).spin(multiplier * 38),
-                    tinycolor(color.toHexString()).spin(multiplier * 100),
-                    tinycolor(color.toHexString()).spin(multiplier * 190),
-                    tinycolor(color.toHexString()).spin(multiplier * 242),
-                    tinycolor(color.toHexString()).spin(multiplier * 303),
-                    tinycolor(color.toHexString())
-                        .spin(multiplier * 38)
-                        .darken(25),
-                    tinycolor(color.toHexString())
-                        .spin(multiplier * 100)
-                        .darken(25),
-                    tinycolor(color.toHexString())
-                        .spin(multiplier * 190)
-                        .darken(25),
-                    tinycolor(color.toHexString())
-                        .spin(multiplier * 242)
-                        .darken(25),
-                    tinycolor(color.toHexString())
-                        .spin(multiplier * 303)
-                        .darken(25),
-                    tinycolor(color.toHexString())
-                        .spin(multiplier * 38)
-                        .brighten(25),
-                    tinycolor(color.toHexString())
-                        .spin(multiplier * 100)
-                        .brighten(25),
-                    tinycolor(color.toHexString())
-                        .spin(multiplier * 190)
-                        .brighten(25),
-                    tinycolor(color.toHexString())
-                        .spin(multiplier * 242)
-                        .brighten(25),
-                    tinycolor(color.toHexString())
-                        .spin(multiplier * 303)
-                        .brighten(25),
-                ], {
-                    includeFallbackColors: false,
-                }
-            )
-            .toHexString();
-    },
 };
