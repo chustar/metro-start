@@ -48,15 +48,11 @@ var chromeConfig = Object.assign({}, config, {
         chunkFilename: 'chrome.[name].[contenthash].js',
         path: `${__dirname}/dist/chrome`,
     },
-    optimization: Object.assign({}, config.optimization, {
-        splitChunks: {
-            chunks: 'all',
-            maxInitialRequests: 25,
-            minSize: 20000,
-        },
-        // minify the chrome demo build to reduce bundle size
-        minimize: true,
-    }),
+    // For the demo build we suppress performance hints rather than forcing
+    // aggressive code-splitting here to avoid multi-compiler chunk filename issues.
+    performance: {
+        hints: false,
+    },
     plugins: [
         new CopyPlugin({
             patterns: [
