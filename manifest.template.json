@@ -15,8 +15,7 @@
 		"storage"
 	],
 	"host_permissions": [
-		"https://metro-start.com/*",
-		"https://api.metro-start.com/*"
+		"*://api.metro-start.com/*"
 	],
 	"optional_permissions": [
 		"management",
