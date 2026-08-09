@@ -107,21 +107,39 @@ export default {
                 this.data.units == 'celsius' ? 'metric' : 'imperial';
             let url = `${defaults.defaultWebservice}/weather?location=${this.data.city}&units=${units}`;
             let that = this;
-            jquery.ajax(url).done((result) => {
-                if (result) {
-                    let city = `${result.name}, ${result.country}`;
-                    util.log(url);
-                    util.log(JSON.stringify(result));
-                    that.data.city = city.toLowerCase();
-                    that.data.currentTemp = parseInt(result.temp, 10);
-                    that.data.highTemp = parseInt(result.tempMax, 10);
-                    that.data.lowTemp = parseInt(result.tempMin, 10);
-                    that.data.condition = result.description.toLowerCase();
-
-                    storage.save('weather', that.data);
+            // If running from file:// (demo) or no network, skip remote fetch and use stored data
+            try {
+                if (typeof window !== 'undefined' && window.location && window.location.protocol === 'file:') {
+                    util.log('Demo mode detected — skipping remote weather fetch');
+                    // Ensure UI is updated from stored data
                     that.update();
+                    return;
                 }
-            });
+            } catch (e) {
+                // ignore and proceed to attempt ajax
+            }
+
+            jquery.ajax(url)
+                .done((result) => {
+                    if (result) {
+                        let city = `${result.name}, ${result.country}`;
+                        util.log(url);
+                        util.log(JSON.stringify(result));
+                        that.data.city = city.toLowerCase();
+                        that.data.currentTemp = parseInt(result.temp, 10);
+                        that.data.highTemp = parseInt(result.tempMax, 10);
+                        that.data.lowTemp = parseInt(result.tempMin, 10);
+                        that.data.condition = result.description.toLowerCase();
+
+                        storage.save('weather', that.data);
+                        that.update();
+                    }
+                })
+                .fail((jqXHR, textStatus, errorThrown) => {
+                    util.log(`Weather fetch failed: ${textStatus} ${errorThrown}`);
+                    // Keep existing stored data and update UI
+                    that.update();
+                });
         }
     },
 
