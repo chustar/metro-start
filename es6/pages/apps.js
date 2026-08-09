@@ -82,7 +82,7 @@ export default {
      * @param {any} newSort The new sort order.
      */
     sortChanged: function(newSort) {
-        this.bookmarks.sortChanged(newSort, false);
+        this.apps.sortChanged(newSort, false);
     },
 
     loadApps: function() {
@@ -100,6 +100,7 @@ export default {
 
         const that = this;
         ext.management.getAll((res) => {
+            const items = Array.isArray(res) ? res : [];
             that.apps.clear();
             that.apps.addAll({
                 heading: 'apps',
@@ -108,7 +109,7 @@ export default {
                     appLaunchUrl: 'https://chrome.google.com/webstore',
                     enabled: true,
                 }, ].concat(
-                    res.filter((item) => {
+                    items.filter((item) => {
                         return (
                             item.type !== 'extension' &&
                             item.type !== 'theme'
@@ -118,13 +119,13 @@ export default {
             });
             that.apps.addAll({
                 heading: 'extensions',
-                data: res.filter((item) => {
+                data: items.filter((item) => {
                     return item.type === 'extension';
                 }),
             });
             that.apps.addAll({
                 heading: 'themes',
-                data: res.filter((item) => {
+                data: items.filter((item) => {
                     return item.type === 'theme';
                 }),
             });

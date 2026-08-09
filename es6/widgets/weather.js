@@ -155,12 +155,12 @@ export default {
         this.elems.highTemp.innerText = this.data.highTemp;
         this.elems.lowTemp.innerText = this.data.lowTemp;
         this.elems.condition.innerText = this.data.condition;
-        this.elems.units.innerText = this.data.units[0];
+        this.elems.units.innerText = this.data.units ? this.data.units[0] : '';
     },
 
     upgradeWeather: function(defaultWeather) {
         if (!this.data.units) {
-            this.data = defaultWeather;
+            this.data = util.clone(defaultWeather);
         }
     },
 };

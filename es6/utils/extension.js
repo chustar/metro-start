@@ -18,6 +18,11 @@ const _wrapPromiseCall = (promise, callback) => {
 const _hasChrome = () => typeof chrome !== 'undefined' && typeof chrome.runtime !== 'undefined';
 const _hasBrowser = () => typeof browser !== 'undefined';
 
+const _normalizeList = (value) => (Array.isArray(value) ? value : []);
+const _normalizeObject = (value, fallback = {}) => (
+    value && typeof value === 'object' ? value : fallback
+);
+
 // Storage shim: expose storage.sync.get(keys, cb) and storage.sync.set(obj, cb)
 // Falls back to localStorage for browser environments without extension APIs
 const storage = {
@@ -130,7 +135,13 @@ const storage = {
 // Permissions shim: request, remove, getAll
 const permissions = {
     request(permObj, callback) {
-        if (_hasChrome()) return chrome.permissions.request(permObj, callback);
+        if (_hasChrome() && chrome.permissions && chrome.permissions.request) {
+            try {
+                return chrome.permissions.request(permObj, callback);
+            } catch (e) {
+                console.error(e);
+            }
+        }
         if (_hasBrowser()) {
             try {
                 return _wrapPromiseCall(browser.permissions.request(permObj), callback);
@@ -145,7 +156,13 @@ const permissions = {
         return Promise.resolve(true);
     },
     remove(permObj, callback) {
-        if (_hasChrome()) return chrome.permissions.remove(permObj, callback);
+        if (_hasChrome() && chrome.permissions && chrome.permissions.remove) {
+            try {
+                return chrome.permissions.remove(permObj, callback);
+            } catch (e) {
+                console.error(e);
+            }
+        }
         if (_hasBrowser()) {
             try {
                 return _wrapPromiseCall(browser.permissions.remove(permObj), callback);
@@ -182,10 +199,17 @@ const permissions = {
 const management = {
     getAll(callback) {
         if (_hasBrowser() && browser.management && browser.management.getAll) {
-            return _wrapPromiseCall(browser.management.getAll(), callback);
+            return _wrapPromiseCall(browser.management.getAll(), (items) => {
+                const normalized = _normalizeList(items);
+                if (typeof callback === 'function') callback(normalized);
+                return normalized;
+            });
         }
         if (_hasChrome() && chrome.management && chrome.management.getAll) {
-            return chrome.management.getAll(callback);
+            return chrome.management.getAll((items) => {
+                const normalized = _normalizeList(items);
+                if (typeof callback === 'function') callback(normalized);
+            });
         }
         if (typeof callback === 'function') callback([]);
         return Promise.resolve([]);
@@ -267,10 +291,17 @@ const sessions = {
         }
 
         if (_hasBrowser() && browser.sessions && browser.sessions.getRecentlyClosed) {
-            return _wrapPromiseCall(browser.sessions.getRecentlyClosed(opts), cb);
+            return _wrapPromiseCall(browser.sessions.getRecentlyClosed(opts), (items) => {
+                const normalized = _normalizeList(items);
+                if (typeof cb === 'function') cb(normalized);
+                return normalized;
+            });
         }
         if (_hasChrome() && chrome.sessions && chrome.sessions.getRecentlyClosed) {
-            return chrome.sessions.getRecentlyClosed(opts, cb);
+            return chrome.sessions.getRecentlyClosed(opts, (items) => {
+                const normalized = _normalizeList(items);
+                if (typeof cb === 'function') cb(normalized);
+            });
         }
         if (typeof cb === 'function') cb([]);
         return Promise.resolve([]);
@@ -285,10 +316,17 @@ const sessions = {
         }
 
         if (_hasBrowser() && browser.sessions && browser.sessions.getDevices) {
-            return _wrapPromiseCall(browser.sessions.getDevices(opts), cb);
+            return _wrapPromiseCall(browser.sessions.getDevices(opts), (items) => {
+                const normalized = _normalizeList(items);
+                if (typeof cb === 'function') cb(normalized);
+                return normalized;
+            });
         }
         if (_hasChrome() && chrome.sessions && chrome.sessions.getDevices) {
-            return chrome.sessions.getDevices(opts, cb);
+            return chrome.sessions.getDevices(opts, (items) => {
+                const normalized = _normalizeList(items);
+                if (typeof cb === 'function') cb(normalized);
+            });
         }
         if (typeof cb === 'function') cb([]);
         return Promise.resolve([]);
@@ -298,8 +336,12 @@ const sessions = {
 // Expose runtime and tabs too in a minimal way
 const runtime = {
     sendMessage(message, callback) {
-        if (_hasBrowser()) return _wrapPromiseCall(browser.runtime.sendMessage(message), callback);
-        if (_hasChrome()) return chrome.runtime.sendMessage(message, callback);
+        if (_hasBrowser() && browser.runtime && browser.runtime.sendMessage) {
+            return _wrapPromiseCall(browser.runtime.sendMessage(message), callback);
+        }
+        if (_hasChrome() && chrome.runtime && chrome.runtime.sendMessage) {
+            return chrome.runtime.sendMessage(message, callback);
+        }
         if (typeof callback === 'function') callback();
         return Promise.resolve();
     },

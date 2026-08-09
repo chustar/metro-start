@@ -96,7 +96,9 @@ export default {
 
         let that = this;
         ext.bookmarks.getTree((data) => {
-            that.data = data[0].children;
+            const tree = Array.isArray(data) ? data : [];
+            const root = tree[0] && tree[0].children ? tree[0].children : [];
+            that.data = root;
             that.bookmarks.addAll(that.data);
         });
     },

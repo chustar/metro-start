@@ -23,21 +23,22 @@ export default {
 
         const that = this;
         ext.permissions.getAll(function(perms) {
-            if (ext.management && perms.permissions.includes('management')) {
+            const permissions = (perms && perms.permissions) || [];
+            if (ext.management && permissions.includes('management')) {
                 jquery('.apps-option').removeClass('removed');
                 apps.enabled = true;
             } else if (that.page == 'apps') {
                 that.page = 'todos';
             }
 
-            if (ext.bookmarks && perms.permissions.includes('bookmarks')) {
+            if (ext.bookmarks && permissions.includes('bookmarks')) {
                 jquery('.bookmarks-option').removeClass('removed');
                 bookmarks.enabled = true;
             } else if (that.page == 'bookmarks') {
                 that.page = 'todos';
             }
 
-            if (ext.sessions && perms.permissions.includes('sessions')) {
+            if (ext.sessions && permissions.includes('sessions')) {
                 jquery('.sessions-option').removeClass('removed');
                 sessions.enabled = true;
             } else if (that.page == 'sessions') {
@@ -65,6 +66,9 @@ export default {
 
     changeToValidPage: function() {
         let page = this.page;
+        if (!page) {
+            page = 'todos';
+        }
         if (page == 'apps' && !apps.enabled) {
             page = 'todos';
         }

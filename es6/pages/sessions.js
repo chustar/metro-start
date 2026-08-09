@@ -94,9 +94,11 @@ export default {
         let that = this;
         if (ext.sessions.getDevices) {
             ext.sessions.getDevices(null, (devices) => {
-                for (let device of devices) {
+                const deviceList = Array.isArray(devices) ? devices : [];
+                for (let device of deviceList) {
                     let data = [];
-                    for (let session of device.sessions) {
+                    const sessionList = Array.isArray(device.sessions) ? device.sessions : [];
+                    for (let session of sessionList) {
                         if (session.tab) {
                             data = data.concat(session);
                         } else if (session.window) {
@@ -112,7 +114,8 @@ export default {
         } else {
             ext.sessions.getRecentlyClosed(null, (sessions) => {
                 let data = [];
-                for (let session of sessions) {
+                const sessionList = Array.isArray(sessions) ? sessions : [];
+                for (let session of sessionList) {
                     if (session.tab) {
                         data = data.concat(session);
                     } else if (session.window) {
