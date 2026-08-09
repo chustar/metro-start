@@ -44,14 +44,15 @@ const config = {
 
 var chromeConfig = Object.assign({}, config, {
     output: {
-        // Main entry remains metro-start.js (single-file for extension packaging).
         filename: 'metro-start.js',
-        // Lazy-loaded chunks use a predictable pattern so they can be included in the extension
-        // package directory alongside metro-start.js when needed.
-        chunkFilename: '[name].[contenthash].js',
+        chunkFilename: 'chrome.[name].[contenthash].js',
         path: `${__dirname}/dist/chrome`,
     },
-    // Keep default optimization (no splitChunks/runtimeChunk) so vendors/runtime stay in the main bundle.
+    // For the demo build we suppress performance hints rather than forcing
+    // aggressive code-splitting here to avoid multi-compiler chunk filename issues.
+    performance: {
+        hints: false,
+    },
     plugins: [
         new CopyPlugin({
             patterns: [
