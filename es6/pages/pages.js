@@ -5,7 +5,6 @@ import todos from './todos';
 import sessions from './sessions';
 import apps from './apps';
 import bookmarks from './bookmarks';
-import themes from './themes';
 import ext from '../utils/extension';
 import 'metro-select';
 export default {
@@ -15,7 +14,7 @@ export default {
         chooser: document.getElementById('pages-chooser'),
     },
 
-    modules: [todos, sessions, apps, bookmarks, themes],
+    modules: [todos, sessions, apps, bookmarks],
 
     init: function(document) {
         this.showOptions = false;
@@ -85,9 +84,23 @@ export default {
      *
      * @param {any} page The new page.
      */
-    changePage: function changePage(page) {
+    changePage: async function changePage(page) {
         this.page = page;
         storage.save('page', page);
+
+        // If themes was requested, lazy-load it and add to modules.
+        if (page === 'themes') {
+            if (!this.modules.find((m) => m.name === 'themes')) {
+                try {
+                    const mod = await import('../widgets/themes');
+                    const themes = mod.default || mod;
+                    themes.init(document);
+                    this.modules.push(themes);
+                } catch (e) {
+                    util.error('Failed to load themes module: ' + e);
+                }
+            }
+        }
 
         let moduleIndex = this.modules
             .map((m) => {
