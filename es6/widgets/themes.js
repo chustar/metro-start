@@ -1,10 +1,12 @@
 import MetroSelect from 'metro-select';
+import '@simonwep/pickr/dist/themes/nano.min.css';
 import {throttle} from 'throttle-debounce';
 import modal from '../utils/modal';
 import util from '../utils/util';
 import storage from '../utils/storage';
 import defaults from '../utils/defaults';
 import script from '../utils/script';
+import {shareTheme as postTheme} from '../utils/api';
 // Lazy-load the color tools only when the theme editor is used.
 let _tinycolor = null;
 const getTinycolor = async () => {
@@ -17,7 +19,6 @@ const getTinycolor = async () => {
 let pickrModule;
 const getPickr = async () => {
     if (!pickrModule) {
-        await import('@simonwep/pickr/dist/themes/nano.min.css');
         const module = await import('@simonwep/pickr');
         pickrModule = module.default;
     }
@@ -349,16 +350,8 @@ export default {
      * @param {function} callback Function to call sharing completes.
      */
     async shareTheme(theme, callback) {
-        const url = `${defaults.defaultWebservice}/newtheme`;
         try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(theme),
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
+            await postTheme(defaults.defaultWebservice, theme);
             util.log('Theme shared to the web.');
             callback(true, '');
         } catch (error) {

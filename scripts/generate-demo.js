@@ -61,7 +61,7 @@ const sampleJs = Object.entries(sampleData)
     .join('\n');
 await Bun.write(path.join(demoDir, 'sample-data.js'), sampleJs);
 for (const filename of await readdir(distDir)) {
-    if (filename.endsWith('.js')) {
+    if (filename.endsWith('.js') || filename.endsWith('.css')) {
         await Bun.write(
             path.join(demoDist, filename),
             Bun.file(path.join(distDir, filename))
@@ -69,10 +69,12 @@ for (const filename of await readdir(distDir)) {
     }
 }
 
-const html = (await htmlFile.text()).replace(
-    /<script src=['"]metro-start.js['"]><\/script>/,
-    '<script src="sample-data.js"></script>\n    <script src="dist/metro-start.js"></script>'
-);
+const html = (await htmlFile.text())
+    .replace("href='metro-start.css'", "href='dist/metro-start.css'")
+    .replace(
+        /<script src=['"]metro-start.js['"]><\/script>/,
+        '<script src="sample-data.js"></script>\n    <script src="dist/metro-start.js"></script>'
+    );
 await Bun.write(path.join(demoDir, 'index.html'), html);
 
 console.log('Demo build complete. Open demo/index.html to try the app.');

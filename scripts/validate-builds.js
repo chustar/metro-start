@@ -3,13 +3,25 @@ import {join} from 'node:path';
 
 const root = join(import.meta.dir, '..');
 const targets = ['chrome', 'firefox', 'xcode'];
+const expectedVersion = (await Bun.file(join(root, 'package.json')).json()).version;
 
 for (const target of targets) {
     const directory = join(root, 'dist', target);
-    for (const name of ['manifest.json', 'metro-start.js', 'start.html']) {
+    for (const name of [
+        'manifest.json',
+        'metro-start.css',
+        'metro-start.js',
+        'start.html',
+    ]) {
         if (!existsSync(join(directory, name))) {
             throw new Error(`${target} build is missing ${name}`);
         }
+    }
+    const manifest = await Bun.file(join(directory, 'manifest.json')).json();
+    if (manifest.version !== expectedVersion) {
+        throw new Error(
+            `${target} manifest version ${manifest.version} does not match ${expectedVersion}`
+        );
     }
 }
 

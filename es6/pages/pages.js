@@ -1,6 +1,5 @@
-import jquery from 'jquery';
 import MetroSelect from 'metro-select';
-import jss from 'jss';
+import styles from '../utils/styles';
 import storage from '../utils/storage';
 import todos from './todos';
 import sessions from './sessions';
@@ -25,21 +24,27 @@ export default {
         ext.permissions.getAll((perms) => {
             const permissions = (perms && perms.permissions) || [];
             if (ext.management && permissions.includes('management')) {
-                jquery('.apps-option').removeClass('removed');
+                document.querySelectorAll('.apps-option').forEach((element) => {
+                    element.classList.remove('removed');
+                });
                 apps.enabled = true;
             } else if (that.page === 'apps') {
                 that.page = 'todos';
             }
 
             if (ext.bookmarks && permissions.includes('bookmarks')) {
-                jquery('.bookmarks-option').removeClass('removed');
+                document.querySelectorAll('.bookmarks-option').forEach((element) => {
+                    element.classList.remove('removed');
+                });
                 bookmarks.enabled = true;
             } else if (that.page === 'bookmarks') {
                 that.page = 'todos';
             }
 
             if (ext.sessions && permissions.includes('sessions')) {
-                jquery('.sessions-option').removeClass('removed');
+                document.querySelectorAll('.sessions-option').forEach((element) => {
+                    element.classList.remove('removed');
+                });
                 sessions.enabled = true;
             } else if (that.page === 'sessions') {
                 that.page = 'todos';
@@ -99,14 +104,20 @@ export default {
             })
             .indexOf(page);
 
-        jquery('.external .internal .collection').addClass('off-screen');
-        jquery(`.external .internal .collection.${page}`).removeClass('off-screen');
-        jquery(`.metro-select-option .${page}-option`).removeClass('removed disabled');
+        document.querySelectorAll('.external .internal .collection').forEach(
+            (element) => element.classList.add('off-screen')
+        );
+        document.querySelectorAll(`.external .internal .collection.${page}`).forEach(
+            (element) => element.classList.remove('off-screen')
+        );
+        document.querySelectorAll(`.${page}-option`).forEach((element) => {
+            element.classList.remove('removed', 'disabled');
+        });
 
         if (moduleIndex < 0) {
             moduleIndex = 0;
         }
-        jss.set('.external .internal', {
+        styles.set('.external .internal', {
             'margin-left': `${moduleIndex * -100}%`,
         });
     },

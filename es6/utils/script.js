@@ -1,5 +1,4 @@
-import jquery from 'jquery';
-import jss from 'jss';
+import styles from './styles';
 import util from './util';
 import defaults from './defaults';
 
@@ -23,6 +22,26 @@ const getTrianglify = async () => {
 
 export default {
     init() {},
+
+    animate(selector, styles, duration) {
+        if (!duration) {
+            return;
+        }
+
+        document.querySelectorAll(selector).forEach((element) => {
+            const computed = getComputedStyle(element);
+            const from = Object.fromEntries(
+                Object.keys(styles).map((property) => [
+                    property,
+                    computed.getPropertyValue(property),
+                ])
+            );
+            element.animate([from, styles], {
+                duration,
+                easing: 'linear',
+            });
+        });
+    },
 
     /**
      * Changes the style to whatever is in the scope.
@@ -114,11 +133,11 @@ export default {
                 variance: Math.random(),
             }).toCanvas();
 
-            jss.set('body', {
+            styles.set('body', {
                 'background-image': `url(${bodyPattern.toDataURL('image/png').toString()})`,
             });
 
-            jss.set('.modal-content', {
+            styles.set('.modal-content', {
                 'background-image': `url(${bodyPattern.toDataURL('image/png').toString()})`,
             });
         }).catch((e) => { util.error(`Could not load trianglify: ${  e}`); });
@@ -133,7 +152,7 @@ export default {
      */
     updateBackground(theme, oldTheme, duration) {
         // console.log('changing to', theme);
-        const jBody = jquery('body');
+        const body = document.body;
         if (theme.themeContent['background-chooser'] === 'trianglify') {
             if (
                 oldTheme &&
@@ -237,29 +256,29 @@ export default {
                 getTrianglify().then((trianglify) => {
                     try {
                         const bodyPattern = trianglify({
-                            width: jBody.prop('scrollWidth'),
-                            height: jBody.prop('scrollHeight'),
+                            width: body.scrollWidth,
+                            height: body.scrollHeight,
                             variance: triVariance,
                             cellSize: triSize,
                             xColors,
                             seed: 'metro-start',
                         }).toCanvas();
-                        jss.set('.background-color', {
+                        styles.set('.background-color', {
                             'background-color': theme.themeContent.backgroundColor,
                         });
-                        jss.set('body', {
+                        styles.set('body', {
                             'background-image': `url(${bodyPattern.toDataURL('image/png').toString()})`,
                         });
 
                         const modalPattern = trianglify({
-                            width: jBody.prop('scrollWidth') * 0.75,
-                            height: jBody.prop('scrollHeight') * 0.85,
+                            width: body.scrollWidth * 0.75,
+                            height: body.scrollHeight * 0.85,
                             variance: triVariance,
                             cellSize: triSize,
                             xColors,
                         }).toCanvas();
 
-                        jss.set('.modal-content', {
+                        styles.set('.modal-content', {
                             'background-image': `url(${modalPattern.toDataURL('image/png').toString()})`,
                         });
                     } catch (e) {
@@ -268,14 +287,11 @@ export default {
                 }).catch((e) => { util.error(`Could not load trianglify: ${  e}`); });
             }).catch((e) => { util.error(`Could not load tinycolor: ${  e}`); });
         } else {
-            jquery('.background-color').animate({
+            this.animate('.background-color', {
                 backgroundColor: theme.themeContent.backgroundColor,
-            }, {
-                duration,
-                queue: false,
-            });
+            }, duration);
 
-            this.jssSetMultiple(
+            this.setStyles(
                 ['body', '.modal-content', '.background-color'], {
                     'background-image': 'none',
                     'background-color': theme.themeContent.backgroundColor ?? '',
@@ -283,11 +299,11 @@ export default {
             );
         }
 
-        jss.set('::-webkit-scrollbar', {
+        styles.set('::-webkit-scrollbar', {
             'background-color': theme.themeContent.backgroundColor ?? '',
         });
 
-        jss.set('input[type="text"]', {
+        styles.set('input[type="text"]', {
             'background-color': theme.themeContent.optionsColor ?? '',
         });
     },
@@ -310,29 +326,23 @@ export default {
             return;
         }
 
-        jquery('body').animate({
+        this.animate('body', {
             color: mainColor,
             'text-shadow': this.getShadow(theme, mainColor),
-        }, {
-            duration,
-            queue: false,
-        });
-        jquery('input').animate({
+        }, duration);
+        this.animate('input', {
             color: mainColor,
-        }, {
-            duration,
-            queue: false,
-        });
+        }, duration);
 
-        jss.set('body', {
+        styles.set('body', {
             color: mainColor,
             'text-shadow': this.getShadow(theme, mainColor),
         });
-        jss.set('input', {
+        styles.set('input', {
             color: mainColor,
             'text-shadow': this.getShadow(theme, mainColor),
         });
-        jss.set('.theme-section-title', {
+        styles.set('.theme-section-title', {
             'border-bottom-color': mainColor,
         });
     },
@@ -355,15 +365,12 @@ export default {
             return;
         }
 
-        jquery('.title-color').animate({
+        this.animate('.title-color', {
             color: titleColor,
             'text-shadow': this.getShadow(theme, titleColor),
-        }, {
-            duration,
-            queue: false,
-        });
+        }, duration);
 
-        jss.set('.title-color', {
+        styles.set('.title-color', {
             color: titleColor,
             'text-shadow': this.getShadow(theme, titleColor),
         });
@@ -386,24 +393,21 @@ export default {
         ) {
             return;
         }
-        jquery('.options-color').animate({
+        this.animate('.options-color', {
             color: optionsColor,
             'text-shadow': this.getShadow(theme, optionsColor),
-        }, {
-            duration,
-            queue: false,
-        });
+        }, duration);
 
-        jss.set('.options-color', {
+        styles.set('.options-color', {
             color: optionsColor,
             'text-shadow': this.getShadow(theme, optionsColor),
         });
 
-        jss.set('*', {
+        styles.set('*', {
             'border-color': optionsColor,
         });
 
-        this.jssSetMultiple(
+        this.setStyles(
             [
                 '.modal-info .clickable',
                 '.active',
@@ -465,7 +469,7 @@ export default {
             variant = 'small-caps';
         }
 
-        this.jssSetMultiple(
+        this.setStyles(
             ['body', 'input::placeholder', 'input[type="text"]'], {
                 'font-family': font,
                 'font-weight': theme.themeContent['fontweight-chooser'],
@@ -496,9 +500,9 @@ export default {
     },
 
 
-    jssSetMultiple(selectors, style) {
+    setStyles(selectors, style) {
         for (const selector of selectors) {
-            jss.set(selector, style);
+            styles.set(selector, style);
         }
     },
 
@@ -521,7 +525,7 @@ export default {
 
         ['body', '.background-color', '.modal-content'].forEach(
             (element) => {
-                jss.remove(element);
+                styles.remove(element);
             }
         );
     },
