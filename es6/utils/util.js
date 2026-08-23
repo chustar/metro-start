@@ -1,10 +1,10 @@
 import defaults from './defaults';
 // Speed up calls to hasOwnProperty
-let loggingEnabled = true;
-let hasOwnProperty = Object.prototype.hasOwnProperty;
+const loggingEnabled = true;
+const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 export default {
-    init: function() {
+    init() {
         this.lastLogTime = Date.now();
         this.loggingEnabled = false;
     },
@@ -14,12 +14,12 @@ export default {
      *
      * @param {any} msg The message to log.
      */
-    log: function(msg) {
+    log(msg) {
         if (!loggingEnabled) {
             return;
         }
 
-        let time = Date.now();
+        const time = Date.now();
         console.log(
             `[+${Math.floor((time - this.lastLogTime) / 1000)}s] ${msg}`
         );
@@ -32,12 +32,12 @@ export default {
      *
      * @param {any} msg The warning to log.
      */
-    warn: function(msg) {
+    warn(msg) {
         if (!loggingEnabled) {
             return;
         }
 
-        let time = Date.now();
+        const time = Date.now();
         console.warn(
             `[+${Math.floor((time - this.lastLogTime) / 1000)}s] ${msg}`
         );
@@ -50,12 +50,12 @@ export default {
      *
      * @param {any} msg  The error to log.
      */
-    error: function(msg) {
+    error(msg) {
         if (!loggingEnabled) {
             return;
         }
 
-        let time = Date.now();
+        const time = Date.now();
         console.error(
             `[+${Math.floor((time - this.lastLogTime) / 1000)}s] ${msg}`
         );
@@ -68,7 +68,7 @@ export default {
      * @param {any} key The field that has been changed.
      * @param {any} val The value that was changed to.
      */
-    logChange: function(key, val) {
+    logChange(key, val) {
         if (!loggingEnabled) {
             return;
         }
@@ -79,9 +79,9 @@ export default {
     // Converts an HTML string to a DOM fragment.
     // htmlStr: The string to convert.
     createElement: function createDom(htmlStr) {
-        let fragment = document.createDocumentFragment();
+        const fragment = document.createDocumentFragment();
         if (htmlStr) {
-            let temp = document.createElement('div');
+            const temp = document.createElement('div');
             temp.innerHTML = htmlStr;
             fragment.appendChild(temp.firstElementChild);
         }
@@ -96,7 +96,7 @@ export default {
      */
     addClass: function addClass(elem, newClass) {
         if (newClass) {
-            let oldClasses = elem.className ? elem.className.split(' ') : [];
+            const oldClasses = elem.className ? elem.className.split(' ') : [];
             if (oldClasses.indexOf(newClass) === -1) {
                 oldClasses.unshift(newClass);
                 elem.className = oldClasses.join(' ');
@@ -112,7 +112,7 @@ export default {
      * @return {any} True if the elem has the class; false otherwise.
      */
     hasClass: function hasClass(elem, testClass) {
-        let oldClass = elem.className ? elem.className.split(' ') : [];
+        const oldClass = elem.className ? elem.className.split(' ') : [];
         return oldClass.indexOf(testClass) !== -1;
     },
 
@@ -123,8 +123,8 @@ export default {
      * @param {any} className The class to be addded to the node.
      */
     removeClass: function removeClass(elem, className) {
-        let oldClass = elem.className.split(' ');
-        let index = oldClass.indexOf(className);
+        const oldClass = elem.className.split(' ');
+        const index = oldClass.indexOf(className);
         if (index !== -1) {
             oldClass.splice(index, 1);
             elem.className = oldClass.join(' ');
@@ -172,7 +172,7 @@ export default {
         // Otherwise, does it have any properties of its own?
         // Note that this doesn't handle
         // toString and valueOf enumeration bugs in IE < 9
-        for (let key in obj) {
+        for (const key in obj) {
             if (hasOwnProperty.call(obj, key)) {
                 return false;
             }
@@ -186,7 +186,7 @@ export default {
      * @param {any} arr Array to retrieve a random element of.
      * @return {any} A random item.
      */
-    randomize: function(arr) {
+    randomize(arr) {
         return arr[Math.floor(Math.random() * arr.length)];
     },
 
@@ -197,16 +197,16 @@ export default {
      * @param {any} defaultTheme The theme to use to back-fill.
      * @return {any} The upgraded theme.
      */
-    upgradeTheme: function(oldTheme, defaultTheme) {
-        let metadataFields = ['title', 'author', 'online'];
-        let themeContentFields = {
+    upgradeTheme(oldTheme, defaultTheme) {
+        const metadataFields = ['title', 'author', 'online'];
+        const themeContentFields = {
             optionsColor: 'options_color',
             mainColor: 'main_color',
             titleColor: 'title_color',
             backgroundColor: 'background_color',
         };
         // Ensure we don't miss any field names.
-        for (let defaultField in defaultTheme.themeContent) {
+        for (const defaultField in defaultTheme.themeContent) {
             if (!Object.keys(themeContentFields).includes(defaultField)) {
                 themeContentFields[defaultField] = defaultField;
             }
@@ -241,18 +241,18 @@ export default {
             return defaultTheme.themeContent[field];
         };
 
-        let newTheme = {
+        const newTheme = {
             themeContent: {}
         };
 
-        for (let metadataField of metadataFields) {
+        for (const metadataField of metadataFields) {
             newTheme[metadataField] = valueForMetadata(
                 oldTheme,
                 metadataField
             );
         }
 
-        for (let valueField of Object.keys(themeContentFields)) {
+        for (const valueField of Object.keys(themeContentFields)) {
             newTheme.themeContent[valueField] = valueForPossibleField(
                 oldTheme,
                 valueField

@@ -30,7 +30,7 @@ const storage = {
                     return chrome.storage.sync.get(keys, callback);
                 } catch (e) {
                     console.error(e);
-                    if (typeof callback === 'function') callback({});
+                    if (typeof callback === 'function') {callback({});}
                 }
             }
             if (_hasBrowser() && browser.storage && browser.storage.sync) {
@@ -38,7 +38,7 @@ const storage = {
                     return _wrapPromiseCall(browser.storage.sync.get(keys), callback);
                 } catch (e) {
                     console.error(e);
-                    if (typeof callback === 'function') callback({});
+                    if (typeof callback === 'function') {callback({});}
                 }
             }
 
@@ -83,11 +83,11 @@ const storage = {
                         keysToReturn[keys] = val;
                     }
                 }
-                if (typeof callback === 'function') callback(keysToReturn);
+                if (typeof callback === 'function') {callback(keysToReturn);}
                 return Promise.resolve(keysToReturn);
             } catch (e) {
                 console.error(e);
-                if (typeof callback === 'function') callback({});
+                if (typeof callback === 'function') {callback({});}
                 return Promise.resolve({});
             }
         },
@@ -97,7 +97,7 @@ const storage = {
                     return chrome.storage.sync.set(obj, callback);
                 } catch (e) {
                     console.error(e);
-                    if (typeof callback === 'function') callback();
+                    if (typeof callback === 'function') {callback();}
                 }
             }
             if (_hasBrowser() && browser.storage && browser.storage.sync) {
@@ -105,7 +105,7 @@ const storage = {
                     return _wrapPromiseCall(browser.storage.sync.set(obj), callback);
                 } catch (e) {
                     console.error(e);
-                    if (typeof callback === 'function') callback();
+                    if (typeof callback === 'function') {callback();}
                 }
             }
 
@@ -118,11 +118,11 @@ const storage = {
                         localStorage.setItem(k, String(obj[k]));
                     }
                 });
-                if (typeof callback === 'function') callback();
+                if (typeof callback === 'function') {callback();}
                 return Promise.resolve();
             } catch (e) {
                 console.error(e);
-                if (typeof callback === 'function') callback();
+                if (typeof callback === 'function') {callback();}
                 return Promise.resolve();
             }
         },
@@ -144,12 +144,12 @@ const permissions = {
                 return _wrapPromiseCall(browser.permissions.request(permObj), callback, false);
             } catch (e) {
                 console.error(e);
-                if (typeof callback === 'function') callback(true);
+                if (typeof callback === 'function') {callback(true);}
                 return Promise.resolve(true);
             }
         }
         // Demo: no explicit permissions API; resolve as granted
-        if (typeof callback === 'function') callback(true);
+        if (typeof callback === 'function') {callback(true);}
         return Promise.resolve(true);
     },
     remove(permObj, callback) {
@@ -165,12 +165,12 @@ const permissions = {
                 return _wrapPromiseCall(browser.permissions.remove(permObj), callback, false);
             } catch (e) {
                 console.error(e);
-                if (typeof callback === 'function') callback(true);
+                if (typeof callback === 'function') {callback(true);}
                 return Promise.resolve(true);
             }
         }
         // Demo: no explicit permissions API; resolve as granted
-        if (typeof callback === 'function') callback(true);
+        if (typeof callback === 'function') {callback(true);}
         return Promise.resolve(true);
     },
     getAll(callback) {
@@ -186,12 +186,12 @@ const permissions = {
                 );
             } catch (e) {
                 console.error(e);
-                if (typeof callback === 'function') callback({permissions: [], origins: []});
+                if (typeof callback === 'function') {callback({permissions: [], origins: []});}
                 return Promise.resolve({permissions: [], origins: []});
             }
         }
         // Demo: no permissions API; return empty
-        if (typeof callback === 'function') callback({permissions: [], origins: []});
+        if (typeof callback === 'function') {callback({permissions: [], origins: []});}
         return Promise.resolve({permissions: [], origins: []});
     },
 };
@@ -202,17 +202,17 @@ const management = {
         if (_hasBrowser() && browser.management && browser.management.getAll) {
             return _wrapPromiseCall(browser.management.getAll(), (items) => {
                 const normalized = _normalizeList(items);
-                if (typeof callback === 'function') callback(normalized);
+                if (typeof callback === 'function') {callback(normalized);}
                 return normalized;
             });
         }
         if (_hasChrome() && chrome.management && chrome.management.getAll) {
             return chrome.management.getAll((items) => {
                 const normalized = _normalizeList(items);
-                if (typeof callback === 'function') callback(normalized);
+                if (typeof callback === 'function') {callback(normalized);}
             });
         }
-        if (typeof callback === 'function') callback([]);
+        if (typeof callback === 'function') {callback([]);}
         return Promise.resolve([]);
     },
     setEnabled(id, enabled, callback) {
@@ -222,7 +222,7 @@ const management = {
         if (_hasChrome() && chrome.management && chrome.management.setEnabled) {
             return chrome.management.setEnabled(id, enabled, callback);
         }
-        if (typeof callback === 'function') callback();
+        if (typeof callback === 'function') {callback();}
         return Promise.resolve();
     },
     uninstall(id, options, callback) {
@@ -236,11 +236,11 @@ const management = {
                 try {
                     return chrome.management.uninstall(id, callback);
                 } catch {
-                    if (typeof callback === 'function') callback();
+                    if (typeof callback === 'function') {callback();}
                 }
             }
         }
-        if (typeof callback === 'function') callback();
+        if (typeof callback === 'function') {callback();}
         return Promise.resolve();
     },
 };
@@ -254,7 +254,7 @@ const bookmarks = {
         if (_hasChrome() && chrome.bookmarks && chrome.bookmarks.getTree) {
             return chrome.bookmarks.getTree(callback);
         }
-        if (typeof callback === 'function') callback([]);
+        if (typeof callback === 'function') {callback([]);}
         return Promise.resolve([]);
     },
     getChildren(id, callback) {
@@ -264,7 +264,7 @@ const bookmarks = {
         if (_hasChrome() && chrome.bookmarks && chrome.bookmarks.getChildren) {
             return chrome.bookmarks.getChildren(id, callback);
         }
-        if (typeof callback === 'function') callback([]);
+        if (typeof callback === 'function') {callback([]);}
         return Promise.resolve([]);
     },
     removeTree(id, callback) {
@@ -274,7 +274,7 @@ const bookmarks = {
         if (_hasChrome() && chrome.bookmarks && chrome.bookmarks.removeTree) {
             return chrome.bookmarks.removeTree(id, callback);
         }
-        if (typeof callback === 'function') callback();
+        if (typeof callback === 'function') {callback();}
         return Promise.resolve();
     },
 };
@@ -294,17 +294,17 @@ const sessions = {
         if (_hasBrowser() && browser.sessions && browser.sessions.getRecentlyClosed) {
             return _wrapPromiseCall(browser.sessions.getRecentlyClosed(opts), (items) => {
                 const normalized = _normalizeList(items);
-                if (typeof cb === 'function') cb(normalized);
+                if (typeof cb === 'function') {cb(normalized);}
                 return normalized;
             });
         }
         if (_hasChrome() && chrome.sessions && chrome.sessions.getRecentlyClosed) {
             return chrome.sessions.getRecentlyClosed(opts, (items) => {
                 const normalized = _normalizeList(items);
-                if (typeof cb === 'function') cb(normalized);
+                if (typeof cb === 'function') {cb(normalized);}
             });
         }
-        if (typeof cb === 'function') cb([]);
+        if (typeof cb === 'function') {cb([]);}
         return Promise.resolve([]);
     },
     getDevices(optionsOrCallback, callback) {
@@ -319,17 +319,17 @@ const sessions = {
         if (_hasBrowser() && browser.sessions && browser.sessions.getDevices) {
             return _wrapPromiseCall(browser.sessions.getDevices(opts), (items) => {
                 const normalized = _normalizeList(items);
-                if (typeof cb === 'function') cb(normalized);
+                if (typeof cb === 'function') {cb(normalized);}
                 return normalized;
             });
         }
         if (_hasChrome() && chrome.sessions && chrome.sessions.getDevices) {
             return chrome.sessions.getDevices(opts, (items) => {
                 const normalized = _normalizeList(items);
-                if (typeof cb === 'function') cb(normalized);
+                if (typeof cb === 'function') {cb(normalized);}
             });
         }
-        if (typeof cb === 'function') cb([]);
+        if (typeof cb === 'function') {cb([]);}
         return Promise.resolve([]);
     },
 };
@@ -343,7 +343,7 @@ const runtime = {
         if (_hasChrome() && chrome.runtime && chrome.runtime.sendMessage) {
             return chrome.runtime.sendMessage(message, callback);
         }
-        if (typeof callback === 'function') callback();
+        if (typeof callback === 'function') {callback();}
         return Promise.resolve();
     },
     onMessage: (typeof browser !== 'undefined' && browser.runtime && browser.runtime.onMessage) ||
@@ -353,9 +353,9 @@ const runtime = {
 
 const tabs = {
     query(queryInfo, callback) {
-        if (_hasBrowser()) return _wrapPromiseCall(browser.tabs.query(queryInfo), callback);
-        if (_hasChrome()) return chrome.tabs.query(queryInfo, callback);
-        if (typeof callback === 'function') callback([]);
+        if (_hasBrowser()) {return _wrapPromiseCall(browser.tabs.query(queryInfo), callback);}
+        if (_hasChrome()) {return chrome.tabs.query(queryInfo, callback);}
+        if (typeof callback === 'function') {callback([]);}
         return Promise.resolve([]);
     },
 };

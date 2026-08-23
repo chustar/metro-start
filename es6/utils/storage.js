@@ -1,22 +1,20 @@
-import jquery from 'jquery';
 import ext from './extension';
 
 export default {
     cache: {},
-    deferred: undefined,
+    initializing: undefined,
 
-    init: function() {
-        if (!this.deferred) {
-            this.deferred = new jquery.Deferred();
-            let that = this;
-            // Use unified extension API which supports browser/chrome/safari
-            ext.storage.sync.get(null, (container) => {
-                that.cache = jquery.extend(that.cache, container || {});
-                that.deferred.resolve(that);
+    init() {
+        if (!this.initializing) {
+            this.initializing = new Promise((resolve) => {
+                ext.storage.sync.get(null, (container) => {
+                    Object.assign(this.cache, container || {});
+                    resolve(this);
+                });
             });
         }
 
-        return this.deferred.promise();
+        return this.initializing;
     },
 
     /**
@@ -30,7 +28,7 @@ export default {
             this.cache[key] = value;
         }
 
-        let obj = {};
+        const obj = {};
         obj[key] = value;
         ext.storage.sync.set(obj);
     },

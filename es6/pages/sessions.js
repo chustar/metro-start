@@ -4,16 +4,16 @@ import ext from '../utils/extension';
 export default {
     name: 'sessions',
     enabled: false,
-    supported: !!(ext.sessions && (ext.sessions.getDevices || ext.sessions.getRecentlyClosed)),
+    supported: Boolean(ext.sessions && (ext.sessions.getDevices || ext.sessions.getRecentlyClosed)),
 
-    setPermissionVisibility: function(visible, cb) {
-        let that = this;
+    setPermissionVisibility(visible, cb) {
+        const that = this;
         if (visible) {
             util.log('request sessions', ext.permissions);
             ext.permissions.request({
                 permissions: ['sessions']
             },
-            function(granted) {
+            (granted) => {
                 that.enabled = granted;
                 if (cb) {
                     cb(granted);
@@ -25,7 +25,7 @@ export default {
             ext.permissions.remove({
                 permissions: ['sessions']
             },
-            function(granted) {
+            (granted) => {
                 that.enabled = !granted;
                 if (cb) {
                     cb(granted);
@@ -51,7 +51,7 @@ export default {
         ),
     },
 
-    init: function() {
+    init() {
         this.elems.rootNode = document.getElementById(
             'internal-selector-sessions'
         );
@@ -71,7 +71,7 @@ export default {
      *
      * @param {any} newSort The new sort order.
      */
-    sortChanged: function(newSort) {
+    sortChanged(newSort) {
         this.sessions.sortChanged(newSort, false);
     },
 
@@ -79,7 +79,7 @@ export default {
     /**
      * Loads the available sessions from local and web storage
      */
-    loadSessions: function() {
+    loadSessions() {
         this.sessions.clear();
         if (!this.enabled) {
             this.sessions.addAll({
@@ -91,14 +91,14 @@ export default {
             return;
         }
 
-        let that = this;
+        const that = this;
         if (ext.sessions.getDevices) {
             ext.sessions.getDevices(null, (devices) => {
                 const deviceList = Array.isArray(devices) ? devices : [];
-                for (let device of deviceList) {
+                for (const device of deviceList) {
                     let data = [];
                     const sessionList = Array.isArray(device.sessions) ? device.sessions : [];
-                    for (let session of sessionList) {
+                    for (const session of sessionList) {
                         if (session.tab) {
                             data = data.concat(session);
                         } else if (session.window) {
@@ -107,7 +107,7 @@ export default {
                     }
                     that.sessions.addAll({
                         heading: device.deviceName,
-                        data: data,
+                        data,
                     });
                 }
             });
@@ -115,7 +115,7 @@ export default {
             ext.sessions.getRecentlyClosed(null, (sessions) => {
                 let data = [];
                 const sessionList = Array.isArray(sessions) ? sessions : [];
-                for (let session of sessionList) {
+                for (const session of sessionList) {
                     if (session.tab) {
                         data = data.concat(session);
                     } else if (session.window) {
@@ -124,7 +124,7 @@ export default {
                 }
                 that.sessions.addAll({
                     heading: 'recently closed',
-                    data: data,
+                    data,
                 });
             });
         }
@@ -136,10 +136,10 @@ export default {
      * @param {any} tab The tab session that should be turned into an element.
      * @return {any} The HTML element.
      */
-    templateFunc: function(tab) {
-        let fragment = util.createElement('');
+    templateFunc(tab) {
+        const fragment = util.createElement('');
 
-        let title = this.templates.titleFragment.cloneNode(true);
+        const title = this.templates.titleFragment.cloneNode(true);
         title.firstElementChild.id = `session_${tab.index}`;
         title.firstElementChild.href = tab.url;
         title.firstElementChild.textContent = tab.title;

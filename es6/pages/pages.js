@@ -17,31 +17,31 @@ export default {
 
     modules: [todos, sessions, apps, bookmarks, themes],
 
-    init: function(document) {
+    init(document) {
         this.showOptions = false;
         this.page = storage.get('page', 'todos');
 
         const that = this;
-        ext.permissions.getAll(function(perms) {
+        ext.permissions.getAll((perms) => {
             const permissions = (perms && perms.permissions) || [];
             if (ext.management && permissions.includes('management')) {
                 jquery('.apps-option').removeClass('removed');
                 apps.enabled = true;
-            } else if (that.page == 'apps') {
+            } else if (that.page === 'apps') {
                 that.page = 'todos';
             }
 
             if (ext.bookmarks && permissions.includes('bookmarks')) {
                 jquery('.bookmarks-option').removeClass('removed');
                 bookmarks.enabled = true;
-            } else if (that.page == 'bookmarks') {
+            } else if (that.page === 'bookmarks') {
                 that.page = 'todos';
             }
 
             if (ext.sessions && permissions.includes('sessions')) {
                 jquery('.sessions-option').removeClass('removed');
                 sessions.enabled = true;
-            } else if (that.page == 'sessions') {
+            } else if (that.page === 'sessions') {
                 that.page = 'todos';
             }
 
@@ -64,20 +64,20 @@ export default {
         });
     },
 
-    changeToValidPage: function() {
+    changeToValidPage() {
         let page = this.page;
         if (!page) {
             page = 'todos';
         }
-        if (page == 'apps' && !apps.enabled) {
+        if (page === 'apps' && !apps.enabled) {
             page = 'todos';
         }
 
-        if (page == 'bookmarks' && !bookmarks.enabled) {
+        if (page === 'bookmarks' && !bookmarks.enabled) {
             page = 'todos';
         }
 
-        if (page == 'sessions' && !sessions.enabled) {
+        if (page === 'sessions' && !sessions.enabled) {
             page = 'todos';
         }
 
@@ -112,11 +112,11 @@ export default {
     },
 
     visibilityChanged: function visibilityChanged(page, visibility, cb) {
-        let modules = this.modules.filter((m) => {
-            return m.name == page;
+        const modules = this.modules.filter((m) => {
+            return m.name === page;
         });
         if (modules.length) {
-            let module = modules[0];
+            const module = modules[0];
             if (module.setPermissionVisibility) {
                 module.setPermissionVisibility(visibility, cb);
             }

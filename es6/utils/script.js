@@ -22,7 +22,7 @@ const getTrianglify = async () => {
 };
 
 export default {
-    init: function() {},
+    init() {},
 
     /**
      * Changes the style to whatever is in the scope.
@@ -32,9 +32,9 @@ export default {
      * @param {any} transition: A bool indicating whether to slowly transition or immediately change.
      * @return {any} The upgrade and applied theme.
      */
-    updateTheme: function(newTheme, oldTheme, transition) {
-        let duration = transition === true ? 800 : 0;
-        let theme = util.upgradeTheme(newTheme, defaults.defaultTheme);
+    updateTheme(newTheme, oldTheme, transition) {
+        const duration = transition === true ? 800 : 0;
+        const theme = util.upgradeTheme(newTheme, defaults.defaultTheme);
 
         if (theme.title === 'randomize') {
             theme.themeContent['background-chooser'] = util.randomize([
@@ -72,7 +72,7 @@ export default {
                 theme.themeContent.backgroundColor = tinycolor
                     .random()
                     .toHexString();
-            }).catch((e) => { util.error('Could not load tinycolor: ' + e); });
+            }).catch((e) => { util.error(`Could not load tinycolor: ${  e}`); });
 
             theme.themeContent['font-chooser'] = util.randomize(
                 defaults.defaultFonts
@@ -103,10 +103,10 @@ export default {
     /**
      * Updates the current background to a new random one.
      */
-    updateRandomBackground: function() {
+    updateRandomBackground() {
         // Lazy load trianglify
         getTrianglify().then((trianglify) => {
-            let bodyPattern = trianglify({
+            const bodyPattern = trianglify({
                 width: window.innerWidth,
                 height: window.innerHeight,
                 cellSize: Math.random() * 200 + 40,
@@ -121,7 +121,7 @@ export default {
             jss.set('.modal-content', {
                 'background-image': `url(${bodyPattern.toDataURL('image/png').toString()})`,
             });
-        }).catch((e) => { util.error('Could not load trianglify: ' + e); });
+        }).catch((e) => { util.error(`Could not load trianglify: ${  e}`); });
     },
 
     /**
@@ -131,9 +131,9 @@ export default {
      * @param {any} oldTheme Theme object with the old background settings.
      * @param {any} duration How long to animate the transition.
      */
-    updateBackground: function(theme, oldTheme, duration) {
+    updateBackground(theme, oldTheme, duration) {
         // console.log('changing to', theme);
-        let jBody = jquery('body');
+        const jBody = jquery('body');
         if (theme.themeContent['background-chooser'] === 'trianglify') {
             if (
                 oldTheme &&
@@ -236,12 +236,12 @@ export default {
                 // Now load trianglify and render
                 getTrianglify().then((trianglify) => {
                     try {
-                        let bodyPattern = trianglify({
+                        const bodyPattern = trianglify({
                             width: jBody.prop('scrollWidth'),
                             height: jBody.prop('scrollHeight'),
                             variance: triVariance,
                             cellSize: triSize,
-                            xColors: xColors,
+                            xColors,
                             seed: 'metro-start',
                         }).toCanvas();
                         jss.set('.background-color', {
@@ -251,27 +251,27 @@ export default {
                             'background-image': `url(${bodyPattern.toDataURL('image/png').toString()})`,
                         });
 
-                        let modalPattern = trianglify({
+                        const modalPattern = trianglify({
                             width: jBody.prop('scrollWidth') * 0.75,
                             height: jBody.prop('scrollHeight') * 0.85,
                             variance: triVariance,
                             cellSize: triSize,
-                            xColors: xColors,
+                            xColors,
                         }).toCanvas();
 
                         jss.set('.modal-content', {
                             'background-image': `url(${modalPattern.toDataURL('image/png').toString()})`,
                         });
                     } catch (e) {
-                        util.error('Failed to render trianglify background: ' + e);
+                        util.error(`Failed to render trianglify background: ${  e}`);
                     }
-                }).catch((e) => { util.error('Could not load trianglify: ' + e); });
-            }).catch((e) => { util.error('Could not load tinycolor: ' + e); });
+                }).catch((e) => { util.error(`Could not load trianglify: ${  e}`); });
+            }).catch((e) => { util.error(`Could not load tinycolor: ${  e}`); });
         } else {
             jquery('.background-color').animate({
                 backgroundColor: theme.themeContent.backgroundColor,
             }, {
-                duration: duration,
+                duration,
                 queue: false,
             });
 
@@ -298,8 +298,8 @@ export default {
      * @param {any} oldTheme Theme object with the old color settings.
      * @param {any} duration How long to animate the transition.
      */
-    updateMainColor: function(theme, oldTheme, duration) {
-        let mainColor = theme.themeContent.mainColor ?? '';
+    updateMainColor(theme, oldTheme, duration) {
+        const mainColor = theme.themeContent.mainColor ?? '';
 
         if (
             oldTheme &&
@@ -314,13 +314,13 @@ export default {
             color: mainColor,
             'text-shadow': this.getShadow(theme, mainColor),
         }, {
-            duration: duration,
+            duration,
             queue: false,
         });
         jquery('input').animate({
             color: mainColor,
         }, {
-            duration: duration,
+            duration,
             queue: false,
         });
 
@@ -344,8 +344,8 @@ export default {
      * @param {any} oldTheme Theme object with the old color settings.
      * @param {any} duration How long to animate the transition.
      */
-    updateTitleColor: function(theme, oldTheme, duration) {
-        let titleColor = theme.themeContent.titleColor ?? '';
+    updateTitleColor(theme, oldTheme, duration) {
+        const titleColor = theme.themeContent.titleColor ?? '';
         if (
             oldTheme &&
             oldTheme.themeContent &&
@@ -359,7 +359,7 @@ export default {
             color: titleColor,
             'text-shadow': this.getShadow(theme, titleColor),
         }, {
-            duration: duration,
+            duration,
             queue: false,
         });
 
@@ -376,8 +376,8 @@ export default {
      * @param {any} oldTheme Theme object with the new color settings.
      * @param {any} duration How long to animate the transition.
      */
-    updateOptionsColor: function(theme, oldTheme, duration) {
-        let optionsColor = theme.themeContent.optionsColor ?? '';
+    updateOptionsColor(theme, oldTheme, duration) {
+        const optionsColor = theme.themeContent.optionsColor ?? '';
         if (
             oldTheme &&
             oldTheme.themeContent &&
@@ -390,7 +390,7 @@ export default {
             color: optionsColor,
             'text-shadow': this.getShadow(theme, optionsColor),
         }, {
-            duration: duration,
+            duration,
             queue: false,
         });
 
@@ -422,7 +422,7 @@ export default {
      * @param {any} theme The theme object with the new font settings.
      * @param {any} oldTheme The theme object with the old font settings.
      */
-    updateFont: function(theme, oldTheme) {
+    updateFont(theme, oldTheme) {
         if (
             oldTheme &&
             oldTheme.themeContent &&
@@ -475,11 +475,11 @@ export default {
         );
     },
 
-    getShadow: function(data, color) {
+    getShadow(data, color) {
         // Avoid importing tinycolor synchronously here. If tinycolor has been
         // lazy-loaded already, use it; otherwise return a simple fallback so
         // the UI doesn't force tinycolor into the main bundle.
-        if (!color) return 'none';
+        if (!color) {return 'none';}
         try {
             if (_tinycolor) {
                 const tc = _tinycolor(color);
@@ -496,13 +496,13 @@ export default {
     },
 
 
-    jssSetMultiple: function(selectors, style) {
-        for (let selector of selectors) {
+    jssSetMultiple(selectors, style) {
+        for (const selector of selectors) {
             jss.set(selector, style);
         }
     },
 
-    clearJss: function(oldTheme) {
+    clearJss(oldTheme) {
         if (oldTheme && oldTheme.themeContent) {
             oldTheme.themeContent.mainColor = '';
             oldTheme.themeContent.baseColor = '';

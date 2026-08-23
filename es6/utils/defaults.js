@@ -2,7 +2,7 @@
 The default theme for metro start.
 */
 export default {
-    init: function() {},
+    init() {},
 
     // defaultFonts: ['system', 'raleway', 'source', 'wire one', 'im fell'],
 

@@ -73,10 +73,10 @@ export default {
         document.getElementById('tristyle-chooser'),
     ],
 
-    themeAdded: function() {},
-    themeRemoved: function() {},
+    themeAdded() {},
+    themeRemoved() {},
 
-    init: function() {
+    init() {
         // this.data = defaults.defaultTheme;
         this.data = storage.get('currentTheme', defaults.defaultTheme);
         this.data = util.upgradeTheme(this.data, defaults.defaultTheme);
@@ -99,22 +99,22 @@ export default {
     /**
      * Reset the input elements to match this.data.
      */
-    resetInputs: function() {
+    resetInputs() {
         // Do not try to reset inputs if they haven't been bound.
         if (this.isBound) {
             for (let i = 0; i < this.textInputs.length; i++) {
-                let inputElement = this.textInputs[i];
+                const inputElement = this.textInputs[i];
                 inputElement.value = this.data[inputElement.id] || '';
             }
 
             for (let j = 0; j < this.colorInputs.length; j++) {
-                let value = this.data.themeContent[this.colorInputs[j].id];
-                let color = jquery(this.colorInputs[j]);
+                const value = this.data.themeContent[this.colorInputs[j].id];
+                const color = jquery(this.colorInputs[j]);
                 color.spectrum('set', value);
             }
 
             for (let k = 0; k < this.selectInputs.length; k++) {
-                let text = this.data.themeContent[this.selectInputs[k].id];
+                const text = this.data.themeContent[this.selectInputs[k].id];
                 jquery(`#${this.selectInputs[k].id}`)
                     .metroSelect()
                     .set_active(text);
@@ -125,7 +125,7 @@ export default {
     /**
      * Shows the theme editor modal window.
      */
-    openThemeEditor: function() {
+    openThemeEditor() {
         this.sessionUpdateCount = 0;
 
         this.data = storage.get('currentTheme', defaults.defaultTheme);
@@ -168,7 +168,7 @@ export default {
      *
      * @param {any} res How the modal was closed. True if the 'okay' option was selected.
      */
-    themeEditorClosed: function(res) {
+    themeEditorClosed(res) {
         util.log(`theme editor closed with result: ${res}`);
 
         if (!res) {
@@ -205,7 +205,7 @@ export default {
             // Ensure no duplicate local themes are created.
             let themeFound = false;
             let themeIndex = 0;
-            let themesLocal = storage.get('themesLocal', []);
+            const themesLocal = storage.get('themesLocal', []);
             for (themeIndex in themesLocal) {
                 if (
                     themesLocal[themeIndex].title.toLowerCase() ===
@@ -232,9 +232,9 @@ export default {
      *
      * @param {any} inputElement The name of the field to collect inputs from.
      */
-    bindTextInput: function(inputElement) {
+    bindTextInput(inputElement) {
         jquery(inputElement).on('input', (event) => {
-            let target = jquery(event.target);
+            const target = jquery(event.target);
             if (target.data('lastval') !== target.val()) {
                 target.data('lastval', target.val());
 
@@ -248,7 +248,7 @@ export default {
      *
      * @param {any} inputElement The name of the field to turn into a metro-select.
      */
-    bindSelectInput: function(inputElement) {
+    bindSelectInput(inputElement) {
         jquery(inputElement).metroSelect({
             initial: this.data.themeContent[inputElement.id],
             onchange: this.updateSelect.bind(this, inputElement.id),
@@ -265,7 +265,7 @@ export default {
      *
      * @param {any} inputElement The name of the field to turn into a spectrum.
      */
-    bindColorInput: function(inputElement) {
+    bindColorInput(inputElement) {
         // Ensure spectrum plugin is loaded before initializing
         ensureSpectrum().then(() => {
             jquery(inputElement).spectrum({
@@ -280,7 +280,7 @@ export default {
                     true
                 ),
             });
-        }).catch((e) => { util.error('Failed to load spectrum: ' + e); });
+        }).catch((e) => { util.error(`Failed to load spectrum: ${  e}`); });
     },
 
 
@@ -290,7 +290,7 @@ export default {
      * @param {any} inputId The name of the metro-select that's changing.
      * @param {any} val The new value.
      */
-    updateSelect: function(inputId, val) {
+    updateSelect(inputId, val) {
         if (this.data[inputId] === val) {
             return;
         }
@@ -299,8 +299,8 @@ export default {
         case 'background-chooser':
         case 'palette-chooser':
         case 'font-chooser':
-        case 'fontfamily-chooser':
-            var elems = document.getElementsByClassName(
+        case 'fontfamily-chooser': {
+            const elems = document.getElementsByClassName(
                 `${inputId}-section`
             );
             for (let i = 0; i < elems.length; i++) {
@@ -315,6 +315,7 @@ export default {
             }
             break;
         }
+        }
 
         this.updateCurrentTheme(inputId, val);
     },
@@ -325,7 +326,7 @@ export default {
      * @param {any} inputId The name of the color field that's changing.
      * @param {any} color The new color.
      */
-    updateColor: function(inputId, color) {
+    updateColor(inputId, color) {
         if (this.data[inputId] === color.toHexString()) {
             return;
         }
@@ -338,23 +339,23 @@ export default {
      * @param {any} theme The theme to be shared.
      * @param {function} callback Function to call sharing completes.
      */
-    shareTheme: function(theme, callback) {
-        let url = `${defaults.defaultWebservice}/newtheme`;
-        jquery.ajax({
-            url: url,
-            type: 'POST',
-            data: JSON.stringify(theme),
-            success: function() {
-                util.log('Theme shared to the web.');
-                callback(true, '');
-            },
-            error: function(jqxhr, status, ex) {
-                util.error(
-                    `Theme was not shared to the web with status: ${status} and ex: ${ex}`
-                );
-                callback(false, status);
-            },
-        });
+    async shareTheme(theme, callback) {
+        const url = `${defaults.defaultWebservice}/newtheme`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(theme),
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            util.log('Theme shared to the web.');
+            callback(true, '');
+        } catch (error) {
+            util.error(`Theme was not shared to the web: ${error}`);
+            callback(false, String(error));
+        }
     },
 
     /**
@@ -362,8 +363,8 @@ export default {
      *
      * @param {any} theme The theme to be removed. Only checks by name.
      */
-    removeTheme: function(theme) {
-        let themesLocal = storage.get('themesLocal', []);
+    removeTheme(theme) {
+        const themesLocal = storage.get('themesLocal', []);
 
         for (let i = 0; i < themesLocal.length; i++) {
             if (theme.title === themesLocal[i].title) {
@@ -382,7 +383,7 @@ export default {
      * @param {any} inputId The theme setting that has changed.
      * @param {any} val The new theme setting.
      */
-    updateCurrentTheme: function(inputId, val) {
+    updateCurrentTheme(inputId, val) {
         if (this.data[inputId] === val) {
             return;
         }
@@ -418,7 +419,7 @@ export default {
                 this.data.online = false;
             }
 
-            let updatedTheme = script.updateTheme(
+            const updatedTheme = script.updateTheme(
                 this.data,
                 this.oldTheme,
                 true
@@ -427,7 +428,7 @@ export default {
             storage.save('currentTheme', updatedTheme);
         } else {
             this.data.themeContent[inputId] = val;
-            let updatedTheme = script.updateTheme(
+            const updatedTheme = script.updateTheme(
                 this.data,
                 this.oldTheme,
                 true
@@ -436,7 +437,7 @@ export default {
         }
     },
 
-    autoPaletteAdjust: function() {
+    autoPaletteAdjust() {
         // Lazy-load tinycolor and compute palette asynchronously
         getTinycolor().then((tinycolor) => {
             try {
@@ -487,10 +488,10 @@ export default {
                 this.oldTheme = updatedTheme;
                 storage.save('currentTheme', updatedTheme);
             } catch (e) {
-                util.error('Failed to compute auto palette: ' + e);
+                util.error(`Failed to compute auto palette: ${  e}`);
             }
         }).catch((e) => {
-            util.error('Could not load tinycolor for auto palette: ' + e);
+            util.error(`Could not load tinycolor for auto palette: ${  e}`);
         });
     },
 
