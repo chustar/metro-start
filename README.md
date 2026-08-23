@@ -11,8 +11,8 @@ A new tab page for Google Chrome inspired by Zune.
 * [Jquery](https://jquery.com/)
 * [JSS](https://github.com/Box9/jss)
 * [MetroSelect](https://github.com/metro-start/metro-select)
-* [Spectrum Colorpicker](https://bgrins.github.io/spectrum/)
-* [TinyColor](https://bgrins.github.io/spectrum/)
+* [Pickr](https://github.com/simonwep/pickr)
+* [TinyColor](https://github.com/bgrins/TinyColor)
 * [and others...](https://github.com/metro-start/metro-start/blob/master/package.json)
 
 ### Development

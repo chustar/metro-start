@@ -1,9 +1,10 @@
 import path from 'node:path';
-import {mkdir} from 'node:fs/promises';
+import {mkdir, readdir, rm} from 'node:fs/promises';
 
 const repoRoot = path.resolve(import.meta.dir, '..');
 const htmlPath = path.join(repoRoot, 'html', 'start.html');
-const distPath = path.join(repoRoot, 'dist', 'chrome', 'metro-start.js');
+const distDir = path.join(repoRoot, 'dist', 'chrome');
+const distPath = path.join(distDir, 'metro-start.js');
 const demoDir = path.join(repoRoot, 'demo');
 const demoDist = path.join(demoDir, 'dist');
 
@@ -16,7 +17,7 @@ const requireFile = async (filePath, description) => {
 };
 
 const htmlFile = await requireFile(htmlPath, 'Start page');
-const bundleFile = await requireFile(distPath, 'Built bundle');
+await requireFile(distPath, 'Built bundle');
 
 const sampleData = {
     todos: [
@@ -50,6 +51,7 @@ const sampleData = {
     page: 'todos',
 };
 
+await rm(demoDist, {recursive: true, force: true});
 await mkdir(demoDist, {recursive: true});
 
 const sampleJs = Object.entries(sampleData)
@@ -58,7 +60,14 @@ const sampleJs = Object.entries(sampleData)
     )
     .join('\n');
 await Bun.write(path.join(demoDir, 'sample-data.js'), sampleJs);
-await Bun.write(path.join(demoDist, 'metro-start.js'), bundleFile);
+for (const filename of await readdir(distDir)) {
+    if (filename.endsWith('.js')) {
+        await Bun.write(
+            path.join(demoDist, filename),
+            Bun.file(path.join(distDir, filename))
+        );
+    }
+}
 
 const html = (await htmlFile.text()).replace(
     /<script src=['"]metro-start.js['"]><\/script>/,

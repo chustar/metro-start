@@ -1,8 +1,7 @@
-import jquery from 'jquery';
+import MetroSelect from 'metro-select';
 import util from '../utils/util';
 import storage from '../utils/storage';
 import defaults from '../utils/defaults';
-import 'metro-select';
 const templates = {
     column: util.createElement('<div class="page"></div>'),
     item: util.createElement('<div class="item"></div>'),
@@ -26,10 +25,11 @@ export default class Pagebase {
 
         util.addClass(this.rootNode, this.className);
 
-        if (jquery(`#${this.name}-sort-chooser`).length !== 0) {
-            jquery(`#${this.name}-sort-chooser`).metroSelect({
+        const sortChooser = document.getElementById(`${this.name}-sort-chooser`);
+        if (sortChooser) {
+            this.sortChooser = new MetroSelect(sortChooser, {
                 initial: this.getSort(),
-                onchange: this.sortChanged.bind(this),
+                onChange: this.sortChanged.bind(this),
             });
         }
     }

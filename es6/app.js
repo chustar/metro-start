@@ -3,6 +3,7 @@ import widgets from './widgets/widgets';
 import pages from './pages/pages';
 import './../scss/reset.scss';
 import './../scss/main.scss';
+import 'metro-select/metro-select.css';
 
 const app = {
     data: {},

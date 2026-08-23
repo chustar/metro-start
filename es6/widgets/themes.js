@@ -1,12 +1,11 @@
-import jquery from 'jquery';
+import MetroSelect from 'metro-select';
 import {throttle} from 'throttle-debounce';
 import modal from '../utils/modal';
 import util from '../utils/util';
 import storage from '../utils/storage';
 import defaults from '../utils/defaults';
 import script from '../utils/script';
-import 'metro-select';
-// Lazy-load spectrum and tinycolor where needed to reduce initial bundle size
+// Lazy-load the color tools only when the theme editor is used.
 let _tinycolor = null;
 const getTinycolor = async () => {
     if (!_tinycolor) {
@@ -15,18 +14,14 @@ const getTinycolor = async () => {
     }
     return _tinycolor;
 };
-let _spectrumLoaded = false;
-const ensureSpectrum = async () => {
-    if (!_spectrumLoaded) {
-        // Load CSS then JS for spectrum so styles are not pulled into the main bundle.
-        try {
-            await import('spectrum-colorpicker/spectrum.css');
-        } catch {
-            // importing CSS might be a no-op in some bundler configs; ignore failures.
-        }
-        await import('spectrum-colorpicker');
-        _spectrumLoaded = true;
+let pickrModule;
+const getPickr = async () => {
+    if (!pickrModule) {
+        await import('@simonwep/pickr/dist/themes/nano.min.css');
+        const module = await import('@simonwep/pickr');
+        pickrModule = module.default;
     }
+    return pickrModule;
 };
 
 export default {
@@ -37,6 +32,10 @@ export default {
     data: {},
 
     oldTheme: {},
+
+    colorPickers: new Map(),
+
+    selectControls: new Map(),
 
     elems: {
         themeEditor: document.getElementById('themeEditor'),
@@ -109,15 +108,14 @@ export default {
 
             for (let j = 0; j < this.colorInputs.length; j++) {
                 const value = this.data.themeContent[this.colorInputs[j].id];
-                const color = jquery(this.colorInputs[j]);
-                color.spectrum('set', value);
+                this.colorPickers.get(this.colorInputs[j])?.setColor(value, true);
             }
 
             for (let k = 0; k < this.selectInputs.length; k++) {
                 const text = this.data.themeContent[this.selectInputs[k].id];
-                jquery(`#${this.selectInputs[k].id}`)
-                    .metroSelect()
-                    .set_active(text);
+                this.selectControls.get(this.selectInputs[k])?.select(text, {
+                    emit: false,
+                });
             }
         }
     },
@@ -233,13 +231,8 @@ export default {
      * @param {any} inputElement The name of the field to collect inputs from.
      */
     bindTextInput(inputElement) {
-        jquery(inputElement).on('input', (event) => {
-            const target = jquery(event.target);
-            if (target.data('lastval') !== target.val()) {
-                target.data('lastval', target.val());
-
-                this.data[inputElement.id] = target.val();
-            }
+        inputElement.addEventListener('input', (event) => {
+            this.data[inputElement.id] = event.target.value;
         });
     },
 
@@ -249,10 +242,11 @@ export default {
      * @param {any} inputElement The name of the field to turn into a metro-select.
      */
     bindSelectInput(inputElement) {
-        jquery(inputElement).metroSelect({
+        const control = new MetroSelect(inputElement, {
             initial: this.data.themeContent[inputElement.id],
-            onchange: this.updateSelect.bind(this, inputElement.id),
+            onChange: this.updateSelect.bind(this, inputElement.id),
         });
+        this.selectControls.set(inputElement, control);
 
         this.updateSelect(
             inputElement.id,
@@ -261,26 +255,41 @@ export default {
     },
 
     /**
-     * Create new color picker element for the given inputElement.
+     * Create a Pickr color picker for the given input element.
      *
-     * @param {any} inputElement The name of the field to turn into a spectrum.
+     * @param {any} inputElement The name of the field to turn into a color picker.
      */
-    bindColorInput(inputElement) {
-        // Ensure spectrum plugin is loaded before initializing
-        ensureSpectrum().then(() => {
-            jquery(inputElement).spectrum({
-                chooseText: 'save color',
-                replacerClassName: 'spectrum-replacer',
-                appendTo: inputElement.parentNode,
-                showButtons: false,
-                color: this.data.themeContent[inputElement.id],
-                move: throttle(
-                    125,
-                    this.updateColor.bind(this, inputElement.id),
-                    true
-                ),
+    async bindColorInput(inputElement) {
+        try {
+            const Pickr = await getPickr();
+            const picker = Pickr.create({
+                el: inputElement,
+                theme: 'nano',
+                default: this.data.themeContent[inputElement.id],
+                components: {
+                    preview: true,
+                    hue: true,
+                    interaction: {
+                        hex: true,
+                        input: true,
+                        save: true,
+                    },
+                },
             });
-        }).catch((e) => { util.error(`Failed to load spectrum: ${  e}`); });
+            const updateColor = throttle(125, (color) => {
+                if (color) {
+                    this.updateColor(inputElement.id, color.toHEXA().toString());
+                }
+            });
+            picker.on('change', updateColor);
+            picker.on('save', (color) => {
+                updateColor(color);
+                picker.hide();
+            });
+            this.colorPickers.set(inputElement, picker);
+        } catch (error) {
+            util.error(`Failed to load Pickr: ${error}`);
+        }
     },
 
 
@@ -324,13 +333,13 @@ export default {
      * Handles changes to color elements.
      *
      * @param {any} inputId The name of the color field that's changing.
-     * @param {any} color The new color.
+     * @param {string} color The new color.
      */
     updateColor(inputId, color) {
-        if (this.data[inputId] === color.toHexString()) {
+        if (this.data[inputId] === color) {
             return;
         }
-        this.updateCurrentTheme(inputId, color.toHexString());
+        this.updateCurrentTheme(inputId, color);
     },
 
     /**

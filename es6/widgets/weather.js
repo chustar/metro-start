@@ -1,8 +1,7 @@
-import jquery from 'jquery';
+import MetroSelect from 'metro-select';
 import util from '../utils/util';
 import defaults from '../utils/defaults';
 import storage from '../utils/storage';
-import 'metro-select';
 export default {
     data: {},
 
@@ -39,11 +38,9 @@ export default {
             this.setWeatherVisibility(!this.data.visible);
         });
 
-        const chooser = jquery('#weather-units-chooser');
-
-        chooser.metroSelect({
+        this.unitChooser = new MetroSelect(document.getElementById('weather-units-chooser'), {
             initial: this.data.units,
-            onchange: this.updateWeatherUnit.bind(this),
+            onChange: this.updateWeatherUnit.bind(this),
         });
 
         this.updateWeather(false);

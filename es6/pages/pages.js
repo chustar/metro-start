@@ -1,4 +1,5 @@
 import jquery from 'jquery';
+import MetroSelect from 'metro-select';
 import jss from 'jss';
 import storage from '../utils/storage';
 import todos from './todos';
@@ -7,7 +8,6 @@ import apps from './apps';
 import bookmarks from './bookmarks';
 import themes from './themes';
 import ext from '../utils/extension';
-import 'metro-select';
 export default {
     name: 'pages',
 
@@ -49,14 +49,14 @@ export default {
                 module.init(document);
             });
 
-            jquery(that.elems.chooser).metroSelect({
+            that.chooser = new MetroSelect(that.elems.chooser, {
                 initial: that.page,
-                add_text: '[+]',
-                remove_text: '[x]',
-                adder_remover_class: 'addremove_button option options-color',
-                parent_removed_class: 'option disabled',
-                onchange: that.changePage.bind(that),
-                onvisibilitychange: that.visibilityChanged.bind(that),
+                addText: '+',
+                removeText: '×',
+                addRemoveClass: 'addremove_button option options-color',
+                parentRemovedClass: 'option disabled',
+                onChange: that.changePage.bind(that),
+                onVisibilityChange: that.visibilityChanged.bind(that),
             });
 
             // Set the initial page.
@@ -81,7 +81,7 @@ export default {
             page = 'todos';
         }
 
-        jquery(this.elems.chooser).metroSelect().select_child(page);
+        this.chooser.select(page);
     },
 
     /**
