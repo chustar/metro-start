@@ -3,18 +3,18 @@ const packageJson = require('./package.json');
 const CopyPlugin = require('copy-webpack-plugin');
 const ZipPlugin = require('zip-webpack-plugin');
 const webpack = require('webpack');
+const {transformManifest} = require('./scripts/manifest.cjs');
 
 const config = {
     entry: './es6/app.js',
-    devtool: 'inline-source-map',
+    devtool: false,
     mode: 'production',
     optimization: {
-        minimize: false,
+        minimize: true,
     },
     stats: {
         colors: true,
-        modules: true,
-        reasons: true,
+        preset: 'errors-warnings',
     },
     resolve: {
         alias: {
@@ -43,19 +43,20 @@ const config = {
     }
 };
 
-var chromeConfig = Object.assign({}, config, {
+const createConfig = (target) => ({...config,
     output: {
         filename: 'metro-start.js',
-        chunkFilename: 'chrome.[name].[contenthash].js',
-        path: `${__dirname}/dist/chrome`,
+        chunkFilename: `${target}.[name].[contenthash].js`,
+        path: `${__dirname}/dist/${target}`,
         clean: true,
     },
-    // For the demo build we suppress performance hints rather than forcing
-    // aggressive code-splitting here to avoid multi-compiler chunk filename issues.
     performance: {
         hints: false,
     },
     plugins: [
+        ...(target === 'xcode'
+            ? [new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1})]
+            : []),
         new CopyPlugin({
             patterns: [
                 {from: 'html/start.html'},
@@ -64,81 +65,22 @@ var chromeConfig = Object.assign({}, config, {
                     from: 'manifest.template.json',
                     to: 'manifest.json',
                     transform(content) {
-                        let manifest = JSON.parse(content.toString());
-                        manifest.version = packageJson.version;
-                        return JSON.stringify(manifest);
+                        return transformManifest(
+                            content,
+                            packageJson.version,
+                            target
+                        );
                     }
                 }]}),
         new ZipPlugin({
             path: `${__dirname}/dist`,
-            filename: 'metro-start-chrome.zip',
+            filename: `metro-start-${target}.zip`,
         })]
 });
 
-var firefoxConfig = Object.assign({}, config, {
-    output: {
-        filename: 'metro-start.js',
-        path: `${__dirname}/dist/firefox`,
-        clean: true,
-    },
-    plugins: [new CopyPlugin({
-        patterns: [
-            {from: 'html/start.html'},
-            {from: 'icons/*' },
-            {
-                from: 'manifest.template.json',
-                to: 'manifest.json',
-                transform(content) {
-                    let manifest = JSON.parse(content.toString());
-                    manifest.version = packageJson.version;
-                    manifest.manifest_version = 2;
-                    manifest.permissions = manifest.permissions.concat(
-                        manifest.host_permissions || []
-                    );
-                    delete manifest.host_permissions;
-                    manifest.browser_specific_settings = {
-                        gecko: {
-                            id: 'metro-start@metro-start.com',
-                            strict_min_version: '77.0'
-                        }
-                    };
-                    return JSON.stringify(manifest);
-                }
-            }]
-    }),
-    new ZipPlugin({
-        path: `${__dirname}/dist`,
-        filename: 'metro-start-firefox.zip',
-    })]});
-
-var xcodeConfig = Object.assign({}, config, {
-    output: {
-        filename: 'metro-start.js',
-        path: `${__dirname}/dist/xcode`,
-        clean: true,
-    },
-    plugins: [
-        // The Xcode project embeds only metro-start.js, so keep lazy imports in
-        // that single resource instead of emitting unbundled chunk files.
-        new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
-        new CopyPlugin({
-            patterns: [
-                {from: 'html/start.html'},
-                {from: 'icons/*' },
-                {
-                    from: 'manifest.template.json',
-                    to: 'manifest.json',
-                    transform(content) {
-                        let manifest = JSON.parse(content.toString());
-                        manifest.version = packageJson.version;
-                        return JSON.stringify(manifest);
-                    }
-                }]
-        }),
-        new ZipPlugin({
-            path: `${__dirname}/dist`,
-            filename: 'metro-start-xcode.zip',
-        })]});
+const chromeConfig = createConfig('chrome');
+const firefoxConfig = createConfig('firefox');
+const xcodeConfig = createConfig('xcode');
     
 module.exports = (env = {}) => {
     // Allow selecting a specific target via --env target=chrome|firefox|xcode|all
