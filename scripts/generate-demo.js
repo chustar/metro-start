@@ -1,29 +1,28 @@
-const fs = require('fs');
-const path = require('path');
+import path from 'node:path';
+import {mkdir} from 'node:fs/promises';
 
-const repoRoot = path.resolve(__dirname, '..');
+const repoRoot = path.resolve(import.meta.dir, '..');
 const htmlPath = path.join(repoRoot, 'html', 'start.html');
-const distSrc = path.join(repoRoot, 'dist', 'chrome', 'metro-start.js');
+const distPath = path.join(repoRoot, 'dist', 'chrome', 'metro-start.js');
 const demoDir = path.join(repoRoot, 'demo');
 const demoDist = path.join(demoDir, 'dist');
 
-if (!fs.existsSync(htmlPath)) {
-    console.error('html/start.html not found');
-    process.exit(1);
-}
+const requireFile = async (filePath, description) => {
+    const file = Bun.file(filePath);
+    if (!await file.exists()) {
+        throw new Error(`${description} not found at ${filePath}`);
+    }
+    return file;
+};
 
-if (!fs.existsSync(distSrc)) {
-    console.error('Built bundle not found at', distSrc);
-    console.error('Run `npm run build` first or run `npm run build:demo` which runs build then this script.');
-    process.exit(1);
-}
+const htmlFile = await requireFile(htmlPath, 'Start page');
+const bundleFile = await requireFile(distPath, 'Built bundle');
 
-// Sample data to populate localStorage for demo
 const sampleData = {
     todos: [
-        { name: 'Try the demo mode', done: false },
-        { name: 'Add a todo', done: false },
-        { name: 'Mark one done', done: true }
+        {name: 'Try the demo mode', done: false},
+        {name: 'Add a todo', done: false},
+        {name: 'Mark one done', done: true},
     ],
     currentTheme: {
         themeContent: {
@@ -33,10 +32,10 @@ const sampleData = {
             titleColor: '#333333',
             optionsColor: '#ff5500',
             backgroundColor: '#0f1723',
-            'background-chooser': 'none'
+            'background-chooser': 'none',
         },
         title: 'Demo Theme',
-        author: 'Demo'
+        author: 'Demo',
     },
     themesLocal: [],
     weather: {
@@ -46,37 +45,25 @@ const sampleData = {
         lowTemp: 12,
         condition: 'partly cloudy',
         units: 'celsius',
-        visible: true
+        visible: true,
     },
-    page: 'todos'
+    page: 'todos',
 };
 
-function ensureDir(p) {
-    if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
-}
+await mkdir(demoDist, {recursive: true});
 
-ensureDir(demoDir);
-ensureDir(demoDist);
+const sampleJs = Object.entries(sampleData)
+    .map(([key, value]) =>
+        `localStorage.setItem(${JSON.stringify(key)}, ${JSON.stringify(JSON.stringify(value))});`
+    )
+    .join('\n');
+await Bun.write(path.join(demoDir, 'sample-data.js'), sampleJs);
+await Bun.write(path.join(demoDist, 'metro-start.js'), bundleFile);
 
-// Create sample-data.js which sets localStorage keys
-const sampleJs = Object.keys(sampleData).map(k => {
-    return `localStorage.setItem(${JSON.stringify(k)}, ${JSON.stringify(JSON.stringify(sampleData[k]))});`;
-}).join('\n');
+const html = (await htmlFile.text()).replace(
+    /<script src=['"]metro-start.js['"]><\/script>/,
+    '<script src="sample-data.js"></script>\n    <script src="dist/metro-start.js"></script>'
+);
+await Bun.write(path.join(demoDir, 'index.html'), html);
 
-fs.writeFileSync(path.join(demoDir, 'sample-data.js'), sampleJs, 'utf8');
-console.log('Wrote demo/sample-data.js');
-
-// Copy the built bundle to demo/dist
-fs.copyFileSync(distSrc, path.join(demoDist, 'metro-start.js'));
-console.log('Copied bundle to demo/dist/metro-start.js');
-
-// Read start.html and modify it for demo usage: insert sample-data.js and point script to dist/metro-start.js
-let html = fs.readFileSync(htmlPath, 'utf8');
-
-// Insert sample-data.js before the metro-start script tag and update script src
-html = html.replace(/<script src=['"]metro-start.js['"]><\/script>/, `<script src="sample-data.js"></script>\n    <script src="dist/metro-start.js"></script>`);
-
-fs.writeFileSync(path.join(demoDir, 'index.html'), html, 'utf8');
-console.log('Wrote demo/index.html');
-
-console.log('\nDemo build complete. Open demo/index.html in a browser to try the app without installing as an extension.');
+console.log('Demo build complete. Open demo/index.html to try the app.');

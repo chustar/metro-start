@@ -5,14 +5,21 @@
   "version": "10.10.1",
   "license": "MIT",
   "private": true,
+  "packageManager": "bun@1.4.0",
+  "engines": {
+    "bun": ">=1.4.0"
+  },
   "scripts": {
-    "build": "npx webpack --env target=chrome",
-    "build:chrome": "npx webpack --env target=chrome",
-    "build:firefox": "npx webpack --env target=firefox",
-    "build:xcode": "npx webpack --env target=xcode",
-    "build:all": "npx webpack --env target=all",
-    "lint": "eslint es6 scripts webpack.config.js",
-    "build:demo": "npm run build && node scripts/generate-demo.js"
+    "build": "webpack --env target=chrome",
+    "build:chrome": "webpack --env target=chrome",
+    "build:firefox": "webpack --env target=firefox",
+    "build:xcode": "webpack --env target=xcode",
+    "build:all": "webpack --env target=all",
+    "lint": "eslint es6 scripts test webpack.config.js",
+    "test": "bun test",
+    "validate:builds": "bun run scripts/validate-builds.js",
+    "check": "bun run lint && bun test && bun run build:all && bun run validate:builds",
+    "build:demo": "bun run build && bun run scripts/generate-demo.js"
   },
   "repository": {
     "type": "git",
@@ -20,27 +27,25 @@
   },
   "dependencies": {
     "jquery": "^3.7.1",
-    "jquery-color": "^3.0.0",
-    "jss": "git://github.com/Box9/jss.git",
-    "metro-select": "git://github.com/chustar/metro-select.git",
-    "requirejs": "^2.3.7",
+    "jss": "github:Box9/jss#29adabd",
+    "metro-select": "github:chustar/metro-select#37c6c05",
     "spectrum-colorpicker": "^1.8.1",
     "throttle-debounce": "^5.0.2",
     "tinycolor2": "^1.6.0",
     "trianglify": "^4.1.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^7.1.2",
     "eslint": "^10.8.1",
-    "eslint-config-google": "^0.14.0",
+    "globals": "^17.11.0",
+    "happy-dom": "^20.11.6",
     "sass": "^1.94.0",
     "sass-loader": "^17.0.0",
     "style-loader": "^4.0.0",
     "webpack": "^5.102.1",
     "webpack-cli": "^7.2.2",
-    "webpack-dev-server": "^6.0.0",
-    "webpack-sources": "^3.3.3",
     "zip-webpack-plugin": "^4.0.3"
   }
 }

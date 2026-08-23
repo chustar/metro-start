@@ -14,3 +14,16 @@ A new tab page for Google Chrome inspired by Zune.
 * [Spectrum Colorpicker](https://bgrins.github.io/spectrum/)
 * [TinyColor](https://bgrins.github.io/spectrum/)
 * [and others...](https://github.com/metro-start/metro-start/blob/master/package.json)
+
+### Development
+
+This project uses [Bun 1.4.0](https://bun.sh/) as its package manager and runtime.
+
+```sh
+bun install --frozen-lockfile
+bun run lint
+bun run build:all
+```
+
+Use `bun run build:chrome`, `bun run build:firefox`, or `bun run build:xcode`
+to build a single browser target.
