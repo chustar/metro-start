@@ -14,20 +14,20 @@ jobs:
         working-directory: metro-start
     steps:
     - name: Checkout Metro Start
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         path: metro-start
     - name: Checkout Metro Select
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         repository: metro-start/metro-select
         path: metro-select
-    - uses: oven-sh/setup-bun@v2
+    - uses: oven-sh/setup-bun@v2.2.0
       with:
         bun-version: 1.4.0
     - run: bun install --frozen-lockfile
     - run: bun run check
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       with:
         name: metro-start-extensions
         path: metro-start/dist/*.zip
