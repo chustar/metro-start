@@ -4,6 +4,7 @@ import modal from '../utils/modal';
 import util from '../utils/util';
 import storage from '../utils/storage';
 import defaults from '../utils/defaults';
+import {getThemes} from '../utils/api';
 export default {
     name: 'themes',
 
@@ -83,11 +84,7 @@ export default {
 
         // Load online themes.
         try {
-            const response = await fetch(`${defaults.defaultWebservice}/themes`);
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-            const downloadedThemes = await response.json();
+            const downloadedThemes = await getThemes(defaults.defaultWebservice);
             if (!downloadedThemes?.length) {
                 util.warn('No online themes available.');
                 return;

@@ -2,6 +2,7 @@ import MetroSelect from 'metro-select';
 import util from '../utils/util';
 import defaults from '../utils/defaults';
 import storage from '../utils/storage';
+import {getWeather} from '../utils/api';
 export default {
     data: {},
 
@@ -96,14 +97,8 @@ export default {
             force ||
             new Date().getTime() > parseInt(this.data.weatherUpdateTime, 10)
         ) {
-            this.update(
-                'weatherUpdateTime',
-                parseInt(new Date().getTime(), 10) + 3600000
-            );
             const units =
                 this.data.units === 'celsius' ? 'metric' : 'imperial';
-            const location = encodeURIComponent(this.data.city);
-            const url = `${defaults.defaultWebservice}/weather?location=${location}&units=${units}`;
             // If running from file:// (demo) or no network, skip remote fetch and use stored data
             try {
                 if (typeof window !== 'undefined' && window.location && window.location.protocol === 'file:') {
@@ -117,23 +112,26 @@ export default {
             }
 
             try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                const result = await response.json();
+                const result = await getWeather(
+                    defaults.defaultWebservice,
+                    this.data.city,
+                    units
+                );
                 if (result) {
                     const city = `${result.name}, ${result.country}`;
-                    util.log(url);
                     this.data.city = city.toLowerCase();
                     this.data.currentTemp = Number.parseInt(result.temp, 10);
                     this.data.highTemp = Number.parseInt(result.tempMax, 10);
                     this.data.lowTemp = Number.parseInt(result.tempMin, 10);
-                    this.data.condition = result.description.toLowerCase();
+                    this.data.condition = result.description
+                        ? result.description.toLowerCase()
+                        : this.data.condition;
+                    this.data.weatherUpdateTime = Date.now() + 3600000;
                     storage.save('weather', this.data);
                 }
             } catch (error) {
                 util.log(`Weather fetch failed: ${error}`);
+                this.data.weatherUpdateTime = Date.now() + 300000;
             }
             this.update();
         }
