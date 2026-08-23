@@ -13,8 +13,8 @@ A new tab page for Google Chrome inspired by Zune.
 
 ## Prerequisites
 
-Install Bun 1.4 or newer. Keep the sibling `metro-select` checkout at
-`../metro-select`; Bun links that package into the extension build.
+Install Bun 1.4 or newer. Metro Select 3.1 is pinned to its canonical release
+commit for reproducible extension builds.
 
 ## Install, test, and build
 

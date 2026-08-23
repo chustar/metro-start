@@ -6,7 +6,7 @@
       "name": "metro-start",
       "dependencies": {
         "@simonwep/pickr": "^1.10.1",
-        "metro-select": "file:../metro-select",
+        "metro-select": "github:metro-start/metro-select#7ee102f3dba38c56e7e645de936eb3b44fb48586",
         "throttle-debounce": "^5.0.2",
         "tinycolor2": "^1.6.0",
         "trianglify": "^4.1.1",
@@ -238,7 +238,7 @@
 
     "make-dir": ["make-dir@3.1.0", "", { "dependencies": { "semver": "^6.0.0" } }, ""],
 
-    "metro-select": ["metro-select@file:../metro-select", { "devDependencies": { "@eslint/js": "^10.0.1", "eslint": "^10.8.1", "globals": "^17.11.0", "happy-dom": "^20.11.6" } }],
+    "metro-select": ["metro-select@github:metro-start/metro-select#7ee102f", {}, "metro-start-metro-select-7ee102f", "sha512-YsglYHr93ybHRS5ondH9cWZCBaJvTVbrQrYrU5uWNr+dikP66YyyIN7clVyuhJFMlIm/S6eAK7WNgvlI0dwgBg=="],
 
     "micromatch": ["micromatch@4.0.5", "", { "dependencies": { "braces": "^3.0.2", "picomatch": "^2.3.1" } }, ""],
 
