@@ -3,12 +3,13 @@
 // Unified extension API shim for Chrome and Firefox (browser).
 // Exposes a chrome-like API (callback style) while using browser.* promises when available.
 
-const _wrapPromiseCall = (promise, callback) => {
+const _wrapPromiseCall = (promise, callback, errorValue) => {
     if (typeof callback === 'function') {
         promise
             .then((res) => callback(res))
             .catch((err) => {
                 console.error('Extension API error', err);
+                callback(errorValue);
             });
         return;
     }
@@ -19,10 +20,6 @@ const _hasChrome = () => typeof chrome !== 'undefined' && typeof chrome.runtime 
 const _hasBrowser = () => typeof browser !== 'undefined';
 
 const _normalizeList = (value) => (Array.isArray(value) ? value : []);
-const _normalizeObject = (value, fallback = {}) => (
-    value && typeof value === 'object' ? value : fallback
-);
-
 // Storage shim: expose storage.sync.get(keys, cb) and storage.sync.set(obj, cb)
 // Falls back to localStorage for browser environments without extension APIs
 const storage = {
@@ -144,7 +141,7 @@ const permissions = {
         }
         if (_hasBrowser()) {
             try {
-                return _wrapPromiseCall(browser.permissions.request(permObj), callback);
+                return _wrapPromiseCall(browser.permissions.request(permObj), callback, false);
             } catch (e) {
                 console.error(e);
                 if (typeof callback === 'function') callback(true);
@@ -165,7 +162,7 @@ const permissions = {
         }
         if (_hasBrowser()) {
             try {
-                return _wrapPromiseCall(browser.permissions.remove(permObj), callback);
+                return _wrapPromiseCall(browser.permissions.remove(permObj), callback, false);
             } catch (e) {
                 console.error(e);
                 if (typeof callback === 'function') callback(true);
@@ -182,7 +179,11 @@ const permissions = {
         }
         if (_hasBrowser() && browser.permissions && browser.permissions.getAll) {
             try {
-                return _wrapPromiseCall(browser.permissions.getAll(), callback);
+                return _wrapPromiseCall(
+                    browser.permissions.getAll(),
+                    callback,
+                    {permissions: [], origins: []}
+                );
             } catch (e) {
                 console.error(e);
                 if (typeof callback === 'function') callback({permissions: [], origins: []});

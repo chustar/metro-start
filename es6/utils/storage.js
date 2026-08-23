@@ -1,5 +1,4 @@
 import jquery from 'jquery';
-import util from './util';
 import ext from './extension';
 
 export default {
@@ -44,6 +43,7 @@ export default {
      * @return {any} True if the value of the key if one exists exists; defaultValue otherwise.
      */
     get: function get(key, defaultValue) {
-        return util.isEmpty(this.cache[key]) ? defaultValue : this.cache[key];
+        const value = this.cache[key];
+        return value === null || value === undefined ? defaultValue : value;
     },
 };

@@ -132,7 +132,7 @@ export default {
         this.loadTodos();
 
         this.todoToEdit = null;
-        this.elems.addTodo.reset();
+        this.elems.newTodo.value = '';
     },
 
     /**

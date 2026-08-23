@@ -1,12 +1,17 @@
 {
   "name": "metro-start",
-  "description": "A new tab page for Google Chrome inspired by Zune",
+  "description": "A cross-browser new tab page inspired by Zune",
   "homepage": "http://www.metro-start.com/",
   "version": "10.10.1",
   "license": "MIT",
   "private": true,
   "scripts": {
     "build": "npx webpack --env target=chrome",
+    "build:chrome": "npx webpack --env target=chrome",
+    "build:firefox": "npx webpack --env target=firefox",
+    "build:xcode": "npx webpack --env target=xcode",
+    "build:all": "npx webpack --env target=all",
+    "lint": "eslint es6 scripts webpack.config.js",
     "build:demo": "npm run build && node scripts/generate-demo.js"
   },
   "repository": {

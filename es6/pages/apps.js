@@ -143,10 +143,14 @@ export default {
 
         const title = this.templates.titleFragment.cloneNode(true);
         title.firstElementChild.textContent = app.name;
-        title.firstElementChild.addEventListener(
-            'click',
-            this.openAppLaunchUrl.bind(this, app)
-        );
+        if (app.appLaunchUrl) {
+            title.firstElementChild.addEventListener(
+                'click',
+                this.openAppLaunchUrl.bind(this, app)
+            );
+        } else {
+            util.removeClass(title.firstElementChild, 'clickable');
+        }
 
         if (!app.enabled) {
             util.addClass(title.firstElementChild, 'disabled');
@@ -154,7 +158,7 @@ export default {
 
         fragment.appendChild(title);
 
-        if (app.homepageUrl !== '') {
+        if (app.homepageUrl) {
             const homepage = this.templates.homepageFragment.cloneNode(
                 true
             );

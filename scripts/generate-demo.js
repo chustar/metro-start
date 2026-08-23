@@ -74,7 +74,7 @@ console.log('Copied bundle to demo/dist/metro-start.js');
 let html = fs.readFileSync(htmlPath, 'utf8');
 
 // Insert sample-data.js before the metro-start script tag and update script src
-html = html.replace(/<script src=['\"]metro-start.js['\"]><\/script>/, `<script src="sample-data.js"></script>\n    <script src="dist/metro-start.js"></script>`);
+html = html.replace(/<script src=['"]metro-start.js['"]><\/script>/, `<script src="sample-data.js"></script>\n    <script src="dist/metro-start.js"></script>`);
 
 fs.writeFileSync(path.join(demoDir, 'index.html'), html, 'utf8');
 console.log('Wrote demo/index.html');

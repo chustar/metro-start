@@ -487,7 +487,7 @@ export default {
                     ? `${tc.spin(90)} 0 0 0.1em, ${tc.spin(180)} 0 0 0.2em`
                     : 'none';
             }
-        } catch (e) {
+        } catch {
             // fallthrough to fallback
         }
         return data.themeContent['fontreadability-chooser'] === 'on'

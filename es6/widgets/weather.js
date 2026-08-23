@@ -46,7 +46,7 @@ export default {
             onchange: this.updateWeatherUnit.bind(this),
         });
 
-        this.updateWeather(true);
+        this.updateWeather(false);
         this.setWeatherVisibility(this.data.visible);
     },
 
@@ -105,7 +105,8 @@ export default {
             );
             let units =
                 this.data.units == 'celsius' ? 'metric' : 'imperial';
-            let url = `${defaults.defaultWebservice}/weather?location=${this.data.city}&units=${units}`;
+            const location = encodeURIComponent(this.data.city);
+            let url = `${defaults.defaultWebservice}/weather?location=${location}&units=${units}`;
             let that = this;
             // If running from file:// (demo) or no network, skip remote fetch and use stored data
             try {
@@ -115,7 +116,7 @@ export default {
                     that.update();
                     return;
                 }
-            } catch (e) {
+            } catch {
                 // ignore and proceed to attempt ajax
             }
 

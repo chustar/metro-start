@@ -213,7 +213,7 @@ export default {
         }
 
         const valueForMetadata = (obj, field) => {
-            if (obj[field]) {
+            if (Object.prototype.hasOwnProperty.call(obj, field)) {
                 return obj[field];
             }
             // Do not try to re-use default metadata.
@@ -238,7 +238,7 @@ export default {
                 return obj[themeContentFields[field]];
             }
             // Fallback to default.
-            return defaultTheme[field];
+            return defaultTheme.themeContent[field];
         };
 
         let newTheme = {

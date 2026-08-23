@@ -21,7 +21,7 @@ const ensureSpectrum = async () => {
         // Load CSS then JS for spectrum so styles are not pulled into the main bundle.
         try {
             await import('spectrum-colorpicker/spectrum.css');
-        } catch (e) {
+        } catch {
             // importing CSS might be a no-op in some bundler configs; ignore failures.
         }
         await import('spectrum-colorpicker');
@@ -104,7 +104,7 @@ export default {
         if (this.isBound) {
             for (let i = 0; i < this.textInputs.length; i++) {
                 let inputElement = this.textInputs[i];
-                inputElement.value = this.data.themeContent[inputElement.id] ? this.data.themeContent[inputElement.id] : '';
+                inputElement.value = this.data[inputElement.id] || '';
             }
 
             for (let j = 0; j < this.colorInputs.length; j++) {
@@ -305,7 +305,8 @@ export default {
             );
             for (let i = 0; i < elems.length; i++) {
                 // If this element has the same id as our new select value, make it visible.
-                if (elems[i].id === val) {
+                const choice = elems[i].dataset.choice || elems[i].id;
+                if (choice === val) {
                     util.removeClass(elems[i], 'hide');
                     // Otherwise ensure its hidden.
                 } else if (!util.hasClass(elems[i], 'hide')) {
@@ -403,17 +404,18 @@ export default {
             this.data = util.clone(val);
 
             // Create an id, if one does not exist.
-            if (this.data.id) {
+            if (!this.data.id) {
                 this.data.id =
                     this.data.title +
                     this.data.author +
-                    new Date().getUTCSeconds;
+                    new Date().getTime();
             }
 
             // If its an online theme, clear the 'metadata'.
-            if (this.data.isOnline) {
+            if (this.data.online) {
                 this.data.title = '';
                 this.data.author = '';
+                this.data.online = false;
             }
 
             let updatedTheme = script.updateTheme(

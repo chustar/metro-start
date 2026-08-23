@@ -69,9 +69,13 @@ export default {
 
         modalContent.firstElementChild.id = id;
         util.addClass(modalContent.firstElementChild, id);
-        modalContent.firstElementChild.appendChild(
-            typeof content === 'string' ? util.createElement(`<p>${content}</p>`) : content
-        );
+        if (typeof content === 'string') {
+            const paragraph = document.createElement('p');
+            paragraph.textContent = content;
+            modalContent.firstElementChild.appendChild(paragraph);
+        } else {
+            modalContent.firstElementChild.appendChild(content);
+        }
         modalContent.firstElementChild.appendChild(info);
 
         let body = jquery('body');
