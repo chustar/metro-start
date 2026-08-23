@@ -26,7 +26,7 @@
     "url": "https://github.com/metro-start/metro-start.git"
   },
   "dependencies": {
-    "metro-select": "github:metro-start/metro-select#7ee102f3dba38c56e7e645de936eb3b44fb48586",
+    "metro-select": "^3.1.0",
     "@simonwep/pickr": "^1.10.1",
     "throttle-debounce": "^5.0.2",
     "tinycolor2": "^1.6.0",

@@ -43,6 +43,23 @@ describe('Metro Start web API client', () => {
         expect(urls[1]).toContain('continuationToken=next+token');
     });
 
+    test('accepts legacy unpaginated themes without generated IDs', async () => {
+        let requests = 0;
+        const themes = await getThemes('https://legacy.example/api', async () => {
+            requests++;
+            return jsonResponse([{
+                author: 'Metro',
+                title: 'Classic',
+                online: true,
+                themeContent: {background_color: '#000000'},
+            }]);
+        });
+
+        expect(requests).toBe(1);
+        expect(themes[0].id).toBeUndefined();
+        expect(themes[0].themeContent.background_color).toBe('#000000');
+    });
+
     test('rejects malformed themes responses', async () => {
         await expect(getThemes('https://api.example/api', async () =>
             jsonResponse({items: []})
