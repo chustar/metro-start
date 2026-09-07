@@ -10,12 +10,12 @@
   </head>
   <body class='background-color'>
     <div class='weather'>
-      <div class='options-color option clickable' id='toggleWeather'></div>
+      <button class='options-color option clickable text-action' id='toggleWeather' type='button'></button>
       <div class='hide' id='weather'>
         <div id='city'></div>
         <div>
           <input class='option' id='newLocation' placeholder='vancouver, ca' type='text'>
-          <span class='options-color option clickable' id='saveLocation'>save</span>
+          <button class='options-color option clickable text-action' id='saveLocation' type='button'>save</button>
         </div>
         <div class='options-color option'>
           <select class='chooser' id='weather-units-chooser'>
@@ -62,7 +62,7 @@
             </div>
             <div class='add option' id='addTodo'>
               <input class='option' id='newTodo' name='newTodo' placeholder='new todo' type='text'>
-              <div class='options-color option clickable' id='saveTodo'>save</div>
+              <button class='options-color option clickable text-action' id='saveTodo' type='button'>save</button>
             </div>
             <div class='external-selector' id='external-selector-todos'>
               <div class='internal-selector' id='internal-selector-todos'></div>
@@ -135,20 +135,18 @@
             <div class='external-selector' id='external-selector-themes'>
               <div class='internal-selector' id='internal-selector-themes'></div>
             </div>
+            <div class='theme-editor-page-content' id='themeEditorPage'></div>
           </div>
-        </div>
-        <div class='theme-editor collection off-screen'>
-          <div class='theme-editor-page-content' id='themeEditorPage'></div>
         </div>
       </div>
     </div>
     <div class='footer'>
-      <p class='options-color wrench clickable' id='wrench'>wrench</p>
-      <p class='option options-color clickable about-button' id='aboutButton'>about</p>
-      <p class='option options-color clickable theme-button' id='editThemeButton'>edit theme</p>
-      <p class='option options-color clickable' id='focusMode' role='button' tabindex='0'>focus</p>
-      <p class='option options-color clickable' id='exportData'>export backup</p>
-      <p class='option options-color clickable' id='importData'>import backup</p>
+      <button class='options-color wrench clickable text-action' id='wrench' type='button'>wrench</button>
+      <button class='option options-color clickable about-button text-action' id='aboutButton' type='button'>about</button>
+      <button class='option options-color clickable theme-button text-action' id='editThemeButton' type='button'>edit theme</button>
+      <button class='option options-color clickable text-action' id='focusMode' type='button'>focus</button>
+      <button class='option options-color clickable text-action' id='exportData' type='button'>export backup</button>
+      <button class='option options-color clickable text-action' id='importData' type='button'>import backup</button>
       <input id='importDataFile' type='file' accept='application/json' style='display:none'>
     </div>
     <div id='aboutModal'>

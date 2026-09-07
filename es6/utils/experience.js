@@ -10,6 +10,7 @@ export default {
     focusButton: document.getElementById('focusMode'),
     touchStartX: 0,
     wheelLocked: false,
+    pointerFrame: 0,
 
     init() {
         document.addEventListener('metro-pages-ready', () => {
@@ -18,12 +19,6 @@ export default {
         this.setFocusMode(Boolean(storage.get('focusMode', false)), false);
         this.focusButton.addEventListener('click', () => {
             this.setFocusMode(!document.body.classList.contains('focus-mode'));
-        });
-        this.focusButton.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                this.focusButton.click();
-            }
         });
         document.addEventListener('metro-page-change', () => this.syncNavigation());
         document.addEventListener('metro-navigation-change', () => {
@@ -62,6 +57,18 @@ export default {
             this.wheelLocked = true;
             setTimeout(() => { this.wheelLocked = false; }, 350);
         }, {passive: false});
+        document.addEventListener('pointermove', (event) => {
+            if (this.pointerFrame || event.pointerType === 'touch') {
+                return;
+            }
+            this.pointerFrame = requestAnimationFrame(() => {
+                const x = (event.clientX / window.innerWidth - 0.5) * 2;
+                const y = (event.clientY / window.innerHeight - 0.5) * 2;
+                document.documentElement.style.setProperty('--pointer-x', x);
+                document.documentElement.style.setProperty('--pointer-y', y);
+                this.pointerFrame = 0;
+            });
+        }, {passive: true});
     },
 
     availablePages() {

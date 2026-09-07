@@ -11,14 +11,16 @@ export default {
 
         info: util.createElement('<div class="modal-info">'),
         confirm: util.createElement(
-            '<span id="confirm-button" class="main-color clickable"></span>'
+            '<button type="button" class="main-color clickable confirm-button"></button>'
         ),
         cancel: util.createElement(
-            '<span id="cancel-button" class="main-color clickable"></span>'
+            '<button type="button" class="main-color clickable cancel-button"></button>'
         ),
     },
 
     modalCallbacks: {},
+    modalKeyHandlers: {},
+    previousFocus: {},
 
     init() {},
 
@@ -33,6 +35,7 @@ export default {
      */
     createModal(id, content, callback, confirmText, cancelText, options = {}) {
         this.modalCallbacks[id] = callback;
+        this.previousFocus[id] = document.activeElement;
 
         let overlay;
         if (!options.drawer) {
@@ -45,6 +48,7 @@ export default {
         }
 
         const modalContent = this.templates.modalContent.cloneNode(true);
+        const modalElement = modalContent.firstElementChild;
         const info = this.templates.info.cloneNode(true);
 
         if (confirmText) {
@@ -69,24 +73,37 @@ export default {
             info.firstElementChild.appendChild(cancel);
         }
 
-        modalContent.firstElementChild.id = id;
-        util.addClass(modalContent.firstElementChild, id);
+        modalElement.id = id;
+        util.addClass(modalElement, id);
+        modalElement.setAttribute('role', 'dialog');
+        modalElement.setAttribute(
+            'aria-modal',
+            String(!options.drawer)
+        );
         if (options.drawer) {
-            util.addClass(modalContent.firstElementChild, 'settings-drawer');
+            util.addClass(modalElement, 'settings-drawer');
         }
         if (typeof content === 'string') {
             const paragraph = document.createElement('p');
             paragraph.textContent = content;
-            modalContent.firstElementChild.appendChild(paragraph);
+            modalElement.appendChild(paragraph);
         } else {
-            modalContent.firstElementChild.appendChild(content);
+            modalElement.appendChild(content);
         }
-        modalContent.firstElementChild.appendChild(info);
+        modalElement.appendChild(info);
 
         if (overlay) {
             document.body.append(overlay);
         }
         (options.container || document.body).append(modalContent);
+        const keyHandler = (event) => {
+            if (event.key === 'Escape') {
+                this.modalClosed(id, false);
+            }
+        };
+        this.modalKeyHandlers[id] = keyHandler;
+        document.addEventListener('keydown', keyHandler);
+        modalElement.querySelector('button')?.focus();
     },
 
     /**
@@ -96,6 +113,8 @@ export default {
      * @param {any} res The result of the closing modal.
      */
     modalClosed(id, res) {
+        document.removeEventListener('keydown', this.modalKeyHandlers[id]);
+        delete this.modalKeyHandlers[id];
         const elems = document.getElementsByClassName(id);
         while (elems.length > 0) {
             elems[0].remove();
@@ -105,5 +124,7 @@ export default {
         if (Boolean(this.modalCallbacks) && Boolean(this.modalCallbacks[id])) {
             this.modalCallbacks[id](res);
         }
+        this.previousFocus[id]?.focus?.();
+        delete this.previousFocus[id];
     },
 };

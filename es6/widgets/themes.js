@@ -120,7 +120,7 @@ export default {
     },
 
     /**
-     * Shows the theme editor modal window.
+     * Shows the theme editor as a page in Metro Start.
      */
     openThemeEditor() {
         this.sessionUpdateCount = 0;
@@ -138,17 +138,28 @@ export default {
             this.data.title = '';
         }
 
-        modal.createModal(
-            'themeEditorModal',
-            this.elems.themeEditor,
-            this.themeEditorClosed.bind(this),
-            'save',
-            'cancel',
-            {
-                drawer: true,
-                container: document.getElementById('themeEditorPage'),
+        const container = document.getElementById('themeEditorPage');
+        container.replaceChildren(this.elems.themeEditor);
+        const actions = document.createElement('div');
+        actions.className = 'theme-editor-actions';
+        for (const [label, result] of [['save', true], ['cancel', false]]) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'main-color clickable';
+            button.textContent = label;
+            button.addEventListener('click', () => this.closeThemeEditor(result));
+            actions.appendChild(button);
+        }
+        container.appendChild(actions);
+        document.querySelector('.themes.collection')
+            ?.classList.add('show-theme-editor');
+        this.editorActions = actions;
+        this.editorKeyHandler = (event) => {
+            if (event.key === 'Escape') {
+                this.closeThemeEditor(false);
             }
-        );
+        };
+        document.addEventListener('keydown', this.editorKeyHandler);
         document.dispatchEvent(new CustomEvent('metro-open-theme-editor'));
 
         if (!this.isBound) {
@@ -168,6 +179,14 @@ export default {
 
         this.resetInputs();
         this.applyTheme(this.data, {persist: false, transition: false});
+        this.elems.themeEditor.querySelector('h3')?.setAttribute('tabindex', '-1');
+        this.elems.themeEditor.querySelector('h3')?.focus();
+    },
+
+    closeThemeEditor(result) {
+        document.removeEventListener('keydown', this.editorKeyHandler);
+        this.editorKeyHandler = null;
+        this.themeEditorClosed(result);
     },
 
     /**
@@ -231,7 +250,11 @@ export default {
         }
 
         this.applyTheme(this.data);
-        document.dispatchEvent(new CustomEvent('metro-close-theme-editor'));
+        this.elems.themeEditor.remove();
+        this.editorActions?.remove();
+        this.editorActions = null;
+        document.querySelector('.themes.collection')
+            ?.classList.remove('show-theme-editor');
     },
 
     /**

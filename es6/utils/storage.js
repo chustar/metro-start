@@ -74,6 +74,7 @@ export default {
         console.error('Metro Start storage error', error);
         const message = document.createElement('div');
         message.className = 'storage-error';
+        message.setAttribute('role', 'alert');
         message.textContent = 'Could not save Metro Start data. Export a backup and try again.';
         document.body.appendChild(message);
         setTimeout(() => message.remove(), 6000);

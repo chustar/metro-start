@@ -167,9 +167,7 @@ export default {
             };
             styles.set('body', ambientStyle);
             styles.set('.modal-content', ambientStyle);
-            document.body.classList.add('ambient-background');
         } else if (theme.themeContent['background-chooser'] === 'trianglify') {
-            document.body.classList.remove('ambient-background');
             if (
                 oldTheme &&
                 oldTheme.themeContent &&
@@ -303,7 +301,6 @@ export default {
                 }).catch((e) => { util.error(`Could not load trianglify: ${  e}`); });
             }).catch((e) => { util.error(`Could not load tinycolor: ${  e}`); });
         } else {
-            document.body.classList.remove('ambient-background');
             this.animate('.background-color', {
                 backgroundColor: theme.themeContent.backgroundColor,
             }, duration);

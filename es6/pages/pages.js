@@ -8,12 +8,6 @@ import apps from './apps';
 import bookmarks from './bookmarks';
 import themes from './themes';
 import ext from '../utils/extension';
-const themeEditorPage = {
-    name: 'theme-editor',
-    enabled: true,
-    visible: false,
-    init() {},
-};
 export default {
     name: 'pages',
 
@@ -21,23 +15,13 @@ export default {
         chooser: document.getElementById('pages-chooser'),
     },
 
-    modules: [todos, sessions, apps, bookmarks, themes, themeEditorPage],
+    modules: [todos, sessions, apps, bookmarks, themes],
 
     init(document) {
         this.showOptions = false;
         this.page = storage.get('page', 'todos');
-        if (this.page === 'theme-editor') {
-            this.page = 'themes';
-        }
         document.addEventListener('metro-open-theme-editor', () => {
-            themeEditorPage.visible = true;
-            this.changePage('theme-editor');
-            document.dispatchEvent(new CustomEvent('metro-navigation-change'));
-        });
-        document.addEventListener('metro-close-theme-editor', () => {
-            themeEditorPage.visible = false;
-            this.changePage('themes');
-            document.dispatchEvent(new CustomEvent('metro-navigation-change'));
+            this.chooser?.select?.('themes');
         });
 
         const that = this;

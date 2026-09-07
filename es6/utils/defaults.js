@@ -57,7 +57,7 @@ export default {
         themes: false,
     },
 
-    defaultPageOrder: ['todos', 'sessions', 'apps', 'bookmarks', 'themes', 'theme-editor'],
+    defaultPageOrder: ['todos', 'sessions', 'apps', 'bookmarks', 'themes'],
 
     // The default weather location.
     defaultWeather: {

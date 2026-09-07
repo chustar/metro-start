@@ -68,6 +68,22 @@ describe('themes', () => {
         expect(previous).toEqual(previousBefore);
         expect(applied.themeContent['fontsize-chooser']).toBe('125%');
     });
+
+    test('opens and closes a dialog after its fragment is mounted', async () => {
+        const {default: modal} = await import('../es6/utils/modal');
+
+        expect(() => modal.createModal(
+            'test-dialog',
+            'confirm this action',
+            null,
+            'okay',
+            'cancel'
+        )).not.toThrow();
+        expect(document.getElementById('test-dialog')).not.toBeNull();
+
+        modal.modalClosed('test-dialog', false);
+        expect(document.getElementById('test-dialog')).toBeNull();
+    });
 });
 
 describe('storage synchronization', () => {

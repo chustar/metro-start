@@ -184,6 +184,7 @@ export default {
         document.querySelector('.undo-toast')?.remove();
         const toast = document.createElement('div');
         toast.className = 'undo-toast background-color';
+        toast.setAttribute('role', 'status');
         toast.textContent = `removed “${todo.name}” `;
         const undo = document.createElement('button');
         undo.type = 'button';
