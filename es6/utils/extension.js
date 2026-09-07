@@ -23,6 +23,9 @@ const _normalizeList = (value) => (Array.isArray(value) ? value : []);
 // Storage shim: expose storage.sync.get(keys, cb) and storage.sync.set(obj, cb)
 // Falls back to localStorage for browser environments without extension APIs
 const storage = {
+    onChanged: (_hasChrome() && chrome.storage && chrome.storage.onChanged) ||
+        (_hasBrowser() && browser.storage && browser.storage.onChanged) ||
+        {addListener: () => {}},
     sync: {
         get(keys, callback) {
             if (_hasChrome() && chrome.storage && chrome.storage.sync) {

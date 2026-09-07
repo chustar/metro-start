@@ -23,6 +23,14 @@ const app = {
             module.init(document);
         });
 
+        this.utils.storage.subscribe((key) => {
+            if (key === 'todos' && pages.modules?.[0]?.loadTodos) pages.modules[0].loadTodos();
+            if (key === 'themesLocal' && pages.modules?.[4]?.loadThemes) pages.modules[4].loadThemes();
+            if (key === 'currentTheme' && widgets.themes?.data) {
+                window.location.reload();
+            }
+        });
+
         const wrench = document.getElementById('wrench');
         wrench.addEventListener('click', () => {
             this.clickWrench();
