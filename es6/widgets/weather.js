@@ -3,6 +3,9 @@ import util from '../utils/util';
 import defaults from '../utils/defaults';
 import storage from '../utils/storage';
 import {getWeather} from '../utils/api';
+
+const WEATHER_REFRESH_MS = 60 * 60 * 1000;
+const WEATHER_RETRY_MS = 5 * 60 * 1000;
 export default {
     data: {},
 
@@ -126,12 +129,12 @@ export default {
                     this.data.condition = result.description
                         ? result.description.toLowerCase()
                         : this.data.condition;
-                    this.data.weatherUpdateTime = Date.now() + 3600000;
+                    this.data.weatherUpdateTime = Date.now() + WEATHER_REFRESH_MS;
                     storage.save('weather', this.data);
                 }
             } catch (error) {
                 util.log(`Weather fetch failed: ${error}`);
-                this.data.weatherUpdateTime = Date.now() + 300000;
+                this.data.weatherUpdateTime = Date.now() + WEATHER_RETRY_MS;
             }
             this.update();
         }
