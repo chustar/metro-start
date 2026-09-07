@@ -58,6 +58,11 @@ export default class PagebaseGrouped extends Pagebase {
             for (let i = 0; i < nodes.length; i++) {
                 columnNode.firstElementChild.appendChild(nodes[i]);
             }
+        } else {
+            const empty = document.createElement('p');
+            empty.className = 'empty-state';
+            empty.textContent = 'nothing here yet';
+            columnNode.firstElementChild.appendChild(empty);
         }
 
         groupNode.firstElementChild.appendChild(columnNode);

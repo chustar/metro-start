@@ -12,15 +12,9 @@ export default {
                 ext.storage.sync.get(null, (container) => {
                     Object.assign(this.cache, container || {});
                     if (ext.storage.onChanged && ext.storage.onChanged.addListener) {
-                        ext.storage.onChanged.addListener((changes) => {
-                            Object.keys(changes || {}).forEach((key) => {
-                                const change = changes[key];
-                                if (change && Object.prototype.hasOwnProperty.call(change, 'newValue')) {
-                                    this.cache[key] = change.newValue;
-                                    this.listeners.forEach((listener) => listener(key, change.newValue));
-                                }
-                            });
-                        });
+                        ext.storage.onChanged.addListener(
+                            (changes) => this.applyChanges(changes)
+                        );
                     }
                     resolve(this);
                 });
@@ -49,13 +43,32 @@ export default {
                     this.reportError(chrome.runtime.lastError);
                 }
             });
-            if (result && typeof result.catch === 'function') result.catch((error) => this.reportError(error));
+            if (result && typeof result.catch === 'function') {
+                result.catch((error) => this.reportError(error));
+            }
         } catch (error) {
             this.reportError(error);
         }
     },
 
     subscribe(listener) { this.listeners.add(listener); return () => this.listeners.delete(listener); },
+
+    applyChanges(changes) {
+        Object.keys(changes || {}).forEach((key) => {
+            const change = changes[key];
+            if (!change || !Object.prototype.hasOwnProperty.call(change, 'newValue')) {
+                return;
+            }
+
+            const newValue = change.newValue;
+            if (JSON.stringify(this.cache[key]) === JSON.stringify(newValue)) {
+                return;
+            }
+
+            this.cache[key] = newValue;
+            this.listeners.forEach((listener) => listener(key, newValue));
+        });
+    },
 
     reportError(error) {
         console.error('Metro Start storage error', error);
@@ -67,9 +80,11 @@ export default {
     },
 
     exportBackup() {
-        const keys = ['currentTheme', 'themesLocal', 'todos', 'weather', 'sort', 'page'];
+        const keys = ['currentTheme', 'themesLocal', 'todos', 'weather', 'sort', 'page', 'pageOrder', 'focusMode'];
         return {version: 1, exportedAt: new Date().toISOString(), data: keys.reduce((out, key) => {
-            if (this.cache[key] !== undefined) out[key] = this.cache[key];
+            if (this.cache[key] !== undefined) {
+                out[key] = this.cache[key];
+            }
             return out;
         }, {})};
     },
@@ -78,8 +93,12 @@ export default {
         if (!backup || backup.version !== 1 || !backup.data || typeof backup.data !== 'object') {
             throw new Error('Invalid Metro Start backup');
         }
-        const allowed = ['currentTheme', 'themesLocal', 'todos', 'weather', 'sort', 'page'];
-        allowed.forEach((key) => { if (Object.prototype.hasOwnProperty.call(backup.data, key)) this.save(key, backup.data[key]); });
+        const allowed = ['currentTheme', 'themesLocal', 'todos', 'weather', 'sort', 'page', 'pageOrder', 'focusMode'];
+        allowed.forEach((key) => {
+            if (Object.prototype.hasOwnProperty.call(backup.data, key)) {
+                this.save(key, backup.data[key]);
+            }
+        });
     },
 
     /**

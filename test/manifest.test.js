@@ -24,6 +24,12 @@ describe('browser manifests', () => {
         expect(manifest.permissions).toContain('*://api.metro-start.com/*');
         expect(manifest.browser_specific_settings.gecko.id)
             .toBe('metro-start@metro-start.com');
+        expect(manifest.browser_specific_settings.gecko.data_collection_permissions)
+            .toEqual({required: ['locationInfo']});
+        expect(manifest.browser_specific_settings.gecko.strict_min_version)
+            .toBe('140.0');
+        expect(manifest.browser_specific_settings.gecko_android.strict_min_version)
+            .toBe('142.0');
     });
 
     test('does not mutate the shared template', () => {

@@ -30,6 +30,11 @@ export default {
             'click',
             this.addTodo.bind(this)
         );
+        this.elems.newTodo.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                this.addTodo(event);
+            }
+        });
 
         this.todos = new PagebaseGrouped();
         this.todos.init(
@@ -162,6 +167,7 @@ export default {
      * @param {any} todo The todo to be removed.
      */
     removeTodo(todo) {
+        const index = this.data.indexOf(todo);
         for (let i = 0; i < this.data.length; i++) {
             if (this.data[i] === todo) {
                 this.data.splice(i, 1);
@@ -171,5 +177,26 @@ export default {
 
         storage.save('todos', this.data);
         this.loadTodos();
+        this.showUndo(todo, index);
+    },
+
+    showUndo(todo, index) {
+        document.querySelector('.undo-toast')?.remove();
+        const toast = document.createElement('div');
+        toast.className = 'undo-toast background-color';
+        toast.textContent = `removed “${todo.name}” `;
+        const undo = document.createElement('button');
+        undo.type = 'button';
+        undo.className = 'options-color clickable';
+        undo.textContent = 'undo';
+        undo.addEventListener('click', () => {
+            this.data.splice(index, 0, todo);
+            storage.save('todos', this.data);
+            this.loadTodos();
+            toast.remove();
+        });
+        toast.appendChild(undo);
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 6000);
     },
 };

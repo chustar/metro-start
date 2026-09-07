@@ -13,6 +13,8 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    transition: background-color .5s ease, color .35s ease;
 }
 a {
     color: inherit;
@@ -118,7 +120,7 @@ h5 {
 
 .collection {
     float: left;
-    width: 20%;
+    width: calc(100% / 6);
     height: 100%;
     &.off-screen {
         height: 1px;
@@ -133,7 +135,7 @@ h5 {
     .internal {
         transition: margin .3s ease-in-out;
         height: 100%;
-        width: 500%;
+        width: 600%;
     }
 }
 .external-selector .internal-selector {
@@ -146,6 +148,49 @@ h5 {
 .pages-chooser, .sort {
     margin-bottom: 10px;
     margin-left: 25px;
+}
+.pages-chooser > .metroselect-container {
+    display: none;
+}
+.show-options .pages-chooser > .metroselect-container {
+    display: inline-flex;
+    margin-bottom: 10px;
+}
+.section-nav {
+    display: flex;
+    gap: clamp(14px, 3vw, 38px);
+    max-width: calc(100vw - 50px);
+    overflow-x: auto;
+    padding: 2px 0 9px;
+    scrollbar-width: none;
+
+    button {
+        appearance: none;
+        background: transparent;
+        border: 0;
+        color: inherit;
+        cursor: pointer;
+        font: inherit;
+        font-size: clamp(1.05rem, 2vw, 1.4rem);
+        opacity: .45;
+        padding: 4px 0;
+        position: relative;
+        transition: opacity .2s ease, transform .2s ease;
+
+        &.active {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+        &.active::after {
+            bottom: -4px;
+            content: '';
+            height: 2px;
+            left: 0;
+            position: absolute;
+            width: 100%;
+            background: currentColor;
+        }
+    }
 }
 .page {
     border-top: 1px solid;
@@ -230,6 +275,94 @@ h5 {
     top: 0;
     width: 75%;
 }
+.settings-drawer {
+    bottom: 0;
+    box-shadow: -18px 0 60px rgb(0 0 0 / 22%);
+    left: auto;
+    margin: 0;
+    max-height: 100vh;
+    right: 0;
+    top: 0;
+    width: min(520px, 92vw);
+    z-index: 20;
+
+    .modal-info {
+        bottom: 0;
+        padding: 12px;
+        position: sticky;
+        width: 100%;
+    }
+}
+.theme-editor.collection {
+    overflow-y: auto;
+
+    .theme-editor-page-content {
+        min-height: 100%;
+        padding: 0 25px 25px;
+    }
+    .settings-drawer {
+        border: 0;
+        box-shadow: none;
+        margin: 0;
+        max-height: none;
+        max-width: 900px;
+        position: relative;
+        width: 100%;
+    }
+}
+.ambient-background {
+    animation: ambient-drift 18s ease-in-out infinite alternate;
+}
+@keyframes ambient-drift {
+    from { background-position: 0% 0%; }
+    to { background-position: 70% 35%; }
+}
+.undo-toast {
+    border: 2px solid;
+    bottom: 24px;
+    left: 50%;
+    padding: 12px 18px;
+    position: fixed;
+    transform: translateX(-50%);
+    z-index: 40;
+
+    button {
+        appearance: none;
+        background: none;
+        border: 0;
+        font: inherit;
+        margin-left: 8px;
+    }
+}
+.empty-state {
+    font-style: italic;
+    opacity: .55;
+    padding: 12px 0;
+}
+.focus-mode {
+    .pages-chooser, .external, #wrench, #editThemeButton,
+    #exportData, #importData, #aboutButton {
+        display: none;
+    }
+    h1 {
+        margin: auto;
+    }
+    .footer {
+        justify-content: flex-end;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+    }
+}
+@media (prefers-contrast: more) {
+    .section-nav button { opacity: .75; }
+    .section-nav button.active { opacity: 1; text-decoration: underline; }
+}
 .modal-content > p {
     height: 10%;
     margin: 10% 0;
@@ -298,6 +431,9 @@ h5 {
     }
 }
 @media only screen and (max-width: 480px) {
+    h1 { font-size: clamp(2.4em, 14vw, 3.6em); }
+    .footer { gap: 14px; overflow-x: auto; }
+    .settings-drawer { border-width: 0 0 0 2px; }
     // h1 {
     //     font-size: 1.8em;
     //     margin: 0 0 15px 25px;

@@ -26,7 +26,9 @@ export default {
         this.elems.importData.addEventListener('click', () => this.elems.importDataFile.click());
         this.elems.importDataFile.addEventListener('change', async (event) => {
             const file = event.target.files[0];
-            if (!file) return;
+            if (!file) {
+                return;
+            }
             try {
                 storage.importBackup(JSON.parse(await file.text()));
                 window.location.reload();

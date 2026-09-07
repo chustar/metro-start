@@ -31,15 +31,18 @@ export default {
      * @param {any} confirmText The text to display for confirmation. If empty, no confirm button will be shown.
      * @param {any} cancelText The tex to display for cancellation. If empty, no cancel button will be shown.
      */
-    createModal(id, content, callback, confirmText, cancelText) {
+    createModal(id, content, callback, confirmText, cancelText, options = {}) {
         this.modalCallbacks[id] = callback;
 
-        const overlay = this.templates.overlay.cloneNode(true);
-        overlay.firstElementChild.addEventListener(
-            'click',
-            this.modalClosed.bind(this, id, false)
-        );
-        util.addClass(overlay.firstElementChild, id);
+        let overlay;
+        if (!options.drawer) {
+            overlay = this.templates.overlay.cloneNode(true);
+            overlay.firstElementChild.addEventListener(
+                'click',
+                this.modalClosed.bind(this, id, false)
+            );
+            util.addClass(overlay.firstElementChild, id);
+        }
 
         const modalContent = this.templates.modalContent.cloneNode(true);
         const info = this.templates.info.cloneNode(true);
@@ -68,6 +71,9 @@ export default {
 
         modalContent.firstElementChild.id = id;
         util.addClass(modalContent.firstElementChild, id);
+        if (options.drawer) {
+            util.addClass(modalContent.firstElementChild, 'settings-drawer');
+        }
         if (typeof content === 'string') {
             const paragraph = document.createElement('p');
             paragraph.textContent = content;
@@ -77,7 +83,10 @@ export default {
         }
         modalContent.firstElementChild.appendChild(info);
 
-        document.body.append(overlay, modalContent);
+        if (overlay) {
+            document.body.append(overlay);
+        }
+        (options.container || document.body).append(modalContent);
     },
 
     /**

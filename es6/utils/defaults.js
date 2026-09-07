@@ -30,6 +30,7 @@ export default {
             'fontfamily-chooser': 'system',
             'fontweight-chooser': 'normal',
             'fontvariant-chooser': 'normal',
+            'fontsize-chooser': '100%',
             'fontreadability-chooser': 'off',
 
             'palette-chooser': 'custom',
@@ -55,6 +56,8 @@ export default {
         bookmarks: false,
         themes: false,
     },
+
+    defaultPageOrder: ['todos', 'sessions', 'apps', 'bookmarks', 'themes', 'theme-editor'],
 
     // The default weather location.
     defaultWeather: {

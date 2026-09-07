@@ -44,6 +44,7 @@
         <option class='clickable bookmarks-option removeable removed'>bookmarks</option>
         <option class='clickable themes-option'>themes</option>
       </select>
+      <nav aria-label='Start sections' class='section-nav' id='sectionNav'></nav>
     </div>
     <div class='external'>
       <div class='internal'>
@@ -136,12 +137,16 @@
             </div>
           </div>
         </div>
+        <div class='theme-editor collection off-screen'>
+          <div class='theme-editor-page-content' id='themeEditorPage'></div>
+        </div>
       </div>
     </div>
     <div class='footer'>
       <p class='options-color wrench clickable' id='wrench'>wrench</p>
       <p class='option options-color clickable about-button' id='aboutButton'>about</p>
       <p class='option options-color clickable theme-button' id='editThemeButton'>edit theme</p>
+      <p class='option options-color clickable' id='focusMode' role='button' tabindex='0'>focus</p>
       <p class='option options-color clickable' id='exportData'>export backup</p>
       <p class='option options-color clickable' id='importData'>import backup</p>
       <input id='importDataFile' type='file' accept='application/json' style='display:none'>
@@ -259,6 +264,21 @@
                     </div>
                   </td>
                 </tr>
+                <tr>
+                  <td>
+                    <span class='small-text'>size</span>
+                  </td>
+                  <td>
+                    <div class='options-color'>
+                      <select class='chooser' id='fontsize-chooser'>
+                        <option class='clickable' value='75%'>small</option>
+                        <option class='clickable' value='100%'>normal</option>
+                        <option class='clickable' value='125%'>large</option>
+                        <option class='clickable' value='150%'>extra large</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -337,6 +357,7 @@
         <div class='theme-section-title small-text'>background options</div>
         <div class='theme-editor-section options-color'>
           <select class='chooser theme-editor-section' id='background-chooser'>
+            <option class='clickable'>ambient</option>
             <option class='clickable'>trianglify</option>
             <option class='clickable'>none</option>
           </select>

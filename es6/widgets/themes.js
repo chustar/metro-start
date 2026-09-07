@@ -65,6 +65,7 @@ export default {
         document.getElementById('fontfamily-chooser'),
         document.getElementById('fontweight-chooser'),
         document.getElementById('fontvariant-chooser'),
+        document.getElementById('fontsize-chooser'),
 
         document.getElementById('palette-chooser'),
         document.getElementById('background-chooser'),
@@ -78,9 +79,9 @@ export default {
 
     init() {
         // this.data = defaults.defaultTheme;
-        this.data = storage.get('currentTheme', defaults.defaultTheme);
-        this.data = util.upgradeTheme(this.data, defaults.defaultTheme);
-        this.oldTheme = this.data;
+        this.data = util.clone(
+            storage.get('currentTheme', defaults.defaultTheme)
+        );
 
         this.elems.themeEditor.parentNode.removeChild(
             this.elems.themeEditor
@@ -90,10 +91,7 @@ export default {
             this.openThemeEditor.bind(this)
         );
 
-        storage.save(
-            'currentTheme',
-            script.updateTheme(this.data, null, false)
-        );
+        this.applyTheme(this.data, {transition: false});
     },
 
     /**
@@ -127,7 +125,9 @@ export default {
     openThemeEditor() {
         this.sessionUpdateCount = 0;
 
-        this.data = storage.get('currentTheme', defaults.defaultTheme);
+        this.data = util.clone(
+            storage.get('currentTheme', defaults.defaultTheme)
+        );
         storage.save('previousTheme', this.data);
 
         if (
@@ -143,8 +143,13 @@ export default {
             this.elems.themeEditor,
             this.themeEditorClosed.bind(this),
             'save',
-            'cancel'
+            'cancel',
+            {
+                drawer: true,
+                container: document.getElementById('themeEditorPage'),
+            }
         );
+        document.dispatchEvent(new CustomEvent('metro-open-theme-editor'));
 
         if (!this.isBound) {
             for (let i = 0; i < this.textInputs.length; i++) {
@@ -160,6 +165,9 @@ export default {
             }
             this.isBound = true;
         }
+
+        this.resetInputs();
+        this.applyTheme(this.data, {persist: false, transition: false});
     },
 
     /**
@@ -171,10 +179,9 @@ export default {
         util.log(`theme editor closed with result: ${res}`);
 
         if (!res) {
-            if (this.sessionUpdateCount !== 0) {
-                // If the theme edior was canceled, reset the theme.
-                this.data = storage.get('previousTheme', this.data);
-            }
+            this.data = util.clone(
+                storage.get('previousTheme', this.data)
+            );
         } else {
             if (
                 defaults.systemThemes
@@ -223,7 +230,8 @@ export default {
             this.themeAdded();
         }
 
-        this.updateCurrentTheme('currentTheme', this.data);
+        this.applyTheme(this.data);
+        document.dispatchEvent(new CustomEvent('metro-close-theme-editor'));
     },
 
     /**
@@ -301,9 +309,6 @@ export default {
      * @param {any} val The new value.
      */
     updateSelect(inputId, val) {
-        if (this.data[inputId] === val) {
-            return;
-        }
         switch (inputId.toLowerCase()) {
         // These are the choosers that have something to hide.
         case 'background-chooser':
@@ -386,15 +391,12 @@ export default {
      * @param {any} val The new theme setting.
      */
     updateCurrentTheme(inputId, val) {
-        if (this.data[inputId] === val) {
+        const isThemeSelection = inputId === 'currentTheme';
+        const currentValue = isThemeSelection
+            ? this.data
+            : this.data.themeContent[inputId];
+        if (JSON.stringify(currentValue) === JSON.stringify(val)) {
             return;
-        }
-
-        if (
-            this.data.themeContent &&
-            this.data.themeContent['palette-chooser'] === 'automatic'
-        ) {
-            this.autoPaletteAdjust();
         }
 
         this.sessionUpdateCount++;
@@ -403,40 +405,46 @@ export default {
             typeof val === 'object' ? JSON.stringify(val) : val
         );
 
-        if (inputId === 'currentTheme') {
-            this.data = util.clone(val);
+        if (isThemeSelection) {
+            const selectedTheme = util.clone(val);
 
             // Create an id, if one does not exist.
-            if (!this.data.id) {
-                this.data.id =
-                    this.data.title +
-                    this.data.author +
+            if (!selectedTheme.id) {
+                selectedTheme.id =
+                    selectedTheme.title +
+                    selectedTheme.author +
                     new Date().getTime();
             }
 
             // If its an online theme, clear the 'metadata'.
-            if (this.data.online) {
-                this.data.title = '';
-                this.data.author = '';
-                this.data.online = false;
+            if (selectedTheme.online) {
+                selectedTheme.title = '';
+                selectedTheme.author = '';
+                selectedTheme.online = false;
             }
 
-            const updatedTheme = script.updateTheme(
-                this.data,
-                this.oldTheme,
-                true
-            );
-            this.oldTheme = updatedTheme;
-            storage.save('currentTheme', updatedTheme);
+            this.applyTheme(selectedTheme);
         } else {
             this.data.themeContent[inputId] = val;
-            const updatedTheme = script.updateTheme(
-                this.data,
-                this.oldTheme,
-                true
-            );
-            this.oldTheme = updatedTheme;
+            this.applyTheme(this.data);
+            if (this.data.themeContent['palette-chooser'] === 'automatic') {
+                this.autoPaletteAdjust();
+            }
         }
+    },
+
+    applyTheme(theme, {persist = true, transition = true} = {}) {
+        const updatedTheme = script.updateTheme(
+            theme,
+            this.oldTheme,
+            transition
+        );
+        this.data = util.clone(updatedTheme);
+        this.oldTheme = util.clone(updatedTheme);
+        if (persist) {
+            storage.save('currentTheme', this.data);
+        }
+        return this.data;
     },
 
     autoPaletteAdjust() {
@@ -486,9 +494,7 @@ export default {
                 );
 
                 // Apply updated theme
-                const updatedTheme = script.updateTheme(this.data, this.oldTheme, true);
-                this.oldTheme = updatedTheme;
-                storage.save('currentTheme', updatedTheme);
+                this.applyTheme(this.data);
             } catch (e) {
                 util.error(`Failed to compute auto palette: ${  e}`);
             }

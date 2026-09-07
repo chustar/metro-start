@@ -81,9 +81,9 @@ export default {
     createElement: function createDom(htmlStr) {
         const fragment = document.createDocumentFragment();
         if (htmlStr) {
-            const temp = document.createElement('div');
-            temp.innerHTML = htmlStr;
-            fragment.appendChild(temp.firstElementChild);
+            const parsed = new document.defaultView.DOMParser()
+                .parseFromString(htmlStr, 'text/html');
+            fragment.appendChild(parsed.body.firstElementChild);
         }
         return fragment;
     },

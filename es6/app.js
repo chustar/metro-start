@@ -1,6 +1,7 @@
 import utils from './utils/utils';
 import widgets from './widgets/widgets';
 import pages from './pages/pages';
+import experience from './utils/experience';
 import './../scss/reset.scss';
 import './../scss/main.scss';
 import 'metro-select/metro-select.css';
@@ -22,12 +23,30 @@ const app = {
         this.modules.forEach((module) => {
             module.init(document);
         });
+        experience.init();
 
-        this.utils.storage.subscribe((key) => {
-            if (key === 'todos' && pages.modules?.[0]?.loadTodos) pages.modules[0].loadTodos();
-            if (key === 'themesLocal' && pages.modules?.[4]?.loadThemes) pages.modules[4].loadThemes();
-            if (key === 'currentTheme' && widgets.themes?.data) {
-                window.location.reload();
+        this.utils.storage.subscribe((key, value) => {
+            const pageModule = (name) => pages.modules.find(
+                (module) => module.name === name
+            );
+            if (key === 'todos' && pageModule('todos')?.loadTodos) {
+                pageModule('todos').loadTodos();
+            }
+            if (key === 'themesLocal' && pageModule('themes')?.loadThemes) {
+                pageModule('themes').loadThemes();
+            }
+            if (key === 'currentTheme' && widgets.themes?.applyTheme) {
+                widgets.themes.applyTheme(value, {
+                    persist: false,
+                    transition: false,
+                });
+            }
+            if (key === 'pageOrder') {
+                pages.setOrder(value);
+                experience.renderNavigation();
+            }
+            if (key === 'focusMode') {
+                experience.setFocusMode(Boolean(value), false);
             }
         });
 

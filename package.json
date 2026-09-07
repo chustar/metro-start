@@ -16,9 +16,10 @@
     "build:xcode": "bun run scripts/build.js xcode",
     "build:all": "bun run scripts/build.js all",
     "lint": "eslint es6 scripts test",
+    "lint:firefox": "bun run scripts/lint-firefox.js",
     "test": "bun test",
     "validate:builds": "bun run scripts/validate-builds.js",
-    "check": "bun run lint && bun test && bun run build:all && bun run validate:builds",
+    "check": "bun run lint && bun test && bun run build:all && bun run validate:builds && bun run lint:firefox",
     "build:demo": "bun run build && bun run scripts/generate-demo.js"
   },
   "repository": {
@@ -35,9 +36,10 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.8.1",
+    "fflate": "^0.8.2",
     "globals": "^17.11.0",
     "happy-dom": "^20.11.6",
     "sass": "^1.94.0",
-    "fflate": "^0.8.2"
+    "web-ext": "10.6.0"
   }
 }

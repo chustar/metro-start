@@ -1,12 +1,19 @@
 import MetroSelect from 'metro-select';
 import styles from '../utils/styles';
 import storage from '../utils/storage';
+import defaults from '../utils/defaults';
 import todos from './todos';
 import sessions from './sessions';
 import apps from './apps';
 import bookmarks from './bookmarks';
 import themes from './themes';
 import ext from '../utils/extension';
+const themeEditorPage = {
+    name: 'theme-editor',
+    enabled: true,
+    visible: false,
+    init() {},
+};
 export default {
     name: 'pages',
 
@@ -14,11 +21,24 @@ export default {
         chooser: document.getElementById('pages-chooser'),
     },
 
-    modules: [todos, sessions, apps, bookmarks, themes],
+    modules: [todos, sessions, apps, bookmarks, themes, themeEditorPage],
 
     init(document) {
         this.showOptions = false;
         this.page = storage.get('page', 'todos');
+        if (this.page === 'theme-editor') {
+            this.page = 'themes';
+        }
+        document.addEventListener('metro-open-theme-editor', () => {
+            themeEditorPage.visible = true;
+            this.changePage('theme-editor');
+            document.dispatchEvent(new CustomEvent('metro-navigation-change'));
+        });
+        document.addEventListener('metro-close-theme-editor', () => {
+            themeEditorPage.visible = false;
+            this.changePage('themes');
+            document.dispatchEvent(new CustomEvent('metro-navigation-change'));
+        });
 
         const that = this;
         ext.permissions.getAll((perms) => {
@@ -50,6 +70,7 @@ export default {
                 that.page = 'todos';
             }
 
+            that.setOrder(storage.get('pageOrder', defaults.defaultPageOrder), false);
             that.modules.forEach((module) => {
                 module.init(document);
             });
@@ -66,7 +87,25 @@ export default {
 
             // Set the initial page.
             that.changeToValidPage();
+            document.dispatchEvent(new CustomEvent('metro-pages-ready'));
         });
+    },
+
+    setOrder(order, refresh = true) {
+        const positions = new Map(order.map((name, index) => [name, index]));
+        this.modules.sort((a, b) => {
+            return (positions.get(a.name) ?? 99) - (positions.get(b.name) ?? 99);
+        });
+        const container = document.querySelector('.external > .internal');
+        this.modules.forEach((module) => {
+            const collection = container.querySelector(`.${module.name}.collection`);
+            if (collection) {
+                container.appendChild(collection);
+            }
+        });
+        if (refresh && this.chooser?.select) {
+            this.changePage(this.page);
+        }
     },
 
     changeToValidPage() {
@@ -120,6 +159,9 @@ export default {
         styles.set('.external .internal', {
             'margin-left': `${moduleIndex * -100}%`,
         });
+        document.dispatchEvent(new CustomEvent('metro-page-change', {
+            detail: {page},
+        }));
     },
 
     visibilityChanged: function visibilityChanged(page, visibility, cb) {

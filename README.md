@@ -23,8 +23,9 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-`check` runs ESLint, unit and API-contract tests, builds all targets, and
-validates their manifests and files. Individual builds are available through
+`check` runs ESLint, unit and API-contract tests, builds all targets, validates
+their manifests and files, and runs Mozilla's `web-ext lint` against the
+generated Firefox extension with warnings treated as errors. Individual builds are available through
 `bun run build:chrome`, `bun run build:firefox`, and `bun run build:xcode`.
 Artifacts and store-ready ZIP files are written under `dist/`.
 

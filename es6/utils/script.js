@@ -53,7 +53,11 @@ export default {
      */
     updateTheme(newTheme, oldTheme, transition) {
         const duration = transition === true ? 800 : 0;
-        const theme = util.upgradeTheme(newTheme, defaults.defaultTheme);
+        const theme = util.upgradeTheme(
+            util.clone(newTheme),
+            defaults.defaultTheme
+        );
+        const previousTheme = oldTheme ? util.clone(oldTheme) : null;
 
         if (theme.title === 'randomize') {
             theme.themeContent['background-chooser'] = util.randomize([
@@ -109,12 +113,12 @@ export default {
             ]);
         }
 
-        this.clearJss(oldTheme);
-        this.updateFont(theme, oldTheme);
-        this.updateBackground(theme, oldTheme, duration);
-        this.updateMainColor(theme, oldTheme, duration);
-        this.updateTitleColor(theme, oldTheme, duration);
-        this.updateOptionsColor(theme, oldTheme, duration);
+        this.clearJss(previousTheme);
+        this.updateFont(theme, previousTheme);
+        this.updateBackground(theme, previousTheme, duration);
+        this.updateMainColor(theme, previousTheme, duration);
+        this.updateTitleColor(theme, previousTheme, duration);
+        this.updateOptionsColor(theme, previousTheme, duration);
 
         return theme;
     },
@@ -153,7 +157,19 @@ export default {
     updateBackground(theme, oldTheme, duration) {
         // console.log('changing to', theme);
         const body = document.body;
-        if (theme.themeContent['background-chooser'] === 'trianglify') {
+        if (theme.themeContent['background-chooser'] === 'ambient') {
+            const accent = theme.themeContent.optionsColor;
+            const base = theme.themeContent.backgroundColor;
+            const ambientStyle = {
+                'background-color': base,
+                'background-image': `radial-gradient(circle at 15% 20%, ${accent}33, transparent 34%), radial-gradient(circle at 85% 75%, ${theme.themeContent.titleColor}2b, transparent 38%)`,
+                'background-size': '140% 140%',
+            };
+            styles.set('body', ambientStyle);
+            styles.set('.modal-content', ambientStyle);
+            document.body.classList.add('ambient-background');
+        } else if (theme.themeContent['background-chooser'] === 'trianglify') {
+            document.body.classList.remove('ambient-background');
             if (
                 oldTheme &&
                 oldTheme.themeContent &&
@@ -287,6 +303,7 @@ export default {
                 }).catch((e) => { util.error(`Could not load trianglify: ${  e}`); });
             }).catch((e) => { util.error(`Could not load tinycolor: ${  e}`); });
         } else {
+            document.body.classList.remove('ambient-background');
             this.animate('.background-color', {
                 backgroundColor: theme.themeContent.backgroundColor,
             }, duration);
@@ -437,7 +454,9 @@ export default {
             theme.themeContent['fontweight-chooser'] ===
             oldTheme.themeContent['fontweight-chooser'] &&
             theme.themeContent['fontvariant-chooser'] ===
-            oldTheme.themeContent['fontvariant-chooser']
+            oldTheme.themeContent['fontvariant-chooser'] &&
+            theme.themeContent['fontsize-chooser'] ===
+            oldTheme.themeContent['fontsize-chooser']
         ) {
             return;
         }
@@ -472,6 +491,7 @@ export default {
         this.setStyles(
             ['body', 'input::placeholder', 'input[type="text"]'], {
                 'font-family': font,
+                'font-size': theme.themeContent['fontsize-chooser'],
                 'font-weight': theme.themeContent['fontweight-chooser'],
                 'text-transform': transform,
                 'font-variant': variant,
@@ -517,6 +537,7 @@ export default {
             oldTheme.themeContent['fontfamily-chooser'] = '';
             oldTheme.themeContent['fontweight-chooser'] = '';
             oldTheme.themeContent['fontvariant-chooser'] = '';
+            oldTheme.themeContent['fontsize-chooser'] = '';
             oldTheme.themeContent['fontreadability-chooser'] = '';
             oldTheme.themeContent['trisize-chooser'] = '';
             oldTheme.themeContent['tristyle-chooser'] = '';
