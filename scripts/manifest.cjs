@@ -27,10 +27,4 @@ function createManifest(template, version, target) {
     return manifest;
 }
 
-function transformManifest(content, version, target) {
-    return JSON.stringify(
-        createManifest(JSON.parse(content.toString()), version, target)
-    );
-}
-
-module.exports = {createManifest, transformManifest};
+module.exports = {createManifest};
